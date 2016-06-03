@@ -1,3 +1,5 @@
+require "dolma/row"
+require "hirb-colors"
 require "hirb"
 require "highline/import"
 
@@ -11,7 +13,7 @@ module Dolma
 
     def show
       if @records.size > 0
-        table data_with_index, fields: [:num] + fields, unicode: true
+        table rows, unicode: true
       else
         say "No records found"
       end
@@ -25,16 +27,10 @@ module Dolma
 
     private
 
-      def data_with_index
+      def rows
         @records.each_with_index.map do |record, index|
-          data = { num: index + 1 }
-          fields.each { |field| data[field] = record.send(field) }
-          data
+          Row.new(record, index).to_h
         end
-      end
-
-      def fields
-        @fields ||= @records.first.class.fields
       end
   end
 end
