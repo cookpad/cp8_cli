@@ -21,8 +21,10 @@ module Dolma
   board = Table.new(Board.all).pick
   list = Table.new(board.lists).pick
   card = Table.new(list.cards).pick
-  checklist = Table.new(card.checklists).pick
+  #checklist = Table.new(card.checklists).pick
+  checklist = card.checklists.first #Table.new(card.checklists).pick
   item = Table.new(checklist.check_items).pick
+  puts item
 
   say "Create branch for '#{item.name}' and move to developing"
 end

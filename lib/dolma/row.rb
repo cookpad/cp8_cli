@@ -25,8 +25,8 @@ module Dolma
       end
 
       def color
-        return :white unless @record.respond_to?(:color)
-        @record.color
+        custom_color = @record.color if @record.respond_to?(:color)
+        custom_color || :white
       end
 
       def fields
