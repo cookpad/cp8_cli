@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Jens Balvig"]
   spec.email         = ["jens@balvig.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{GitHub/Trello flow gemified.}
+  spec.description   = %q{GitHub/Trello flow gemified.}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
 
