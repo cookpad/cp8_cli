@@ -18,23 +18,25 @@ module Dolma
     config.member_token = "***REMOVED***"
   end
 
-  board = Table.new(Board.all).pick
-  list = Table.new(board.lists).pick
-  card = Table.new(list.cards).pick
-
-  if card.checklists.size == 0
-    Trello::Checklist.create name: "To-Do", card_id: card.id
-    say "Added checklist to card"
-  end
+  board = Table.new(Board.all, title: "Boards").pick
+  list = Table.new(board.lists, title: board.name).pick
+  card = Table.new(list.cards, title: list.name).pick
 
   # create checklist if doesn't exist
-  checklist = card.checklists.first
+  if card.checklists.size == 0
+    checklist = Checklist.create(card: card, name: "To-Do")
+    say "Added checklist to card"
+  else
+    checklist = card.checklists.first
+  end
+
 
   #if checklist.items.size == 0
+    #checklist.add_item
     #Trello::Checklist.create name: "To-Do", card_id: card.id
     #say "Added checklist to card"
   #end
-  item = Table.new(checklist.items).pick
+  item = Table.new(checklist.items, title: "#{card.name} (#{checklist.name})").pick
 
   say "Create branch for '#{item.name}' and assign owner"
 end
