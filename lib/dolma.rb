@@ -1,8 +1,8 @@
 require "dolma/base"
 require "dolma/board"
 require "dolma/card"
-require "dolma/check_item"
 require "dolma/checklist"
+require "dolma/item"
 require "dolma/list"
 require "dolma/table"
 require "dolma/version"
@@ -21,10 +21,20 @@ module Dolma
   board = Table.new(Board.all).pick
   list = Table.new(board.lists).pick
   card = Table.new(list.cards).pick
-  #checklist = Table.new(card.checklists).pick
-  checklist = card.checklists.first #Table.new(card.checklists).pick
-  item = Table.new(checklist.check_items).pick
-  puts item
 
-  say "Create branch for '#{item.name}' and move to developing"
+  if card.checklists.size == 0
+    Trello::Checklist.create name: "To-Do", card_id: card.id
+    say "Added checklist to card"
+  end
+
+  # create checklist if doesn't exist
+  checklist = card.checklists.first
+
+  #if checklist.items.size == 0
+    #Trello::Checklist.create name: "To-Do", card_id: card.id
+    #say "Added checklist to card"
+  #end
+  item = Table.new(checklist.items).pick
+
+  say "Create branch for '#{item.name}' and assign owner"
 end
