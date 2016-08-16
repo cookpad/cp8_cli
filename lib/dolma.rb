@@ -18,9 +18,9 @@ module Dolma
     config.member_token = "***REMOVED***"
   end
 
-  board = Table.new(Board.all, title: "Boards").pick
-  list = Table.new(board.lists, title: board.name).pick
-  card = Table.new(list.cards, title: list.name).pick
+  url = ask "Input card URL:"
+  card = Card.find(url)
+
 
   # create checklist if doesn't exist
   if card.checklists.size == 0
