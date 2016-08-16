@@ -18,6 +18,11 @@ module Dolma
       :green if complete?
     end
 
+    def assign(card, list, owner)
+      return if mentions.include?(owner)
+      client.put("/cards/#{card.id}/checklist/#{list.id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}")
+    end
+
     private
 
       def mentions

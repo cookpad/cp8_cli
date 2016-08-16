@@ -18,9 +18,8 @@ module Dolma
     config.member_token = "***REMOVED***"
   end
 
-  url = ask "Input card URL:"
+  url = ARGV.first || ask("Input card URL:")
   card = Card.find(url)
-
 
   # create checklist if doesn't exist
   if card.checklists.size == 0
@@ -37,6 +36,7 @@ module Dolma
     #say "Added checklist to card"
   #end
   item = Table.new(checklist.items, title: "#{card.name} (#{checklist.name})").pick
+  item.assign(card, checklist, "balvig")
 
-  say "Create branch for '#{item.name}' and assign owner"
+  say "Create branch for '#{item.name}'"
 end
