@@ -1,8 +1,9 @@
 # Dolma
 
 ```
-git start <trello card URL> # shows/creates checklist
 git start # opens user cards page
+git start <card URL> # show checklist. Choosing task assigns self & creates branch
+git finish # checks off task, opens PR
 ```
 ## Usage
 
