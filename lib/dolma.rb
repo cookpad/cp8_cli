@@ -18,8 +18,11 @@ module Dolma
     config.member_token = "***REMOVED***"
   end
 
+  username = "balvig"
+
+  `open https://trello.com/#{username}/cards` if ARGV.empty?
   url = ARGV.first || ask("Input card URL:")
-  card = Card.find(url)
+  card = Card.find_by_url(url)
 
   # create checklist if doesn't exist
   if card.checklists.size == 0
@@ -35,8 +38,9 @@ module Dolma
     #Trello::Checklist.create name: "To-Do", card_id: card.id
     #say "Added checklist to card"
   #end
+
   item = Table.new(checklist.items, title: "#{card.name} (#{checklist.name})").pick
-  item.assign(card, checklist, "balvig")
+  item.assign(card, checklist, username)
 
   say "Create branch for '#{item.name}'"
 end
