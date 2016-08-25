@@ -10,16 +10,22 @@ require "highline/import"
 require "trello"
 
 module Dolma
-  #Trello.open_public_key_url
-  #Trello.open_authorization_url key: "***REMOVED***"
+
+  # Config, should be done once and stored like pt-flow
+  ask "Press enter to setup Trello for this project (will open public key url)"
+  Trello.open_public_key_url
+
+  public_key = ask("Input Developer API key")
+  Trello.open_authorization_url key: public_key
 
   Trello.configure do |config|
-    config.developer_public_key = "***REMOVED***"
-    config.member_token = "***REMOVED***"
+    config.developer_public_key = public_key
+    config.member_token = ask("Input member token")
   end
 
   username = "balvig"
 
+  # Actual flow
   `open https://trello.com/#{username}/cards` if ARGV.empty?
   url = ARGV.first || ask("Input card URL:")
   card = Card.find_by_url(url)
