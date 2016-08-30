@@ -2,7 +2,6 @@ module Dolma
   class Config
     PATH = ENV["HOME"] + "/.dolma"
 
-    require "pry"
     def initialize
       @data = load_data || {}
     end

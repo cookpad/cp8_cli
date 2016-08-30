@@ -1,4 +1,3 @@
-require "active_support/core_ext/string/inflections"
 require "colored"
 require "hirb-colors"
 require "hirb"

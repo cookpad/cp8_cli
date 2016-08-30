@@ -20,9 +20,9 @@ module Dolma
       end
 
       # add item if none exists
-      if checklist.items.size != 0
+      if checklist.items.size == 0
         say "No to-dos found"
-        title = ask("Input to-do (or leave blank to use card title)") || card.name
+        title = ask("Input to-do (leave blank to use card title):") || card.name
         item = checklist.add_item(title)
       else
         item = Table.new(checklist.items, title: "#{card.name} (#{checklist.name})").pick
