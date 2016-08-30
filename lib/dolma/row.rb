@@ -1,5 +1,3 @@
-require "colored"
-
 module Dolma
   class Row
     attr_reader :num

@@ -1,8 +1,3 @@
-require "dolma/row"
-require "hirb-colors"
-require "hirb"
-require "highline/import"
-
 module Dolma
   class Table
     include Hirb::Console
