@@ -4,6 +4,10 @@ module Dolma
       [:description, :owners]
     end
 
+    def self.new_from_json(json)
+      new Trello::Item.new(JSON.parse(json))
+    end
+
     def description
       description = name_without_mentions
       description = checkmark + description if complete?
