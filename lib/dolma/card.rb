@@ -8,7 +8,7 @@ module Dolma
 
     def find_or_create_checklist
       if checklists.size == 0
-        say "No to-do list found. Added blank"
+        Cli.say "No to-do list found. Added blank"
         Checklist.create(card: self, name: "To-Do")
       else
         checklists.first

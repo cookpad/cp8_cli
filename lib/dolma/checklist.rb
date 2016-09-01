@@ -6,11 +6,11 @@ module Dolma
 
     def select_or_create_item(card)
       if items.size == 0
-        say "No to-dos found"
+        Cli.say "No to-dos found"
         title = ask("Input to-do [#{card.name}]:").presence || card.name
         add_item(title)
       else
-        Table.new(items, title: "#{card.name} (#{name})").pick
+        Cli.table(items, title: "#{card.name} (#{name})")
       end
     end
 
