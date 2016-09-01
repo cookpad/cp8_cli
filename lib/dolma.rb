@@ -14,6 +14,8 @@ require "dolma/item"
 require "dolma/branch"
 require "dolma/repo"
 
+require "dolma/cleanup"
+
 require "dolma/main"
 
 module Dolma
