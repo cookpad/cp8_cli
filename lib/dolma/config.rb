@@ -4,13 +4,7 @@ module Dolma
 
     def initialize
       @data = load_data || {}
-    end
-
-    def configure_trello
-      Trello.configure do |config|
-        config.developer_public_key = public_key
-        config.member_token = member_token
-      end
+      configure_trello
     end
 
     def username
@@ -20,6 +14,13 @@ module Dolma
     private
 
       attr_reader :data
+
+      def configure_trello
+        Trello.configure do |config|
+          config.developer_public_key = public_key
+          config.member_token = member_token
+        end
+      end
 
       def load_data
         YAML.load(File.read(PATH))

@@ -27,18 +27,18 @@ module Dolma
       client.put("/cards/#{card.id}/checklist/#{list.id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}")
     end
 
+    def name_without_mentions
+      str = name
+      mentions.each do |mention|
+        str = str.gsub(mention, "")
+      end
+      str
+    end
+
     private
 
       def mentions
         name.scan(/(@\S+)/).flatten
-      end
-
-      def name_without_mentions
-        str = name
-        mentions.each do |mention|
-          str = str.gsub(mention, "")
-        end
-        str
       end
 
       def checkmark

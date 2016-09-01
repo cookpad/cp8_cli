@@ -6,8 +6,19 @@ module Dolma
       new Trello::Card.find(id)
     end
 
-    def checklists
-      super.map { |obj| Checklist.new(obj) }
+    def find_or_create_checklist
+      if checklists.size == 0
+        say "No to-do list found. Added blank"
+        Checklist.create(card: self, name: "To-Do")
+      else
+        checklists.first
+      end
     end
+
+    private
+
+      def checklists
+        super.map { |obj| Checklist.new(obj) }
+      end
   end
 end

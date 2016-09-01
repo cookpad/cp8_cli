@@ -16,6 +16,9 @@ require "dolma/item"
 require "dolma/table"
 require "dolma/row"
 
+require "dolma/branch"
+require "dolma/repo"
+
 require "dolma/ui"
 
 module Dolma
