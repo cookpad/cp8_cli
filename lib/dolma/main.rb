@@ -6,7 +6,7 @@ module Dolma
 
     def start
       url = ARGV.first || ask_for_url
-      card = Card.find_by_url(url) || error("Card not found")
+      card = Card.find_by_url(url) || Cli.error("Card not found")
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item(card)
       item.assign(card, checklist, config.username)
@@ -14,7 +14,8 @@ module Dolma
     end
 
     def finish
-
+      Branch.current.push
+      Branch.current.open_pull_request
     end
 
     def cleanup

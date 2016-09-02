@@ -27,6 +27,10 @@ module Dolma
       client.put("/cards/#{card.id}/checklist/#{list.id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}")
     end
 
+    def to_param
+      name_without_mentions.parameterize[0..50]
+    end
+
     def name_without_mentions
       str = name
       mentions.each do |mention|
