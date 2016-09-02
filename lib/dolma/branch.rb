@@ -14,7 +14,7 @@ module Dolma
     end
 
     def self.from_item(item)
-      new("#{current.target}.#{item.to_param}.#{item.id}")
+      new("#{current.target}.#{item.to_param}.#{item.checklist.id}-#{item.id}")
     end
 
     def checkout
@@ -55,16 +55,20 @@ module Dolma
         target != 'master'
       end
 
-      def checklist_id
+      def ids
+        name.split(".").last.split("-")
+      end
 
+      def checklist_id
+        ids.first
       end
 
       def item_id
-        name[/\d+$/] || ''
+        ids.last
       end
 
       def current_item
-        Item.find(item_id)
+        Item.find(checklist_id, item_id)
       end
   end
 end

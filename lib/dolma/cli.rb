@@ -34,8 +34,8 @@ module Dolma
       @highline.say(message.bold)
     end
 
-    def self.error(*args)
-      @highline.error(*args)
+    def self.error(message)
+      @highline.say(message.red.bold)
       exit(false)
     end
 

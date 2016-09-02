@@ -1,9 +1,13 @@
 module Dolma
   class Card < Base
+    def self.find(id)
+      new Trello::Card.find(id)
+    end
+
     def self.find_by_url(url)
       return if url.blank?
       id = url.scan(/\/c\/(.+)\//).flatten.first
-      new Trello::Card.find(id)
+      find(id)
     end
 
     def find_or_create_checklist
