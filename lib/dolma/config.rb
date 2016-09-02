@@ -39,7 +39,7 @@ module Dolma
       def configure_public_key
         Cli.ask "Press enter to setup Trello for this project (will open public key url)"
         Trello.open_public_key_url
-        save :public_key, ask("Input Developer API key")
+        save :public_key, Cli.ask("Input Developer API key")
       end
 
       def configure_member_token
