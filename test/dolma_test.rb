@@ -15,6 +15,7 @@ module Dolma
       cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
       cli.expect :table, nil, [Array]
       cli.expect :ask, 1, ["Pick one:", Integer]
+      cli.expect :run, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       dolma.start("https://trello.com/c/CARD_ID/2-trello-flow")
@@ -24,6 +25,13 @@ module Dolma
       assert_requested checklists_endpoint, at_least_times: 1
       assert_requested checklist_endpoint, at_least_times: 1
       assert_requested update_item_endpoint, at_least_times: 1
+    end
+
+    def test_git_finish
+      cli.expect :run, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
+
+      dolma.finish
     end
 
     private

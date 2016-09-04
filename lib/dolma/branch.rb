@@ -10,7 +10,7 @@ module Dolma
     end
 
     def self.current
-      new(`git rev-parse --abbrev-ref HEAD`.strip)
+      new Cli.run("git rev-parse --abbrev-ref HEAD")
     end
 
     def self.from_item(item)

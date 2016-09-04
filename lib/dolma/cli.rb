@@ -46,7 +46,7 @@ module Dolma
 
     def run(command)
       title(command)
-      error "Error running: #{command}" unless system(command)
+      `#{command}`.strip.presence || error("Error running: #{command}")
     end
 
     private

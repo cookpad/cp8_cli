@@ -5,7 +5,7 @@ module Dolma
     end
 
     def self.find(checklist_id, item_id)
-
+      raise "Item.find not implemented"
     end
 
     def self.new_from_json(json)

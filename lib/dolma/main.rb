@@ -13,8 +13,9 @@ module Dolma
     end
 
     def finish
-      Branch.current.push
-      Branch.current.open_pull_request
+      branch = Branch.current
+      branch.push
+      branch.open_pull_request
     end
 
     def cleanup
