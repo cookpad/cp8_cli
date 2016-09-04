@@ -8,7 +8,7 @@ module Dolma
   class Cli
     class << self
       extend Forwardable
-      def_delegators :client, :table, :open, :say, :success, :ask, :title, :error, :run
+      def_delegators :client, :table, :open_url, :say, :success, :ask, :title, :error, :run
       attr_accessor :client
     end
 
@@ -18,7 +18,7 @@ module Dolma
       puts Hirb::Helpers::AutoTable.render(items, unicode: true)
     end
 
-    def open(url)
+    def open_url(url)
       return title(url) if ENV['BROWSER'] == 'echo'
       run "open \"#{url}\""
     end

@@ -1,4 +1,5 @@
 require "active_support/core_ext/string/inflections"
+require "dolma/repo"
 
 module Dolma
   class Branch
@@ -26,7 +27,7 @@ module Dolma
     end
 
     def open_pull_request
-      Cli.open pull_request_url
+      Cli.open_url pull_request_url
     end
 
     def target
@@ -37,7 +38,7 @@ module Dolma
 
       def pull_request_url
         title = URI.escape "#{pull_request_prefix} #{pull_request_title}".strip
-        repo.url + "/compare/#{target}...#{branch}?expand=1&title=#{title}"
+        repo.url + "/compare/#{target}...#{name}?expand=1&title=#{title}"
       end
 
       def pull_request_title
@@ -69,6 +70,10 @@ module Dolma
 
       def current_item
         Item.find(checklist_id, item_id)
+      end
+
+      def repo
+        @_repo ||= Repo.new
       end
   end
 end

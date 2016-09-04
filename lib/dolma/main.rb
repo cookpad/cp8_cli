@@ -27,7 +27,7 @@ module Dolma
       attr_reader :config
 
       def ask_for_url
-        Cli.open "https://trello.com/#{config.username}/cards"
+        Cli.open_url "https://trello.com/#{config.username}/cards"
         Cli.ask "Input card URL:"
       end
   end

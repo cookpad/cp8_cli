@@ -5,7 +5,7 @@ module Dolma
     end
 
     def self.find(checklist_id, item_id)
-      raise "Item.find not implemented"
+      new_from_json Trello::BasicData.client.get("/checklists/#{checklist_id}/checkItems/#{item_id}")
     end
 
     def self.new_from_json(json)
