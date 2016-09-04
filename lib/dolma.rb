@@ -1,5 +1,3 @@
-require "trello"
-
 require "dolma/version"
 
 require "dolma/cli"

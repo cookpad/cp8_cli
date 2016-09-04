@@ -24,10 +24,6 @@ module Dolma
           c.use       JSONParser
           c.adapter   Faraday.default_adapter
         end
-        #Trello.configure do |config|
-        #config.developer_public_key = public_key
-        #config.member_token = member_token
-        #end
       end
 
       def load_data
@@ -46,12 +42,12 @@ module Dolma
 
       def configure_public_key
         Cli.ask "Press enter to setup Trello for this project (will open public key url)"
-        Trello.open_public_key_url
+        Cli.open_url "https://trello.com/app-key"
         save :public_key, Cli.ask("Input Developer API key")
       end
 
       def configure_member_token
-        Trello.open_authorization_url key: public_key
+        Cli.open_url authorize_url(public_key)
         save :member_token, Cli.ask("Input member token")
       end
 
@@ -60,6 +56,18 @@ module Dolma
         File.new(PATH, "w") unless File.exists?(PATH)
         File.open(PATH, "w") { |f| f.write(data.to_yaml) }
         value
+      end
+
+      def authorize_url(key)
+        params = {}
+        params[:key] = key
+        params[:name] = "Trello-Flow"
+        params[:scope] = "read,write,account"
+        params[:expiration] = "never"
+        params[:response_type] = "token"
+        uri = Addressable::URI.parse "https://trello.com/1/authorize"
+        uri.query_values = params
+        uri
       end
   end
 end

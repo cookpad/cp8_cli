@@ -31,7 +31,7 @@ module Dolma
       highline.say(message.green.bold)
     end
 
-    def ask(message, type)
+    def ask(message, type = nil)
       highline.ask(message, type)
     end
 
