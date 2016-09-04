@@ -1,3 +1,5 @@
+require "dolma/table"
+
 module Dolma
   class Checklist < Base
     def self.find(id)
@@ -18,12 +20,15 @@ module Dolma
         title = Cli.ask("Input to-do [#{card.name}]:").presence || card.name
         add_item(title)
       else
-        Cli.table(items, title: "#{card.name} (#{name})")
+        Table.new(items).pick("#{card.name} (#{name})")
       end
     end
 
     def items
-      super.map { |obj| Item.new(obj) }
+      super.map do |obj|
+        obj.attributes[:checklist_id] = id
+        Item.new(obj)
+      end
     end
 
     private

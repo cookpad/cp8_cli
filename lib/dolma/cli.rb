@@ -1,47 +1,58 @@
 require "colored"
+require "forwardable"
 require "highline"
-require "dolma/cli/table"
+require "hirb-colors"
+require "hirb"
 
 module Dolma
-  module Cli
-    @highline = HighLine.new
-
-    def self.table(items, title:)
-      Table.new(items, title: title).pick
+  class Cli
+    class << self
+      extend Forwardable
+      def_delegators :client, :table, :open, :say, :success, :ask, :title, :error, :run
+      attr_accessor :client
     end
 
-    def self.open(url)
-      if ENV['BROWSER'] == 'echo'
-        title url
-      else
-        run "open \"#{url}\""
-      end
+    self.client = Cli.new
+
+    def table(items)
+      puts Hirb::Helpers::AutoTable.render(items, unicode: true)
     end
 
-    def self.say(*args)
-      @highline.say(*args)
+    def open(url)
+      return title(url) if ENV['BROWSER'] == 'echo'
+      run "open \"#{url}\""
     end
 
-    def self.success(message)
-      @highline.say(message.green.bold)
+    def say(*args)
+      highline.say(*args)
     end
 
-    def self.ask(*args)
-      @highline.ask(*args)
+    def success(message)
+      highline.say(message.green.bold)
     end
 
-    def self.title(message)
-      @highline.say(message.bold)
+    def ask(message, type)
+      highline.ask(message, type)
     end
 
-    def self.error(message)
-      @highline.say(message.red.bold)
+    def title(message)
+      highline.say(message.bold)
+    end
+
+    def error(message)
+      say(message.red.bold)
       exit(false)
     end
 
-    def self.run(command)
+    def run(command)
       title(command)
       error "Error running: #{command}" unless system(command)
     end
+
+    private
+
+      def highline
+        @_highline ||= HighLine.new
+      end
   end
 end

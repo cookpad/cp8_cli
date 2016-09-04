@@ -16,5 +16,5 @@ WebMock.stub_request(:any, /.*/).to_return do |request|
 end
 
 def stub_trello(method, path)
-  stub_request(:get, "https://api.trello.com:443/1#{path}").with(query: { key: "PUBLIC_KEY", token: "MEMBER_TOKEN"})
+  stub_request(method, "https://api.trello.com:443/1#{path}").with(query: { key: "PUBLIC_KEY", token: "MEMBER_TOKEN"})
 end

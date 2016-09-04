@@ -48,7 +48,7 @@ module Dolma
       mentions.each do |mention|
         str = str.gsub(mention, "")
       end
-      str
+      str.strip
     end
 
     private

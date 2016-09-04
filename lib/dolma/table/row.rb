@@ -1,5 +1,5 @@
 module Dolma
-  module Cli
+  class Table
     class Row
       attr_reader :num
 
