@@ -4,8 +4,8 @@ module Dolma
       @config = config
     end
 
-    def start(url = ask_for_url)
-      card = Card.find_by_url(url) || Cli.error("Card not found")
+    def start(url)
+      card = Card.find_by_url(url) || ask_for_url
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item
       item.assign(config.username)
@@ -28,7 +28,7 @@ module Dolma
 
       def ask_for_url
         Cli.open_url "https://trello.com/#{config.username}/cards"
-        Cli.ask "Input card URL:"
+        Cli.error("Usage: git start <CARD URL>")
       end
   end
 end

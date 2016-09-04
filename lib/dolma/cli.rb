@@ -20,7 +20,7 @@ module Dolma
 
     def open_url(url)
       return title(url) if ENV['BROWSER'] == 'echo'
-      run "open \"#{url}\""
+      `open \"#{url}\"`
     end
 
     def say(*args)
