@@ -1,11 +1,23 @@
 require 'test_helper'
 
-class DolmaTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Dolma::VERSION
-  end
+module Dolma
+  class DolmaTest < Minitest::Test
+    def test_git_start
+      card_endpoint = stub_trello(:get, "/cards/iYsmSmXA").to_return_json(id: "iYsmSmXA", name: "Trello Flow")
+      checklists_endpoint = stub_trello(:get, "/cards/iYsmSmXA/checklists").
+        with(query: { filter: "all" }).
+        to_return_json([{ id: "CHECKLIST_ID", name: "To-Do", checkItems: [] }])
 
-  def test_it_does_something_useful
-    assert false
+      dolma.start("https://trello.com/c/iYsmSmXA/2-trello-flow")
+
+      assert_requested card_endpoint
+      assert_request checklists_endpoint
+    end
+
+    private
+
+      def dolma
+        @_dolma ||= Main.new Config.new(public_key: "PUBLIC_KEY", member_token: "MEMBER_TOKEN")
+      end
   end
 end

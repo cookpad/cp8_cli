@@ -1,11 +1,10 @@
 module Dolma
   class Main
-    def initialize
-      @config = Config.new
+    def initialize(config = Config.new)
+      @config = config
     end
 
-    def start
-      url = ARGV.first || ask_for_url
+    def start(url = ask_for_url)
       card = Card.find_by_url(url) || Cli.error("Card not found")
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item

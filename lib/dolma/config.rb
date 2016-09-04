@@ -2,8 +2,8 @@ module Dolma
   class Config
     PATH = ENV["HOME"] + "/.dolma"
 
-    def initialize
-      @data = load_data || {}
+    def initialize(data = load_data || {})
+      @data = data
       configure_trello
     end
 
