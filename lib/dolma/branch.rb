@@ -15,7 +15,7 @@ module Dolma
     end
 
     def self.from_item(item)
-      new("#{current.target}.#{item.to_param}.#{item.checklist.id}-#{item.id}")
+      new("#{current.target}.#{item.to_param}.#{item.checklist_id}-#{item.id}")
     end
 
     def checkout

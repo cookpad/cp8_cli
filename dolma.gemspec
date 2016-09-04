@@ -40,4 +40,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "hirb-unicode"
   spec.add_dependency "launchy"
   spec.add_dependency "ruby-trello"
+  spec.add_dependency "spyke"
 end

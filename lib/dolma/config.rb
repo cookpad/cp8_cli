@@ -1,10 +1,13 @@
+require "spyke"
+require "dolma/json_parser"
+
 module Dolma
   class Config
     PATH = ENV["HOME"] + "/.dolma"
 
     def initialize(data = load_data || {})
       @data = data
-      configure_trello
+      configure_api
     end
 
     def username
@@ -15,11 +18,16 @@ module Dolma
 
       attr_reader :data
 
-      def configure_trello
-        Trello.configure do |config|
-          config.developer_public_key = public_key
-          config.member_token = member_token
+      def configure_api
+        Spyke::Base.connection = Faraday.new(url: "https://api.trello.com/1", params: { key: public_key, token: member_token }) do |c|
+          c.request   :json
+          c.use       JSONParser
+          c.adapter   Faraday.default_adapter
         end
+        #Trello.configure do |config|
+        #config.developer_public_key = public_key
+        #config.member_token = member_token
+        #end
       end
 
       def load_data

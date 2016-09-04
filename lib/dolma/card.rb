@@ -1,8 +1,6 @@
 module Dolma
-  class Card < Base
-    def self.find(id)
-      new Trello::Card.find(id)
-    end
+  class Card < Spyke::Base
+    has_many :checklists
 
     def self.find_by_url(url)
       return if url.blank?
@@ -11,18 +9,7 @@ module Dolma
     end
 
     def find_or_create_checklist
-      if checklists.size == 0
-        Cli.say "No to-do list found. Added blank"
-        Checklist.create(card: self, name: "To-Do")
-      else
-        checklists.first
-      end
+      checklists.first || Checklist.create(idCard: id, name: "To-Do")
     end
-
-    private
-
-      def checklists
-        super.map { |obj| Checklist.new(obj) }
-      end
   end
 end

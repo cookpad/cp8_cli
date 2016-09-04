@@ -1,29 +1,22 @@
 module Dolma
-  class Item < Base
+  class Item < Spyke::Base
+    include_root_in_json false
+    delegate :card_id, to: :checklist
+
     def self.fields
       [:description, :owners]
     end
 
     def self.find(checklist_id, item_id)
-      new_from_json Trello::BasicData.client.get("/checklists/#{checklist_id}/checkItems/#{item_id}")
-    end
-
-    def self.new_from_json(json)
-      new Trello::Item.new(JSON.parse(json))
-    end
-
-    def card
-      @_card ||= checklist.card
-    end
-
-    def checklist
-      @_checklist ||= Checklist.find checklist_id
+      with("checklists/#{checklist_id}/checkItems/#{item_id}").find_one
     end
 
     def description
-      description = name_without_mentions
-      description = checkmark + description if complete?
-      description
+      if complete?
+        checkmark + name_without_mentions
+      else
+        name_without_mentions
+      end
     end
 
     def owners
@@ -36,33 +29,37 @@ module Dolma
 
     def assign(owner)
       return if mentions.include?(owner)
-      client.put("/cards/#{card.id}/checklist/#{checklist.id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}")
+      self.class.request :put, "cards/#{card_id}/checklist/#{checklist_id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}"
     end
 
     def to_param
       name_without_mentions.parameterize[0..50]
     end
 
-    def name_without_mentions
-      str = name
-      mentions.each do |mention|
-        str = str.gsub(mention, "")
-      end
-      str.strip
+    def checklist_id
+      attributes[:checklist_id]
     end
 
     private
 
-      def checklist_id
-        attributes[:checklist_id]
+      def checklist
+        @_checklist ||= Checklist.find checklist_id
       end
 
       def mentions
         name.scan(/(@\S+)/).flatten
       end
 
+      def name_without_mentions
+        (name.split - mentions).join(" ").strip
+      end
+
       def checkmark
         "\u2713 "
+      end
+
+      def complete?
+        state == "complete"
       end
   end
 end
