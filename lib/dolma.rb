@@ -4,11 +4,6 @@ require "dolma/cli"
 
 require "dolma/config"
 
-require "dolma/base"
-require "dolma/card"
-require "dolma/checklist"
-require "dolma/item"
-
 require "dolma/branch"
 
 require "dolma/cleanup"

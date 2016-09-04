@@ -69,7 +69,7 @@ module Dolma
       end
 
       def current_item
-        Item.find(checklist_id, item_id)
+        Api::Item.find(checklist_id, item_id)
       end
 
       def repo

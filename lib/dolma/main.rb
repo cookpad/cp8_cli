@@ -5,7 +5,7 @@ module Dolma
     end
 
     def start(url)
-      card = Card.find_by_url(url) || ask_for_url
+      card = Api::Card.find_by_url(url) || ask_for_url
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item
       item.assign(config.username)

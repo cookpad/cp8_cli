@@ -88,7 +88,7 @@ module Dolma
       end
 
       def dolma
-        @_dolma ||= Main.new Config.new(public_key: "PUBLIC_KEY", member_token: "MEMBER_TOKEN")
+        @_dolma ||= Main.new Config.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN")
       end
   end
 end
