@@ -50,15 +50,7 @@ module Dolma
       end
 
       def authorize_url(key)
-        params = {}
-        params[:key] = key
-        params[:name] = "Trello-Flow"
-        params[:scope] = "read,write,account"
-        params[:expiration] = "never"
-        params[:response_type] = "token"
-        uri = Addressable::URI.parse "https://trello.com/1/authorize"
-        uri.query_values = params
-        uri
+        "https://trello.com/1/authorize?key=#{key}&name=Trello-Flow&scope=read,write,account&expiration=never&response_type=token"
       end
   end
 end
