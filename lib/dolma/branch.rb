@@ -42,7 +42,7 @@ module Dolma
       end
 
       def pull_request_title
-        current_item.name.gsub('"',"'") + " [Delivers ##{item_id}]"
+        current_item.name_without_mentions.gsub('"',"'") + " [Delivers ##{item_id}]"
       end
 
       def pull_request_prefix

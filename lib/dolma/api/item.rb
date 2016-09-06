@@ -40,6 +40,10 @@ module Dolma
         attributes[:checklist_id]
       end
 
+      def name_without_mentions
+        (name.split - mentions).join(" ").strip
+      end
+
       private
 
         def checklist
@@ -48,10 +52,6 @@ module Dolma
 
         def mentions
           name.scan(/(@\S+)/).flatten
-        end
-
-        def name_without_mentions
-          (name.split - mentions).join(" ").strip
         end
 
         def checkmark
