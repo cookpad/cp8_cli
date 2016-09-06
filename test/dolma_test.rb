@@ -15,7 +15,7 @@ module Dolma
       cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
       cli.expect :table, nil, [Array]
       cli.expect :ask, 1, ["Pick one:", Integer]
-      cli.expect :run, "master", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       dolma.start(card_url)
@@ -37,7 +37,7 @@ module Dolma
 
       cli.expect :say, nil, ["No to-dos found"]
       cli.expect :ask, "ITEM TASK", ["Input to-do [CARD NAME]:"]
-      cli.expect :run, "master", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       dolma.start(card_url)
@@ -54,9 +54,9 @@ module Dolma
     def test_git_finish
       item_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
 
-      cli.expect :run, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
-      cli.expect :run, "git@github.com:balvig/dolma.git", ["git config --get remote.origin.url"]
+      cli.expect :read, "git@github.com:balvig/dolma.git", ["git config --get remote.origin.url"]
       cli.expect :open_url, nil, ["https://github.com/balvig/dolma/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK%20@owner%20[Delivers%20%23ITEM_ID]"]
 
       dolma.finish

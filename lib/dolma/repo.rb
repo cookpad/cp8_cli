@@ -15,7 +15,7 @@ module Dolma
     private
 
       def path
-        @_path ||= Cli.run("git config --get remote.origin.url").match(/github.com[:\/](\S+\/\S+)\.git/)[1]
+        @_path ||= Cli.read("git config --get remote.origin.url").match(/github.com[:\/](\S+\/\S+)\.git/)[1]
       end
   end
 end

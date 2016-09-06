@@ -8,7 +8,7 @@ module Dolma
   class Cli
     class << self
       extend Forwardable
-      def_delegators :client, :table, :open_url, :say, :success, :ask, :title, :error, :run
+      def_delegators :client, :table, :open_url, :say, :success, :ask, :title, :error, :run, :read
       attr_accessor :client
     end
 
@@ -46,7 +46,11 @@ module Dolma
 
     def run(command)
       title(command)
-      `#{command}`.strip.presence || error("Error running: #{command}")
+      system(command) || error("Error running: #{command}")
+    end
+
+    def read(comman)
+      `#{command}`.strip.presence
     end
 
     private
