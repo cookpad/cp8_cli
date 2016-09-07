@@ -49,7 +49,7 @@ module Dolma
       system(command) || error("Error running: #{command}")
     end
 
-    def read(comman)
+    def read(command)
       `#{command}`.strip.presence
     end
 
