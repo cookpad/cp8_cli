@@ -51,6 +51,18 @@ module Dolma
       assert_requested update_item_endpoint
     end
 
+    def test_git_open
+      stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
+      stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
+      stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
+
+      cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :open_url, nil, ["https://trello.com/c/CARD_ID"]
+
+      dolma.open
+      cli.verify
+    end
+
     def test_git_finish
       item_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
 

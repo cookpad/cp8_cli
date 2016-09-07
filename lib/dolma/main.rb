@@ -12,6 +12,10 @@ module Dolma
       Branch.from_item(item).checkout
     end
 
+    def open
+      Branch.current.open_trello_card
+    end
+
     def finish
       branch = Branch.current
       branch.push

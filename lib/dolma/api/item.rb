@@ -1,7 +1,7 @@
 module Dolma
   module Api
     class Item < Base
-      delegate :card_id, to: :checklist
+      delegate :card, :card_id, to: :checklist
 
       def self.fields
         [:description, :owners]
@@ -36,10 +36,6 @@ module Dolma
         name_without_mentions.parameterize[0..50]
       end
 
-      def checklist_id
-        attributes[:checklist_id]
-      end
-
       def name_without_mentions
         (name.split - mentions).join(" ").strip
       end
@@ -48,6 +44,10 @@ module Dolma
 
         def checklist
           @_checklist ||= Checklist.find checklist_id
+        end
+
+        def checklist_id
+          attributes[:idChecklist]
         end
 
         def mentions

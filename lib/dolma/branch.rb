@@ -3,7 +3,6 @@ require "dolma/repo"
 
 module Dolma
   class Branch
-
     attr_accessor :name
 
     def initialize(name)
@@ -28,6 +27,10 @@ module Dolma
 
     def open_pull_request
       Cli.open_url pull_request_url
+    end
+
+    def open_trello_card
+      Cli.open_url current_item.card.url
     end
 
     def target

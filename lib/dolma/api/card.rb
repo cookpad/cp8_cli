@@ -12,6 +12,10 @@ module Dolma
       def find_or_create_checklist
         checklists.first || Checklist.create(idCard: id, name: "To-Do")
       end
+
+      def url
+        "https://trello.com/c/#{id}"
+      end
     end
   end
 end
