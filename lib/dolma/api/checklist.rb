@@ -6,6 +6,10 @@ module Dolma
       belongs_to :card
       #has_many :items, uri: "checklists/:checklist_id/checkItems"
 
+      def self.fields
+        [:name]
+      end
+
       def select_or_create_item
         if items.none?
           Cli.say "No to-dos found"

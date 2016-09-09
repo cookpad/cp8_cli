@@ -4,8 +4,8 @@ module Dolma
       @config = config
     end
 
-    def start(url)
-      card = Api::Card.find_by_url(url) || ask_for_url
+    def start(input)
+      card = Api::Card.find_by_url(input) #|| Table.new(Api::Card.for(config.username)).pick
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item
       item.assign(config.username)
