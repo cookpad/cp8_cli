@@ -45,11 +45,15 @@ module Dolma
 
       def pull_request_url
         title = URI.escape "#{pull_request_prefix} #{pull_request_title}".strip
-        repo.url + "/compare/#{target}...#{name}?expand=1&title=#{title}"
+        repo.url + "/compare/#{target}...#{name}?expand=1&title=#{title}&body=#{pull_request_body}"
       end
 
       def pull_request_title
         current_item.name_without_mentions.gsub('"',"'") + " [Delivers ##{item_id}]"
+      end
+
+      def pull_request_body
+        "Trello: #{current_item.card.url}"
       end
 
       def pull_request_prefix

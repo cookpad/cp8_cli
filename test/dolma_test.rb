@@ -97,6 +97,7 @@ module Dolma
     end
 
     def test_git_finish
+      card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
       checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
       item_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/state").with(body: { value: "complete" })
@@ -104,7 +105,7 @@ module Dolma
       cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
       cli.expect :read, "git@github.com:balvig/dolma.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/dolma/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK%20[Delivers%20%23ITEM_ID]"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/dolma/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK%20[Delivers%20%23ITEM_ID]&body=Trello: #{card_url}"]
 
       dolma.finish
 
