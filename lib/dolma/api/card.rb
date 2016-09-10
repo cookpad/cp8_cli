@@ -18,13 +18,7 @@ module Dolma
       end
 
       def find_or_create_checklist
-        if checklists.size > 1
-          Table.new(checklists).pick
-        elsif checklists.none?
-          Checklist.create(idCard: id, name: "To-Do")
-        else
-          checklists.first
-        end
+        Table.new(checklists).pick || Checklist.create(idCard: id, name: "To-Do")
       end
 
       def url

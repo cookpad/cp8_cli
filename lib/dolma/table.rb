@@ -3,10 +3,12 @@ require "dolma/table/row"
 module Dolma
   class Table
     def initialize(records)
-      @records = records
+      @records = records.to_a
     end
 
     def pick(title = nil)
+      return if @records.none?
+      return @records.first if @records.one?
       Cli.title title if title
       render_table
       index = Cli.ask("Pick one:", Integer)
