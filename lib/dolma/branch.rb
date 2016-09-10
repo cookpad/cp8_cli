@@ -1,10 +1,8 @@
 require "active_support/core_ext/string/inflections"
-require "dolma/repo"
+require "dolma/pull_request"
 
 module Dolma
   class Branch
-    attr_accessor :name
-
     def initialize(name)
       @name = name
     end
@@ -26,7 +24,7 @@ module Dolma
     end
 
     def open_pull_request
-      Cli.open_url pull_request_url
+      PullRequest.new(current_item, from: name, target: target).open
     end
 
     def complete_current_item
@@ -43,29 +41,7 @@ module Dolma
 
     private
 
-      def pull_request_url
-        title = URI.escape "#{pull_request_prefix} #{pull_request_title}".strip
-        repo.url + "/compare/#{target}...#{name}?expand=1&title=#{title}&body=#{pull_request_body}"
-      end
-
-      def pull_request_title
-        current_item.name_without_mentions.gsub('"',"'") + " [Delivers ##{item_id}]"
-      end
-
-      def pull_request_body
-        "Trello: #{current_item.card.url}"
-      end
-
-      def pull_request_prefix
-        prefixes = []
-        # prefixes << "[WIP]" if @options[:wip]
-        prefixes << "[#{target.titleize}]" if release_branch?
-        prefixes.join(" ")
-      end
-
-      def release_branch?
-        target != 'master'
-      end
+      attr_reader :name
 
       def ids
         name.split(".").last.split("-")
@@ -81,10 +57,6 @@ module Dolma
 
       def current_item
         @_current_item ||= Api::Item.find(checklist_id, item_id)
-      end
-
-      def repo
-        @_repo ||= Repo.new
       end
   end
 end
