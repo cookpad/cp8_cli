@@ -32,6 +32,10 @@ module Dolma
         self.class.request :put, "cards/#{card_id}/checklist/#{checklist_id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}"
       end
 
+      def complete
+        self.class.request :put, "cards/#{card_id}/checklist/#{checklist_id}/checkItem/#{id}/state", value: "complete"
+      end
+
       def to_param
         name_without_mentions.parameterize[0..50]
       end

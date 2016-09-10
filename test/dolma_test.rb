@@ -56,6 +56,10 @@ module Dolma
       #cli.verify
     #end
 
+    #def test_git_start_adding_new_item
+
+    #end
+
     def test_git_start_card_with_no_checklists
       card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
       checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([])
@@ -93,7 +97,9 @@ module Dolma
     end
 
     def test_git_finish
+      checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
       item_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
+      update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/state").with(body: { value: "complete" })
 
       cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
@@ -104,6 +110,7 @@ module Dolma
 
       cli.verify
       assert_requested item_endpoint
+      assert_requested update_item_endpoint
     end
 
     private

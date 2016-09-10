@@ -29,6 +29,10 @@ module Dolma
       Cli.open_url pull_request_url
     end
 
+    def complete_current_item
+      current_item.complete
+    end
+
     def open_trello_card
       Cli.open_url current_item.card.url
     end
@@ -72,7 +76,7 @@ module Dolma
       end
 
       def current_item
-        Api::Item.find(checklist_id, item_id)
+        @_current_item ||= Api::Item.find(checklist_id, item_id)
       end
 
       def repo

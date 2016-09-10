@@ -20,6 +20,7 @@ module Dolma
       branch = Branch.current
       branch.push
       branch.open_pull_request
+      branch.complete_current_item
     end
 
     def cleanup
