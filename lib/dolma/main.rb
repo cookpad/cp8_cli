@@ -5,7 +5,7 @@ module Dolma
     end
 
     def start(input)
-      card = Api::Card.find_by_url(input) #|| Table.new(Api::Card.for(config.username)).pick
+      card = Api::Card.find_by_url(input) || Table.new(Api::Card.for(config.username)).pick
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item
       item.assign(config.username)
@@ -30,10 +30,5 @@ module Dolma
     private
 
       attr_reader :config
-
-      def ask_for_url
-        Cli.open_url "https://trello.com/#{config.username}/cards"
-        Cli.error("Usage: git start <CARD URL>")
-      end
   end
 end

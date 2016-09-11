@@ -27,26 +27,28 @@ module Dolma
       assert_requested update_item_endpoint
     end
 
-    #def test_git_start_without_url
-      #card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
-      #checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([checklist])
-      #checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
-      #update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
+    def test_git_start_without_url
+      my_cards_endpoint = stub_trello(:get, "/members/balvig/cards/open").to_return_json([card])
+      card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
+      checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([checklist])
+      checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
+      update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
 
-      #cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
-      #cli.expect :table, nil, [Array]
-      #cli.expect :ask, 1, ["Pick one:", Integer]
-      #cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      #cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
+      cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
+      cli.expect :table, nil, [Array]
+      cli.expect :ask, 1, ["Pick one:", Integer]
+      cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
-      #dolma.start
+      dolma.start(nil)
 
-      #cli.verify
-      #assert_requested card_endpoint, at_least_times: 1
-      #assert_requested checklists_endpoint
-      #assert_requested checklist_endpoint
-      #assert_requested update_item_endpoint
-    #end
+      cli.verify
+      assert_requested my_cards_endpoint
+      assert_requested card_endpoint, at_least_times: 1
+      assert_requested checklists_endpoint
+      assert_requested checklist_endpoint
+      assert_requested update_item_endpoint
+    end
 
     #def test_git_start_arbitrary_story
       #cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]

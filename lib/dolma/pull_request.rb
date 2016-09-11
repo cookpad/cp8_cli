@@ -36,7 +36,7 @@ module Dolma
       end
 
       def release_branch?
-        target != 'master'
+        target != "master"
       end
 
       def title_with_prefixes
