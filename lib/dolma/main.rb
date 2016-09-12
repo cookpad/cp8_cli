@@ -13,7 +13,7 @@ module Dolma
     end
 
     def open
-      Branch.current.open_trello_card
+      Branch.current.open_trello(config.username)
     end
 
     def finish

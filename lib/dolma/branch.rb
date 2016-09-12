@@ -31,8 +31,12 @@ module Dolma
       current_item.complete
     end
 
-    def open_trello_card
-      Cli.open_url current_item.card.url
+    def open_trello(username)
+      if current_item
+        Cli.open_url current_item.card.url
+      else
+        Cli.open_url "https://trello.com/#{username}/cards"
+      end
     end
 
     def target
@@ -52,11 +56,11 @@ module Dolma
       end
 
       def item_id
-        ids.last
+        ids.last if ids.size == 2
       end
 
       def current_item
-        @_current_item ||= Api::Item.find(checklist_id, item_id)
+        @_current_item ||= Api::Item.find(checklist_id, item_id) if item_id
       end
   end
 end
