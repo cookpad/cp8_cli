@@ -26,11 +26,11 @@ module Dolma
       end
 
       def remove_fully_merged_remote_branches
-        Cli.run "git branch -r --merged origin/#{target} | sed 's/ *origin\\///' | grep '#{filter}' | xargs -I% git push origin :%"
+        Cli.run "git branch -r --merged origin/#{target} | sed 's/ *origin\\///' | grep '#{filter}'" | xargs -I% git push origin :%"
       end
 
       def filter
-        "^ *#{target}.\\+[0-9]\\+$"
+        "^ *#{target}.+.+$"
       end
   end
 end
