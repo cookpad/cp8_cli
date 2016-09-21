@@ -3,7 +3,7 @@ require "dolma/table/row"
 module Dolma
   class Table
     def initialize(records)
-      @records = records.to_a
+      @records = records.to_a.sort_by(&:position)
     end
 
     def pick(title = nil)

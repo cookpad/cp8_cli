@@ -17,6 +17,10 @@ module Dolma
           c.adapter   Faraday.default_adapter
         end
       end
+
+      def position
+        self[:pos].to_f
+      end
     end
   end
 end
