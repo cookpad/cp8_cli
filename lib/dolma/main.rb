@@ -5,11 +5,13 @@ module Dolma
     end
 
     def start(input)
-      card = Api::Card.find_by_url(input) || Table.new(Api::Card.for(config.username)).pick
-      checklist = card.find_or_create_checklist
-      item = checklist.select_or_create_item
-      item.assign(config.username)
-      Branch.from_item(item).checkout
+      if input.to_s.start_with?("http")
+        start_with_url(input)
+      elsif input.present?
+        start_new_item(input)
+      else
+        start_blank
+      end
     end
 
     def open
@@ -28,6 +30,30 @@ module Dolma
     end
 
     private
+
+      def start_with_url(url)
+        card = Api::Card.find_by_url(url)
+        checklist = card.find_or_create_checklist
+        item = checklist.select_or_create_item
+        item.assign(config.username)
+        Branch.from_item(item).checkout
+      end
+
+      def start_new_item(name)
+        card = Table.new(Api::Card.for(config.username)).pick
+        checklist = card.find_or_create_checklist
+        item = checklist.add_item(name)
+        item.assign(config.username)
+        Branch.from_item(item).checkout
+      end
+
+      def start_blank
+        card = Table.new(Api::Card.for(config.username)).pick
+        checklist = card.find_or_create_checklist
+        item = checklist.select_or_create_item
+        item.assign(config.username)
+        Branch.from_item(item).checkout
+      end
 
       attr_reader :config
   end

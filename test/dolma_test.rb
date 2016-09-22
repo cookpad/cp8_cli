@@ -67,7 +67,7 @@ module Dolma
       checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([])
       create_checklist_endpoint = stub_trello(:post, "/checklists").with(body: { idCard: "CARD_ID", name: "To-Do" }).to_return_json(checklist(items: []))
       checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
-      create_item_endpoint = stub_trello(:post, "/checklists/CHECKLIST_ID/checkItems").with(body: { title: "ITEM TASK" }).to_return_json(item)
+      create_item_endpoint = stub_trello(:post, "/checklists/CHECKLIST_ID/checkItems").with(body: { name: "ITEM TASK" }).to_return_json(item)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
 
       cli.expect :say, nil, ["No to-dos found"]

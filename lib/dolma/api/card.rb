@@ -8,7 +8,6 @@ module Dolma
       end
 
       def self.find_by_url(url)
-        return if url.blank?
         id = url.scan(/\/c\/(.+)\//).flatten.first
         find(id)
       end
