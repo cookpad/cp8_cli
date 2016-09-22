@@ -1,9 +1,10 @@
-require 'test_helper'
+require "test_helper"
 
 module Dolma
   class DolmaTest < Minitest::Test
     def setup
       Cli.client = cli
+      stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
     end
 
     def test_git_start
@@ -120,6 +121,10 @@ module Dolma
 
       def card_url
         "https://trello.com/c/CARD_ID/2-trello-flow"
+      end
+
+      def member
+        { id: "MEMBER_ID", username: "balvig" }
       end
 
       def card

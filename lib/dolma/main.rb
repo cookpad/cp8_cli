@@ -15,7 +15,7 @@ module Dolma
     end
 
     def open
-      Branch.current.open_trello(config.username)
+      Branch.current.open_trello(username)
     end
 
     def finish
@@ -35,26 +35,29 @@ module Dolma
         card = Api::Card.find_by_url(url)
         checklist = card.find_or_create_checklist
         item = checklist.select_or_create_item
-        item.assign(config.username)
+        item.assign(username)
         Branch.from_item(item).checkout
       end
 
       def start_new_item(name)
-        card = Table.new(Api::Card.for(config.username)).pick
+        card = Table.new(Api::Card.for(username)).pick
         checklist = card.find_or_create_checklist
         item = checklist.add_item(name)
-        item.assign(config.username)
+        item.assign(username)
         Branch.from_item(item).checkout
       end
 
       def start_blank
-        card = Table.new(Api::Card.for(config.username)).pick
+        card = Table.new(Api::Card.for(username)).pick
         checklist = card.find_or_create_checklist
         item = checklist.select_or_create_item
-        item.assign(config.username)
+        item.assign(username)
         Branch.from_item(item).checkout
       end
 
-      attr_reader :config
+
+      def username
+        @_username ||= Api::Member.current.username
+      end
   end
 end

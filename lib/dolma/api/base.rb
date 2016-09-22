@@ -6,9 +6,11 @@ module Dolma
     class Base < Spyke::Base
       require "dolma/api/card"
       require "dolma/api/checklist"
+      require "dolma/api/member"
       require "dolma/api/item"
 
       include_root_in_json false
+      cattr_accessor :token
 
       def self.configure(key:, token:)
         self.connection = Faraday.new(url: "https://api.trello.com/1", params: { key: key, token: token }) do |c|
@@ -16,6 +18,7 @@ module Dolma
           c.use       JSONParser
           c.adapter   Faraday.default_adapter
         end
+        self.token = token
       end
 
       def position

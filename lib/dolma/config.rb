@@ -9,10 +9,6 @@ module Dolma
       Api::Base.configure(key: key, token: token)
     end
 
-    def username
-      "balvig"
-    end
-
     private
 
       attr_reader :data
