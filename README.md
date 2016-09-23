@@ -1,13 +1,22 @@
 # Dolma
 
+## Installation
+
 ```
-git start # opens user cards page
-git start <card URL> # show checklist. Choosing task assigns self & creates branch
-git finish # checks off task, opens PR
+git clone https://github.com/balvig/dolma.git
+cd dolma
+bundle exec rake install
 ```
+
 ## Usage
 
-TODO: Write usage instructions here
+```
+git start # opens user cards page
+git start <card URL> # show checklist. Choosing items assigns self & creates branch
+git start "Do this" # picking a card/checklist adds and starts item
+git finish # checks off task, opens PR
+```
+
 
 ## License
 
