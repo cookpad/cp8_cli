@@ -12,7 +12,6 @@ module Dolma
 
       def select_or_create_item
         if items.none?
-          Cli.say "No to-dos found"
           item_name = Cli.ask("Input to-do [#{card.name}]:").presence || card.name
           add_item(item_name)
         else

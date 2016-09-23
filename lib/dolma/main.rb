@@ -39,14 +39,6 @@ module Dolma
         Branch.from_item(item).checkout
       end
 
-      def start_new_item(name)
-        card = Table.new(Api::Card.for(username)).pick
-        checklist = card.find_or_create_checklist
-        item = checklist.add_item(name)
-        item.assign(username)
-        Branch.from_item(item).checkout
-      end
-
       def start_blank
         card = Table.new(Api::Card.for(username)).pick
         checklist = card.find_or_create_checklist
@@ -55,6 +47,13 @@ module Dolma
         Branch.from_item(item).checkout
       end
 
+      def start_new_item(name)
+        card = Table.new(Api::Card.for(username)).pick
+        checklist = card.find_or_create_checklist
+        item = checklist.add_item(name)
+        item.assign(username)
+        Branch.from_item(item).checkout
+      end
 
       def username
         @_username ||= Api::Member.current.username
