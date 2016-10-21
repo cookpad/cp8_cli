@@ -1,7 +1,7 @@
 require "active_support/core_ext/string/inflections"
-require "dolma/pull_request"
+require "trello_flow/pull_request"
 
-module Dolma
+module TrelloFlow
   class Branch
     def initialize(name)
       @name = name

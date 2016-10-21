@@ -1,6 +1,6 @@
-require "dolma/repo"
+require "trello_flow/repo"
 
-module Dolma
+module TrelloFlow
   class PullRequest
     def initialize(item, from:, target:)
       @item = item

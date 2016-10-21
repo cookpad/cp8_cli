@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   class Cleanup
     def initialize(target)
       @target = target

@@ -4,7 +4,7 @@ require "highline"
 require "hirb-colors"
 require "hirb"
 
-module Dolma
+module TrelloFlow
   class Cli
     class << self
       extend Forwardable

@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   module Api
     class Member < Base
       def self.current

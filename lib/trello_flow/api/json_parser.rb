@@ -1,6 +1,6 @@
 require "multi_json"
 
-module Dolma
+module TrelloFlow
   module Api
     class JSONParser < Faraday::Response::Middleware
       def parse(body)

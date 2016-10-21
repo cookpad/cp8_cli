@@ -1,7 +1,7 @@
 require "test_helper"
 
-module Dolma
-  class DolmaTest < Minitest::Test
+module TrelloFlow
+  class TrelloFlowTest < Minitest::Test
     def setup
       Cli.client = cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
@@ -19,7 +19,7 @@ module Dolma
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
-      dolma.start(card_url)
+      trello_flow.start(card_url)
 
       cli.verify
       assert_requested card_endpoint, at_least_times: 1
@@ -41,7 +41,7 @@ module Dolma
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
-      dolma.start(nil)
+      trello_flow.start(nil)
 
       cli.verify
       assert_requested my_cards_endpoint
@@ -55,7 +55,7 @@ module Dolma
       #cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       #cli.expect :run, nil, ["git checkout -b master.fix-header-obscuring-body"]
 
-      #dolma.start "Fix header obscuring body"
+      #trello_flow.start "Fix header obscuring body"
       #cli.verify
     #end
 
@@ -71,12 +71,11 @@ module Dolma
       create_item_endpoint = stub_trello(:post, "/checklists/CHECKLIST_ID/checkItems").with(body: { name: "ITEM TASK" }).to_return_json(item)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
 
-      cli.expect :say, nil, ["No to-dos found"]
       cli.expect :ask, "ITEM TASK", ["Input to-do [CARD NAME]:"]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
-      dolma.start(card_url)
+      trello_flow.start(card_url)
 
       cli.verify
       assert_requested card_endpoint, at_least_times: 1
@@ -95,7 +94,7 @@ module Dolma
       cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :open_url, nil, ["https://trello.com/c/CARD_ID/2-trello-flow"]
 
-      dolma.open
+      trello_flow.open
       cli.verify
     end
 
@@ -107,10 +106,10 @@ module Dolma
 
       cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
-      cli.expect :read, "git@github.com:balvig/dolma.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/dolma/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK&body=Trello:%20#{card_url}"]
+      cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK&body=Trello:%20#{card_url}"]
 
-      dolma.finish
+      trello_flow.finish
 
       cli.verify
       assert_requested item_endpoint
@@ -143,8 +142,8 @@ module Dolma
         @_cli ||= Minitest::Mock.new
       end
 
-      def dolma
-        @_dolma ||= Main.new Config.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN")
+      def trello_flow
+        @_trello_flow ||= Main.new Config.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN")
       end
   end
 end

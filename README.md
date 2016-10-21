@@ -1,21 +1,21 @@
-# Dolma
+# trello_flow
 
 ## Installation
 
 ```bash
-git clone https://github.com/balvig/dolma.git
-cd dolma
-bundle exec rake install
+gem uninstall pt-flow dolma # if used
+gem install trello_flow
 ```
 
 ## Usage
 
 ```bash
-git start # opens user cards page
+git open # Open relevant card/all users card in browser
+git start # shows list of cards user is member of
 git start <card URL> # show checklist. Choosing items assigns self & creates branch
 git start "Do this" # picking a card/checklist adds and starts item
 git finish # checks off task, opens PR
-git open # Open relevant card/all users card in browser
+git cleanup # cleans up merged card branches
 ```
 
 

@@ -1,8 +1,8 @@
-require "dolma/api/base"
+require "trello_flow/api/base"
 
-module Dolma
+module TrelloFlow
   class Config
-    PATH = ENV["HOME"] + "/.dolma"
+    PATH = ENV["HOME"] + "/.trello_flow"
 
     def initialize(data = load_data || {})
       @data = data

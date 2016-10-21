@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   class Repo
     def user
       path.split('/').first
