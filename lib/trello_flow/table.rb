@@ -1,6 +1,6 @@
-require "dolma/table/row"
+require "trello_flow/table/row"
 
-module Dolma
+module TrelloFlow
   class Table
     def initialize(records)
       @records = records.to_a.sort_by(&:position)

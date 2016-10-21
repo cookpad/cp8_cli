@@ -1,13 +1,13 @@
 require "spyke"
-require "dolma/api/json_parser"
+require "trello_flow/api/json_parser"
 
-module Dolma
+module TrelloFlow
   module Api
     class Base < Spyke::Base
-      require "dolma/api/card"
-      require "dolma/api/checklist"
-      require "dolma/api/member"
-      require "dolma/api/item"
+      require "trello_flow/api/card"
+      require "trello_flow/api/checklist"
+      require "trello_flow/api/member"
+      require "trello_flow/api/item"
 
       include_root_in_json false
       cattr_accessor :token

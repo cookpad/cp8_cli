@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   module Api
     class Item < Base
       delegate :card, :card_id, to: :checklist

@@ -1,5 +1,5 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "dolma"
+require "trello_flow"
 
 require "minitest/autorun"
 require "pry"

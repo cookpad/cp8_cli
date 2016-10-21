@@ -1,6 +1,6 @@
-require "dolma/table"
+require "trello_flow/table"
 
-module Dolma
+module TrelloFlow
   module Api
     class Checklist < Base
       belongs_to :card

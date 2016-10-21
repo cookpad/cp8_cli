@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   module Api
     class Card < Base
       has_many :checklists

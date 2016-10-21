@@ -4,4 +4,4 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require "dolma"
 
-Dolma::Main.new.open
+TrelloFlow::Main.new.open

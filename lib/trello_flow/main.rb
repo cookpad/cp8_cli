@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   class Main
     def initialize(config = Config.new)
       @config = config

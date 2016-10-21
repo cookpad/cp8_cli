@@ -1,4 +1,4 @@
-module Dolma
+module TrelloFlow
   class Table
     class Row
       attr_reader :num
