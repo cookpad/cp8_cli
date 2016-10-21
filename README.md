@@ -3,6 +3,7 @@
 ## Installation
 
 ```bash
+gem uninstall pt-flow dolma # if used
 gem install trello_flow
 ```
 
