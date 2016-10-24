@@ -2,6 +2,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require "dolma"
+require "trello_flow"
 
 TrelloFlow::Main.new.finish
