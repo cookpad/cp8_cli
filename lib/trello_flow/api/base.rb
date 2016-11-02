@@ -4,8 +4,10 @@ require "trello_flow/api/json_parser"
 module TrelloFlow
   module Api
     class Base < Spyke::Base
+      require "trello_flow/api/board"
       require "trello_flow/api/card"
       require "trello_flow/api/checklist"
+      require "trello_flow/api/list"
       require "trello_flow/api/member"
       require "trello_flow/api/item"
 

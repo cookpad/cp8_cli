@@ -37,6 +37,7 @@ module TrelloFlow
 
       cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
       cli.expect :table, nil, [Array]
+      cli.expect :ask, "e", ["(n)ew or (e)xisting card?"]
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]

@@ -15,7 +15,7 @@ module TrelloFlow
           item_name = Cli.ask("Input to-do [#{card.name}]:").presence || card.name
           add_item(item_name)
         else
-          Table.new(items).pick("#{card.name} (#{name})")
+          Table.pick(items, title: "#{card.name} (#{name})")
         end
       end
 

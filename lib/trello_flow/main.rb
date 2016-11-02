@@ -40,15 +40,31 @@ module TrelloFlow
       end
 
       def start_blank
-        card = Table.new(Api::Card.for(username)).pick
+        choice = Cli.ask("(n)ew or (e)xisting card?")
+        if choice == "n"
+          card = start_new_card
+        else
+          card = start_existing_card
+        end
+
         checklist = card.find_or_create_checklist
         item = checklist.select_or_create_item
         item.assign(username)
         Branch.from_item(item).checkout
       end
 
+      def start_new_card
+        board = Table.pick(Api::Member.current.boards.active)
+        list = Table.pick(board.lists)
+        list.cards.create name: Cli.ask("Input card title")
+      end
+
+      def start_existing_card
+        Table.pick Api::Card.for(username)
+      end
+
       def start_new_item(name)
-        card = Table.new(Api::Card.for(username)).pick
+        card = Table.pick(Api::Card.for(username))
         checklist = card.find_or_create_checklist
         item = checklist.add_item(name)
         item.assign(username)

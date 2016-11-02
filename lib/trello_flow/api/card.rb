@@ -17,7 +17,7 @@ module TrelloFlow
       end
 
       def find_or_create_checklist
-        Table.new(checklists).pick || Checklist.create(idCard: id, name: "To-Do")
+        Table.pick(checklists) || Checklist.create(idCard: id, name: "To-Do")
       end
 
       def url
