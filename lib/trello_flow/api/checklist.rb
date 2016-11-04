@@ -10,10 +10,9 @@ module TrelloFlow
         [:name]
       end
 
-      def select_or_create_item
-        if items.none?
-          item_name = Cli.ask("Input to-do [#{card.name}]:").presence || card.name
-          add_item(item_name)
+      def select_or_create_item(item_name = nil)
+        if item_name.present? || items.none?
+          add_item (Cli.ask("Input to-do [#{card.name}]:").presence || card.name)
         else
           Table.pick(items, title: "#{card.name} (#{name})")
         end
@@ -29,10 +28,12 @@ module TrelloFlow
         attributes[:idCard]
       end
 
-      def add_item(name)
-        Item.with("checklists/:checklist_id/checkItems").where(checklist_id: id).create(name: name)
-        # items.create(name: name)
-      end
+      private
+
+        def add_item(name)
+          Item.with("checklists/:checklist_id/checkItems").where(checklist_id: id).create(name: name)
+          # items.create(name: name)
+        end
     end
   end
 end
