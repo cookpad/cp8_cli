@@ -2,6 +2,10 @@ require "trello_flow/table/row"
 
 module TrelloFlow
   class Table
+    def self.pick(records, title: nil)
+      new(records).pick(title)
+    end
+
     def initialize(records)
       @records = records.to_a.sort_by(&:position)
     end
