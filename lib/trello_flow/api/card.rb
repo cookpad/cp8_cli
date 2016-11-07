@@ -17,6 +17,7 @@ module TrelloFlow
       end
 
       def add_member(user)
+        return if member_ids.include?(user.id)
         self.class.with("cards/:id/members").where(id: id, value: user.id).post
       end
 
@@ -27,6 +28,12 @@ module TrelloFlow
       def url
         attributes[:shortUrl]
       end
+
+      private
+
+        def member_ids
+          attributes["idMembers"] || []
+        end
     end
   end
 end
