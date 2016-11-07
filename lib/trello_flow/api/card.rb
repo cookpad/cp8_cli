@@ -12,8 +12,12 @@ module TrelloFlow
         find(id)
       end
 
-      def self.for(username)
-        with("members/:username/cards/open").where(username: username)
+      def self.for(user)
+        with("members/:username/cards/open").where(username: user.username)
+      end
+
+      def add_member(user)
+        self.class.with("cards/:id/members").where(id: id, value: user.id).post
       end
 
       def find_or_create_checklist

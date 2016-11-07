@@ -14,12 +14,12 @@ module TrelloFlow
 
       checklist = card.find_or_create_checklist
       item = checklist.select_or_create_item(name)
-      item.assign(username)
+      item.assign(current_user)
       Branch.from_item(item).checkout
     end
 
     def open
-      Branch.current.open_trello(username)
+      Branch.current.open_trello(current_user)
     end
 
     def finish
@@ -50,11 +50,11 @@ module TrelloFlow
       end
 
       def pick_existing_card
-        Table.pick Api::Card.for(username)
+        Table.pick Api::Card.for(current_user)
       end
 
-      def username
-        @_username ||= Api::Member.current.username
+      def current_user
+        @_current_user ||= Api::Member.current
       end
   end
 end

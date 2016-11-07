@@ -28,8 +28,9 @@ module TrelloFlow
       end
 
       def assign(owner)
-        return if mentions.include?(owner)
-        self.class.request :put, "cards/#{card_id}/checklist/#{checklist_id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner}"
+        return if mentions.include?(owner.username)
+        self.class.request :put, "cards/#{card_id}/checklist/#{checklist_id}/checkItem/#{id}/name", value: name_without_mentions + " @#{owner.username}"
+        card.add_member(owner)
       end
 
       def complete
