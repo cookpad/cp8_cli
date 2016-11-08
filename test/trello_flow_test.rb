@@ -12,6 +12,7 @@ module TrelloFlow
       checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([checklist])
       checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
+      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
       cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
       cli.expect :table, nil, [Array]
@@ -26,6 +27,7 @@ module TrelloFlow
       assert_requested checklists_endpoint
       assert_requested checklist_endpoint
       assert_requested update_item_endpoint
+      assert_requested add_member_endpoint
     end
 
     def test_git_start_without_url
@@ -34,6 +36,7 @@ module TrelloFlow
       checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([checklist])
       checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
+      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
       cli.expect :title, nil, ["CARD NAME (CHECKLIST NAME)"]
       cli.expect :table, nil, [Array]
@@ -50,6 +53,7 @@ module TrelloFlow
       assert_requested checklists_endpoint
       assert_requested checklist_endpoint
       assert_requested update_item_endpoint
+      assert_requested add_member_endpoint
     end
 
     #def test_git_start_arbitrary_story
@@ -71,6 +75,7 @@ module TrelloFlow
       checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
       create_item_endpoint = stub_trello(:post, "/checklists/CHECKLIST_ID/checkItems").with(body: { name: "ITEM TASK" }).to_return_json(item)
       update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/name").with(body: { value: "ITEM TASK @balvig" })
+      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
       cli.expect :ask, "ITEM TASK", ["Input to-do [CARD NAME]:"]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
@@ -85,6 +90,7 @@ module TrelloFlow
       assert_requested checklist_endpoint
       assert_requested create_item_endpoint
       assert_requested update_item_endpoint
+      assert_requested add_member_endpoint
     end
 
     def test_git_open
