@@ -31,11 +31,11 @@ module TrelloFlow
       current_item.complete
     end
 
-    def open_trello(username)
+    def open_trello(user)
       if current_item
         Cli.open_url current_item.card.url
       else
-        Cli.open_url "https://trello.com/#{username}/cards"
+        Cli.open_url "https://trello.com/#{user.username}/cards"
       end
     end
 
