@@ -18,7 +18,7 @@ module TrelloFlow
       cli.expect :table, nil, [Array]
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
+      cli.expect :run, nil, ["git checkout master.item-task.CHECKLIST_ID-ITEM_ID || git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       trello_flow.start(card_url)
 
@@ -43,7 +43,7 @@ module TrelloFlow
       cli.expect :ask, "e", ["(n)ew or (e)xisting card?"]
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
+      cli.expect :run, nil, ["git checkout master.item-task.CHECKLIST_ID-ITEM_ID || git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       trello_flow.start(nil)
 
@@ -56,18 +56,6 @@ module TrelloFlow
       assert_requested add_member_endpoint
     end
 
-    #def test_git_start_arbitrary_story
-      #cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      #cli.expect :run, nil, ["git checkout -b master.fix-header-obscuring-body"]
-
-      #trello_flow.start "Fix header obscuring body"
-      #cli.verify
-    #end
-
-    #def test_git_start_adding_new_item
-
-    #end
-
     def test_git_start_card_with_no_checklists
       card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
       checklists_endpoint = stub_trello(:get, "/cards/CARD_ID/checklists").to_return_json([])
@@ -79,7 +67,7 @@ module TrelloFlow
 
       cli.expect :ask, "ITEM TASK", ["Input to-do [CARD NAME]:"]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
+      cli.expect :run, nil, ["git checkout master.item-task.CHECKLIST_ID-ITEM_ID || git checkout -b master.item-task.CHECKLIST_ID-ITEM_ID"]
 
       trello_flow.start(card_url)
 
