@@ -11,6 +11,10 @@ module TrelloFlow
       new Cli.read("git rev-parse --abbrev-ref HEAD")
     end
 
+    def self.from_card(card)
+      new("#{current.target}.#{card.to_param}.#{card.id}")
+    end
+
     def self.from_item(item)
       new("#{current.target}.#{item.to_param}.#{item.checklist_id}-#{item.id}")
     end
@@ -31,9 +35,13 @@ module TrelloFlow
       current_item.complete
     end
 
+    def finish_current_card
+      current_card.finish
+    end
+
     def open_trello(user)
-      if current_item
-        Cli.open_url current_item.card.url
+      if current_card
+        Cli.open_url current_card.url
       else
         Cli.open_url "https://trello.com/#{user.username}/cards"
       end
@@ -49,6 +57,14 @@ module TrelloFlow
 
       def ids
         name.split(".").last.split("-")
+      end
+
+      def current_card
+        @_current_card ||= Api::Card.find(card_id) if card_id
+      end
+
+      def card_id
+        name.split(".").last
       end
 
       def checklist_id
