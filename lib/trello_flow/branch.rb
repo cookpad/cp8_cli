@@ -28,7 +28,7 @@ module TrelloFlow
     end
 
     def open_pull_request
-      PullRequest.new(current_item, from: name, target: target).open
+      PullRequest.new(current_card, from: name, target: target).open
     end
 
     def complete_current_item

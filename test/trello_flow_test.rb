@@ -89,23 +89,25 @@ module TrelloFlow
       #cli.verify
     #end
 
-    #def test_git_finish
-      #card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
-      #checklist_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
-      #item_endpoint = stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
-      #update_item_endpoint = stub_trello(:put, "/cards/CARD_ID/checklist/CHECKLIST_ID/checkItem/ITEM_ID/state").with(body: { value: "complete" })
+    def test_git_finish
+      card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
+      lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
+      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
+      move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "FINISHED_LIST_ID" })
 
-      #cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
-      #cli.expect :run, nil, ["git push origin master.item-task.CHECKLIST_ID-ITEM_ID -u"]
-      #cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      #cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.item-task.CHECKLIST_ID-ITEM_ID?expand=1&title=ITEM%20TASK&body=Trello:%20#{card_url}"]
+      cli.expect :read, "master.card-name.CARD_ID", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :run, nil, ["git push origin master.card-name.CARD_ID -u"]
+      cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_ID?expand=1&title=CARD%20NAME&body=Trello:%20#{card_url}"]
 
-      #trello_flow.finish
+      trello_flow.finish
 
-      #cli.verify
-      #assert_requested item_endpoint
-      #assert_requested update_item_endpoint
-    #end
+      cli.verify
+      assert_requested card_endpoint
+      assert_requested lists_endpoint
+      assert_requested board_endpoint
+      assert_requested move_to_list_endpoint
+    end
 
     private
 
