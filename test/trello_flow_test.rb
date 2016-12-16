@@ -137,14 +137,6 @@ module TrelloFlow
         { id: "CARD_ID", name: "CARD NAME", idBoard: "BOARD_ID", shortUrl: card_url }
       end
 
-      def checklist(items: [item, item])
-        { id: "CHECKLIST_ID", name: "CHECKLIST NAME", checkItems: items, idCard: "CARD_ID" }
-      end
-
-      def item
-        { id: "ITEM_ID", name: "ITEM TASK @owner", idChecklist: "CHECKLIST_ID", state: "incomplete" }
-      end
-
       def cli
         @_cli ||= Minitest::Mock.new
       end
