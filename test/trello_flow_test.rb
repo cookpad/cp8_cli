@@ -77,17 +77,15 @@ module TrelloFlow
       assert_requested add_member_endpoint
     end
 
-    #def test_git_open
-      #stub_trello(:get, "/checklists/CHECKLIST_ID/checkItems/ITEM_ID").to_return_json(item)
-      #stub_trello(:get, "/checklists/CHECKLIST_ID").to_return_json(checklist)
-      #stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
+    def test_git_open
+      stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
 
-      #cli.expect :read, "master.item-task.CHECKLIST_ID-ITEM_ID", ["git rev-parse --abbrev-ref HEAD"]
-      #cli.expect :open_url, nil, ["https://trello.com/c/CARD_ID/2-trello-flow"]
+      cli.expect :read, "master.card-name.CARD_ID", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :open_url, nil, ["https://trello.com/c/CARD_ID/2-trello-flow"]
 
-      #trello_flow.open
-      #cli.verify
-    #end
+      trello_flow.open
+      cli.verify
+    end
 
     def test_git_finish
       card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
