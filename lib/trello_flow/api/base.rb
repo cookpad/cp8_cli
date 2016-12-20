@@ -6,10 +6,8 @@ module TrelloFlow
     class Base < Spyke::Base
       require "trello_flow/api/board"
       require "trello_flow/api/card"
-      require "trello_flow/api/checklist"
       require "trello_flow/api/list"
       require "trello_flow/api/member"
-      require "trello_flow/api/item"
 
       include_root_in_json false
       cattr_accessor :token

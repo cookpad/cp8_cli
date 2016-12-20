@@ -5,17 +5,10 @@ module TrelloFlow
     end
 
     def start(name)
-      if name.to_s.start_with?("http")
-        card = Api::Card.find_by_url(name)
-        name = nil
-      else
-        card = find_or_create_card(name)
-      end
-
-      checklist = card.find_or_create_checklist
-      item = checklist.select_or_create_item(name)
-      item.assign(current_user)
-      Branch.from_item(item).checkout
+      card = create_or_pick_card(name)
+      card.add_member(current_user)
+      card.start
+      Branch.from_card(card).checkout
     end
 
     def open
@@ -26,7 +19,7 @@ module TrelloFlow
       branch = Branch.current
       branch.push
       branch.open_pull_request
-      branch.complete_current_item
+      branch.finish_current_card
     end
 
     def cleanup
@@ -35,8 +28,10 @@ module TrelloFlow
 
     private
 
-      def find_or_create_card(name)
-        if Cli.ask("(n)ew or (e)xisting card?") == "n"
+      def create_or_pick_card(name)
+        if name.to_s.start_with?("http")
+          Api::Card.find_by_url(name)
+        elsif name.present?
           create_new_card(name)
         else
           pick_existing_card
@@ -44,13 +39,13 @@ module TrelloFlow
       end
 
       def create_new_card(name)
-        board = Table.pick(Api::Member.current.boards.active)
-        list = Table.pick(board.lists)
-        list.cards.create name: Cli.ask("Input card title [#{name}]:").presence || name
+        board = Table.pick(current_user.boards.active)
+        board.lists.backlog.cards.create name: name
       end
 
       def pick_existing_card
-        Table.pick Api::Card.for(current_user)
+        board = Table.pick(current_user.boards.active)
+        Table.pick board.lists.backlog.cards
       end
 
       def current_user

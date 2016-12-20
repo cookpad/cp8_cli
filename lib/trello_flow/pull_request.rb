@@ -2,8 +2,8 @@ require "trello_flow/repo"
 
 module TrelloFlow
   class PullRequest
-    def initialize(item, from:, target:)
-      @item = item
+    def initialize(card, from:, target:)
+      @card = card
       @from = from
       @target = target
     end
@@ -14,18 +14,18 @@ module TrelloFlow
 
     private
 
-      attr_reader :item, :from, :target
+      attr_reader :card, :from, :target
 
       def url
         repo.url + "/compare/#{target}...#{from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
       end
 
       def title
-        item.name_without_mentions.gsub('"',"'")
+        card.name.gsub('"',"'")
       end
 
       def body
-        "Trello: #{item.card.url}"
+        "Trello: #{card.url}"
       end
 
       def prefixes
