@@ -7,7 +7,7 @@ module TrelloFlow
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
     end
 
-    def dont_test_git_start
+    def test_git_start
       card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
@@ -15,7 +15,7 @@ module TrelloFlow
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID || git checkout -b master.card-name.CARD_ID"]
+      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
 
       trello_flow.start(card_url)
 
@@ -38,7 +38,7 @@ module TrelloFlow
       cli.expect :table, nil, [Array]
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID || git checkout -b master.card-name.CARD_ID"]
+      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
 
       trello_flow.start("NEW CARD NAME")
 
@@ -51,7 +51,7 @@ module TrelloFlow
       assert_requested add_member_endpoint
     end
 
-    def dont_test_git_start_with_blank_name
+    def test_git_start_with_blank_name
       boards_endpoint = stub_trello(:get, "/members/MEMBER_ID/boards").with(query: { filter: "open" }).to_return_json([board])
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       cards_endpoint = stub_trello(:get, "/lists/BACKLOG_LIST_ID/cards").to_return_json([card])
@@ -64,7 +64,7 @@ module TrelloFlow
       cli.expect :table, nil, [Array]
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID || git checkout -b master.card-name.CARD_ID"]
+      cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
 
       trello_flow.start(nil)
 

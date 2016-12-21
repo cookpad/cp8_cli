@@ -16,7 +16,7 @@ module TrelloFlow
     end
 
     def checkout
-      Cli.run "git checkout #{name} || git checkout -b #{name}"
+      Cli.run "git checkout #{name} >/dev/null 2>&1 || git checkout -b #{name}"
     end
 
     def push
