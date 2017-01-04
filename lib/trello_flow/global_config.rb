@@ -1,47 +1,35 @@
+require "trello_flow/config_store"
 require "trello_flow/api/base"
 
 module TrelloFlow
-  class Config
+  class GlobalConfig
     PATH = ENV["HOME"] + "/.trello_flow"
 
-    def initialize(data = nil)
-      @data = data || load_data
+    def initialize(store = nil)
+      @store = store || ConfigStore.new(PATH)
     end
 
     def key
-      @_key ||= data[:key] || configure_key
+      @_key ||= store[:key] || configure_key
     end
 
     def token
-      @_token ||= data[:token] || configure_token
+      @_token ||= store[:token] || configure_token
     end
 
     private
 
-      attr_reader :data
-
-      def load_data
-        YAML.load(File.read(PATH))
-      rescue
-        false
-      end
+      attr_reader :store
 
       def configure_key
         Cli.ask "Press enter to setup Trello for this project (will open public key url)"
         Cli.open_url "https://trello.com/app-key"
-        save :key, Cli.ask("Input Developer API key")
+        store.save :key, Cli.ask("Input Developer API key")
       end
 
       def configure_token
         Cli.open_url authorize_url(key)
-        save :token, Cli.ask("Input member token")
-      end
-
-      def save(key, value)
-        data[key] = value
-        File.new(PATH, "w") unless File.exists?(PATH)
-        File.open(PATH, "w") { |f| f.write(data.to_yaml) }
-        value
+        store.save :token, Cli.ask("Input member token")
       end
 
       def authorize_url(key)

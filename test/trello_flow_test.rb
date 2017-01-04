@@ -28,40 +28,33 @@ module TrelloFlow
     end
 
     def test_git_start_with_name
-      boards_endpoint = stub_trello(:get, "/members/MEMBER_ID/boards").with(query: { filter: "open" }).to_return_json([board])
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       create_card_endpoint = stub_trello(:post, "/lists/BACKLOG_LIST_ID/cards").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
-      cli.expect :table, nil, [Array]
-      cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
 
       trello_flow.start("NEW CARD NAME")
 
       cli.verify
-      assert_requested boards_endpoint
-      assert_requested lists_endpoint, at_least_times: 1
+      assert_requested lists_endpoint, times: 2
       assert_requested create_card_endpoint
-      assert_requested board_endpoint
+      assert_requested board_endpoint, times: 2
       assert_requested move_to_list_endpoint
       assert_requested add_member_endpoint
     end
 
     def test_git_start_with_blank_name
-      boards_endpoint = stub_trello(:get, "/members/MEMBER_ID/boards").with(query: { filter: "open" }).to_return_json([board])
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       cards_endpoint = stub_trello(:get, "/lists/BACKLOG_LIST_ID/cards").to_return_json([card])
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
-      cli.expect :table, nil, [Array]
-      cli.expect :ask, 1, ["Pick one:", Integer]
-      cli.expect :table, nil, [Array]
+      cli.expect :table, nil, [Array] # Pick column
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
@@ -69,10 +62,9 @@ module TrelloFlow
       trello_flow.start(nil)
 
       cli.verify
-      assert_requested boards_endpoint
-      assert_requested lists_endpoint, at_least_times: 1
+      assert_requested lists_endpoint, times: 2
       assert_requested cards_endpoint
-      assert_requested board_endpoint
+      assert_requested board_endpoint, times: 2
       assert_requested move_to_list_endpoint
       assert_requested add_member_endpoint
     end
@@ -142,7 +134,7 @@ module TrelloFlow
       end
 
       def trello_flow
-        @_trello_flow ||= Main.new Config.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN")
+        @_trello_flow ||= Main.new GlobalConfig.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN"), LocalConfig.new(board_id: "BOARD_ID")
       end
   end
 end

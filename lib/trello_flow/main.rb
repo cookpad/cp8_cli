@@ -1,7 +1,11 @@
+require "trello_flow/local_config"
+require "trello_flow/global_config"
+
 module TrelloFlow
   class Main
-    def initialize(config = Config.new)
-      Api::Base.configure(key: config.key, token: config.token)
+    def initialize(global_config = GlobalConfig.new, local_config = LocalConfig.new)
+      Api::Base.configure(key: global_config.key, token: global_config.token)
+      @local_config = local_config
     end
 
     def start(name)
@@ -28,6 +32,12 @@ module TrelloFlow
 
     private
 
+      attr_reader :local_config
+
+      def board
+        @_board ||= local_config.board
+      end
+
       def create_or_pick_card(name)
         if name.to_s.start_with?("http")
           Api::Card.find_by_url(name)
@@ -39,12 +49,10 @@ module TrelloFlow
       end
 
       def create_new_card(name)
-        board = Table.pick(current_user.boards.active)
         board.lists.backlog.cards.create name: name
       end
 
       def pick_existing_card
-        board = Table.pick(current_user.boards.active)
         Table.pick board.lists.backlog.cards
       end
 
