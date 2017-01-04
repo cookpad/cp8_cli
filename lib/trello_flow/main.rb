@@ -1,7 +1,7 @@
 module TrelloFlow
   class Main
     def initialize(config = Config.new)
-      @config = config
+      Api::Base.configure(key: config.key, token: config.token)
     end
 
     def start(name)

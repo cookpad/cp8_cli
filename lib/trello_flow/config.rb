@@ -4,9 +4,16 @@ module TrelloFlow
   class Config
     PATH = ENV["HOME"] + "/.trello_flow"
 
-    def initialize(data = load_data || {})
-      @data = data
-      Api::Base.configure(key: key, token: token)
+    def initialize(data = nil)
+      @data = data || load_data
+    end
+
+    def key
+      @_key ||= data[:key] || configure_key
+    end
+
+    def token
+      @_token ||= data[:token] || configure_token
     end
 
     private
@@ -17,14 +24,6 @@ module TrelloFlow
         YAML.load(File.read(PATH))
       rescue
         false
-      end
-
-      def key
-        @_key ||= data[:key] || configure_key
-      end
-
-      def token
-        @_token ||= data[:token] || configure_token
       end
 
       def configure_key
