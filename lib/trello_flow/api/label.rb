@@ -6,6 +6,10 @@ module TrelloFlow
       def self.fields
         [:name]
       end
+
+      def position
+        name.downcase
+      end
     end
   end
 end
