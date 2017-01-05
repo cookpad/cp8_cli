@@ -6,6 +6,7 @@ module TrelloFlow
     class Base < Spyke::Base
       require "trello_flow/api/board"
       require "trello_flow/api/card"
+      require "trello_flow/api/label"
       require "trello_flow/api/list"
       require "trello_flow/api/member"
 

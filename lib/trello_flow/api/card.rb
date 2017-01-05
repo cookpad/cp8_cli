@@ -25,6 +25,10 @@ module TrelloFlow
         self.class.with("cards/:id/members").where(id: id, value: user.id).post
       end
 
+      def add_label(label)
+        self.class.with("cards/:id/idLabels").where(id: id, value: label.id).post
+      end
+
       def url
         attributes[:shortUrl]
       end
