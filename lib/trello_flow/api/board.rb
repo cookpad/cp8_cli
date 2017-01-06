@@ -2,6 +2,7 @@ module TrelloFlow
   module Api
     class Board < Base
       has_many :lists
+      has_many :labels
       scope :active, -> { where(filter: "open") }
 
       def self.fields

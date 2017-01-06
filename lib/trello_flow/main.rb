@@ -49,7 +49,10 @@ module TrelloFlow
       end
 
       def create_new_card(name)
-        board.lists.backlog.cards.create name: name
+        card = board.lists.backlog.cards.create name: name
+        label = Table.pick board.labels, caption: "Add label:"
+        card.add_label(label)
+        card
       end
 
       def pick_existing_card

@@ -2,19 +2,18 @@ require "trello_flow/table/row"
 
 module TrelloFlow
   class Table
-    def self.pick(records, title: nil)
-      new(records).pick(title)
+    def self.pick(records, caption: "Pick one:")
+      new(records).pick(caption)
     end
 
     def initialize(records)
       @records = records.to_a.sort_by(&:position)
     end
 
-    def pick(title = nil)
+    def pick(caption)
       return if records.none?
-      Cli.title title if title
       render_table
-      index = Cli.ask("Pick one:", Integer)
+      index = Cli.ask(caption, Integer)
       records[index - 1]
     end
 

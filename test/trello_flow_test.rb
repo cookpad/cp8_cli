@@ -31,9 +31,13 @@ module TrelloFlow
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       create_card_endpoint = stub_trello(:post, "/lists/BACKLOG_LIST_ID/cards").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
+      labels_endpoint = stub_trello(:get, "/boards/BOARD_ID/labels").to_return_json([label])
+      add_label_endpoint = stub_trello(:post, "/cards/CARD_ID/idLabels").with(body: { value: "LABEL_ID" })
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
+      cli.expect :table, nil, [Array] # Pick label
+      cli.expect :ask, 1, ["Add label:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git checkout master.card-name.CARD_ID >/dev/null 2>&1 || git checkout -b master.card-name.CARD_ID"]
 
@@ -43,6 +47,8 @@ module TrelloFlow
       assert_requested lists_endpoint, times: 2
       assert_requested create_card_endpoint
       assert_requested board_endpoint, times: 2
+      assert_requested labels_endpoint
+      assert_requested add_label_endpoint
       assert_requested move_to_list_endpoint
       assert_requested add_member_endpoint
     end
@@ -127,6 +133,10 @@ module TrelloFlow
 
       def card
         { id: "CARD_ID", name: "CARD NAME", idBoard: "BOARD_ID", shortUrl: card_url }
+      end
+
+      def label
+        { id: "LABEL_ID", name: "LABEL NAME" }
       end
 
       def cli
