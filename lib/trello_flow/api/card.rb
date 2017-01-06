@@ -26,11 +26,11 @@ module TrelloFlow
 
       def add_member(user)
         return if member_ids.include?(user.id)
-        self.class.with("cards/:id/members").where(id: id, value: user.id).post
+        self.class.request(:post, "cards/#{id}/members", value: user.id)
       end
 
       def add_label(label)
-        self.class.with("cards/:id/idLabels").where(id: id, value: label.id).post
+        self.class.request(:post, "cards/#{id}/idLabels", value: label.id)
       end
 
       def url

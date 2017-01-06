@@ -32,7 +32,7 @@ module TrelloFlow
       create_card_endpoint = stub_trello(:post, "/lists/BACKLOG_LIST_ID/cards").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       labels_endpoint = stub_trello(:get, "/boards/BOARD_ID/labels").to_return_json([label])
-      add_label_endpoint = stub_trello(:post, "/cards/CARD_ID/idLabels").with(body: { value: "LABEL_ID" })
+      add_label_endpoint = stub_trello(:post, "/cards/CARD_ID/idLabels").with(body: { value: "LABEL_ID" }).to_return_json(["LABEL_ID"])
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 

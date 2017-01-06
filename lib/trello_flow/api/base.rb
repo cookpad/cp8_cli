@@ -18,6 +18,10 @@ module TrelloFlow
           c.request   :json
           c.use       JSONParser
           c.adapter   Faraday.default_adapter
+
+          # For trello api logging
+          # require "faraday/conductivity"
+          # c.use       Faraday::Conductivity::ExtendedLogging
         end
         self.token = token
       end
