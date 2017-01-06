@@ -4,6 +4,7 @@ module TrelloFlow
       BACKLOG_INDEX = 0
       STARTED_INDEX = 1
       FINISHED_INDEX = 2
+      ACCEPTED_INDEX = 3
 
       has_many :cards
 
@@ -21,6 +22,10 @@ module TrelloFlow
 
       def self.finished
         all[FINISHED_INDEX]
+      end
+
+      def self.accepted
+        all[ACCEPTED_INDEX]
       end
     end
   end

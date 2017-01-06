@@ -20,6 +20,10 @@ module TrelloFlow
         move_to board.lists.finished
       end
 
+      def accept
+        move_to board.lists.accepted
+      end
+
       def add_member(user)
         return if member_ids.include?(user.id)
         self.class.with("cards/:id/members").where(id: id, value: user.id).post
