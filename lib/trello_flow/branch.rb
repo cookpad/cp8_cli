@@ -27,10 +27,6 @@ module TrelloFlow
       PullRequest.new(current_card, from: name, target: target).open
     end
 
-    def finish_current_card
-      current_card.finish
-    end
-
     def open_trello(user)
       if current_card
         Cli.open_url current_card.url
