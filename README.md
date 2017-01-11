@@ -3,7 +3,7 @@
 ## Installation
 
 ```bash
-gem uninstall pt-flow dolma # if used
+gem uninstall pt-flow # if used
 gem install trello_flow
 ```
 
@@ -14,7 +14,7 @@ git open # Open relevant card/all user's cards in browser
 git start # Pick a board to see backlog
 git start <card URL> # Assigns self to card, moves to "started", and creates branch
 git start "Do this" # Picking a board creates card "Do this" and starts it
-git finish # Moves card to "in review" and opens PR
+git finish # Opens PR
 git cleanup # cleans up merged card branches
 ```
 
