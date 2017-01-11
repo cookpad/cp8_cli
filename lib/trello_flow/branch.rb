@@ -12,7 +12,7 @@ module TrelloFlow
     end
 
     def self.from_card(card)
-      new("#{current.target}.#{card.to_param}.#{card.id}")
+      new("#{current.target}.#{card.to_param}.#{card.short_link}")
     end
 
     def checkout
@@ -25,10 +25,6 @@ module TrelloFlow
 
     def open_pull_request
       PullRequest.new(current_card, from: name, target: target).open
-    end
-
-    def finish_current_card
-      current_card.finish
     end
 
     def open_trello(user)
@@ -48,10 +44,10 @@ module TrelloFlow
       attr_reader :name
 
       def current_card
-        @_current_card ||= Api::Card.find(card_id) if card_id
+        @_current_card ||= Api::Card.find(card_short_link) if card_short_link
       end
 
-      def card_id
+      def card_short_link
         name.split(".").last
       end
   end

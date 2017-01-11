@@ -23,7 +23,6 @@ module TrelloFlow
       branch = Branch.current
       branch.push
       branch.open_pull_request
-      branch.finish_current_card
     end
 
     def cleanup
