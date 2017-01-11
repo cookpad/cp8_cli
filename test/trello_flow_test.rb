@@ -7,8 +7,8 @@ module TrelloFlow
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
     end
 
-    def test_git_start
-      card_endpoint = stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
+    def test_git_start_from_url
+      card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
@@ -79,7 +79,7 @@ module TrelloFlow
       stub_trello(:get, "/cards/CARD_ID").to_return_json(card)
 
       cli.expect :read, "master.card-name.CARD_ID", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :open_url, nil, ["https://trello.com/c/CARD_ID/2-trello-flow"]
+      cli.expect :open_url, nil, ["https://trello.com/c/CARD_SHORT_LINK/2-trello-flow"]
 
       trello_flow.open
       cli.verify
@@ -101,8 +101,12 @@ module TrelloFlow
 
     private
 
+      def card_short_link
+        "CARD_SHORT_LINK"
+      end
+
       def card_url
-        "https://trello.com/c/CARD_ID/2-trello-flow"
+        "https://trello.com/c/#{card_short_link}/2-trello-flow"
       end
 
       def member
@@ -126,7 +130,7 @@ module TrelloFlow
       end
 
       def card
-        { id: "CARD_ID", name: "CARD NAME", idBoard: "BOARD_ID", shortUrl: card_url }
+        { id: "CARD_ID", name: "CARD NAME", idBoard: "BOARD_ID", shortUrl: card_url, shortLink: card_short_link }
       end
 
       def label

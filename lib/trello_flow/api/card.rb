@@ -8,8 +8,8 @@ module TrelloFlow
       end
 
       def self.find_by_url(url)
-        id = url.scan(/\/c\/(.+)\//).flatten.first
-        find(id)
+        short_link = url.scan(/\/c\/(.+)\//).flatten.first
+        find(short_link)
       end
 
       def start
