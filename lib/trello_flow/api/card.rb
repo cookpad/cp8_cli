@@ -8,8 +8,8 @@ module TrelloFlow
       end
 
       def self.find_by_url(url)
-        short_link = url.scan(/\/c\/(.+)\//).flatten.first
-        find(short_link)
+        card = Card.new(url: url)
+        find(card.short_link)
       end
 
       def start
@@ -33,7 +33,11 @@ module TrelloFlow
         self.class.request(:post, "cards/#{id}/idLabels", value: label.id)
       end
 
-      def url
+      def short_link
+        url.scan(/\/c\/(.+)\//).flatten.first
+      end
+
+      def short_url
         attributes[:shortUrl]
       end
 
