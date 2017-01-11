@@ -21,7 +21,7 @@ module TrelloFlow
       end
 
       def title
-        card.name.gsub('"',"'") + " [Delivers ##{card.id}]"
+        card.name.gsub('"',"'") + " [Delivers ##{card.short_link}]"
       end
 
       def body
