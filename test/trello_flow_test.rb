@@ -91,7 +91,7 @@ module TrelloFlow
       cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.card-name.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_url}"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
 
       trello_flow.finish
 

@@ -25,7 +25,7 @@ module TrelloFlow
       end
 
       def body
-        "Trello: #{card.url}"
+        "Trello: #{card.short_url}"
       end
 
       def prefixes
