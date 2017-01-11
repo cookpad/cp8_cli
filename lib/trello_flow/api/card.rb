@@ -12,6 +12,10 @@ module TrelloFlow
         find(short_link)
       end
 
+      def short_link
+        shortLink
+      end
+
       def start
         move_to board.lists.started
       end
