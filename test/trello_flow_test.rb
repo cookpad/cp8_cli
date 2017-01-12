@@ -75,7 +75,19 @@ module TrelloFlow
       assert_requested add_member_endpoint
     end
 
-    def test_git_open
+    def test_git_open_master
+      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
+
+      cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :open_url, nil, [board_url]
+
+      trello_flow.open
+
+      cli.verify
+      assert_requested board_endpoint
+    end
+
+    def test_git_open_card
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
       cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
@@ -113,12 +125,16 @@ module TrelloFlow
         "#{card_short_url}/2-trello-flow"
       end
 
+      def board_url
+        "https://trello.com/b/qdC0CNy0/2-trello-flow-board"
+      end
+
       def member
         { id: "MEMBER_ID", username: "balvig" }
       end
 
       def board
-        { name: "BOARD NAME", id: "BOARD_ID" }
+        { name: "BOARD NAME", id: "BOARD_ID", url: board_url }
       end
 
       def backlog

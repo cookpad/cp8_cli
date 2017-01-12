@@ -16,7 +16,7 @@ module TrelloFlow
     end
 
     def open
-      Branch.current.open_trello(current_user)
+      Branch.current.open_trello(user: current_user, config: local_config)
     end
 
     def finish

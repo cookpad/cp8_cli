@@ -27,11 +27,11 @@ module TrelloFlow
       PullRequest.new(current_card, from: name, target: target).open
     end
 
-    def open_trello(user)
+    def open_trello(user:, config:)
       if current_card
         Cli.open_url current_card.url
       else
-        Cli.open_url "https://trello.com/#{user.username}/cards"
+        Cli.open_url config.board.url
       end
     end
 
@@ -48,7 +48,7 @@ module TrelloFlow
       end
 
       def card_short_link
-        name.split(".").last
+        name[/\.(\w+)$/, 1]
       end
   end
 end
