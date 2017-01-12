@@ -33,6 +33,10 @@ module TrelloFlow
         self.class.request(:post, "cards/#{id}/idLabels", value: label.id)
       end
 
+      def attach(url:)
+        self.class.request(:post, "cards/#{id}/attachments", url: url)
+      end
+
       def short_link
         url.scan(/\/c\/(.+)\//).flatten.first
       end
