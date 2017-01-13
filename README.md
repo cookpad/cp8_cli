@@ -10,10 +10,10 @@ gem install trello_flow
 ## Usage
 
 ```bash
-git open # Open relevant card/all user's cards in browser
-git start # Pick a board to see backlog
+git start # Shows backlog for current board
 git start <card URL> # Assigns self to card, moves to "started", and creates branch
-git start "Do this" # Picking a board creates card "Do this" and starts it
+git start "Do this" # Creates card "Do this" and starts it
+git open # Open relevant card/board in browser
 git finish # Opens PR
 git cleanup # cleans up merged card branches
 ```
