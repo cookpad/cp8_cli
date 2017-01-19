@@ -23,8 +23,8 @@ module TrelloFlow
       Cli.run "git push origin #{name} -u"
     end
 
-    def open_pull_request
-      PullRequest.new(current_card, from: name, target: target).open
+    def open_pull_request(options = {})
+      PullRequest.new(current_card, options.merge(from: name, target: target)).open
     end
 
     def open_trello(user:, config:)

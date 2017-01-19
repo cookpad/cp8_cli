@@ -2,10 +2,11 @@ require "trello_flow/repo"
 
 module TrelloFlow
   class PullRequest
-    def initialize(card, from:, target:)
+    def initialize(card, from:, target:, **options)
       @card = card
       @from = from
       @target = target
+      @options = options
     end
 
     def open
@@ -14,7 +15,7 @@ module TrelloFlow
 
     private
 
-      attr_reader :card, :from, :target
+      attr_reader :card, :from, :target, :options
 
       def url
         repo.url + "/compare/#{target}...#{from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
@@ -30,7 +31,7 @@ module TrelloFlow
 
       def prefixes
         prefixes = []
-        # prefixes << "[WIP]" if @options[:wip]
+        prefixes << "[WIP]" if options[:wip]
         prefixes << "[#{target.titleize}]" if release_branch?
         prefixes.join(" ")
       end

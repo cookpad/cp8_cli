@@ -3,5 +3,17 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require "trello_flow"
+require "trollop"
 
-TrelloFlow::Main.new.finish
+
+options = Trollop::options do
+	banner <<-EOS
+Pushes branch to GitHub and opens a PR
+
+Usage:
+    git finish
+EOS
+  opt :wip, "Open [WIP] PR"
+end
+
+TrelloFlow::Main.new.finish(options)

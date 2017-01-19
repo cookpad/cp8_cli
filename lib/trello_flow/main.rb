@@ -19,10 +19,10 @@ module TrelloFlow
       Branch.current.open_trello(user: current_user, config: local_config)
     end
 
-    def finish
+    def finish(options = {})
       branch = Branch.current
       branch.push
-      branch.open_pull_request
+      branch.open_pull_request(options)
     end
 
     def cleanup
