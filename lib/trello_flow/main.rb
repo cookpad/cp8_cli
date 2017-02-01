@@ -12,7 +12,7 @@ module TrelloFlow
       card = create_or_pick_card(name)
       card.add_member(current_user)
       card.start
-      Branch.from_card(card).checkout
+      Branch.from_card(user: current_user, card: card).checkout
     end
 
     def open
