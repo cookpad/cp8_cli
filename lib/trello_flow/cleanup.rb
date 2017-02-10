@@ -30,7 +30,7 @@ module TrelloFlow
       end
 
       def filter
-        "^ *#{target}.\\+$"
+        "\\.#{target}\\."
       end
   end
 end
