@@ -11,8 +11,8 @@ module TrelloFlow
       new Cli.read("git rev-parse --abbrev-ref HEAD")
     end
 
-    def self.from_card(card)
-      new("#{current.target}.#{card.to_param}.#{card.short_link}")
+    def self.from_card(user:, card:)
+      new("#{user.initials.downcase}.#{card.to_param}.#{current.target}.#{card.short_link}")
     end
 
     def checkout
@@ -36,7 +36,11 @@ module TrelloFlow
     end
 
     def target
-      name.split('.').first
+      if legacy_naming?
+        name_parts.first
+      else
+        name_parts[-2] || name
+      end
     end
 
     private
@@ -49,6 +53,14 @@ module TrelloFlow
 
       def card_short_link
         name[/\.(\w+)$/, 1]
+      end
+
+      def legacy_naming?
+        name_parts.size == 3
+      end
+
+      def name_parts
+        @_name_parts ||= name.split(".")
       end
   end
 end

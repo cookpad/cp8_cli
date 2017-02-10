@@ -15,7 +15,7 @@ module TrelloFlow
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
 
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b master.card-name.CARD_SHORT_LINK"]
+      cli.expect :run, nil, ["git checkout jb.card-name.master.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b jb.card-name.master.CARD_SHORT_LINK"]
 
       trello_flow.start(card_url)
 
@@ -39,7 +39,7 @@ module TrelloFlow
       cli.expect :table, nil, [Array] # Pick label
       cli.expect :ask, 1, ["Add label:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b master.card-name.CARD_SHORT_LINK"]
+      cli.expect :run, nil, ["git checkout jb.card-name.master.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b jb.card-name.master.CARD_SHORT_LINK"]
 
       trello_flow.start("NEW CARD NAME")
 
@@ -63,7 +63,7 @@ module TrelloFlow
       cli.expect :table, nil, [Array] # Pick column
       cli.expect :ask, 1, ["Pick one:", Integer]
       cli.expect :read, "master", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git checkout master.card-name.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b master.card-name.CARD_SHORT_LINK"]
+      cli.expect :run, nil, ["git checkout jb.card-name.master.CARD_SHORT_LINK >/dev/null 2>&1 || git checkout -b jb.card-name.master.CARD_SHORT_LINK"]
 
       trello_flow.start(nil)
 
@@ -90,7 +90,7 @@ module TrelloFlow
     def test_git_open_card
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
-      cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :open_url, nil, ["https://trello.com/c/CARD_SHORT_LINK/2-trello-flow"]
 
       trello_flow.open
@@ -100,6 +100,20 @@ module TrelloFlow
     def test_git_finish
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
+      cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
+      cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
+
+      trello_flow.finish
+
+      cli.verify
+      assert_requested card_endpoint
+    end
+
+    def test_git_finish_with_backwards_compatibility
+      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
+
       cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.card-name.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
@@ -108,16 +122,15 @@ module TrelloFlow
       trello_flow.finish
 
       cli.verify
-      assert_requested card_endpoint
     end
 
     def test_finish_wip
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
-      cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
-      cli.expect :run, nil, ["git push origin master.card-name.CARD_SHORT_LINK -u"]
+      cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
+      cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_SHORT_LINK?expand=1&title=[WIP]%20CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=[WIP]%20CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
 
       trello_flow.finish(wip: true)
 
@@ -143,7 +156,7 @@ module TrelloFlow
       end
 
       def member
-        { id: "MEMBER_ID", username: "balvig" }
+        { id: "MEMBER_ID", username: "balvig", initials: "JB" }
       end
 
       def board
