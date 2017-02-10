@@ -1,3 +1,4 @@
+require "trello_flow/version"
 require "trello_flow/local_config"
 require "trello_flow/global_config"
 
@@ -9,6 +10,7 @@ module TrelloFlow
     end
 
     def start(name)
+      Cli.error "Your `trello_flow` version is out of date. Please run `gem update trello_flow`." unless Version.latest?
       card = create_or_pick_card(name)
       card.add_member(current_user)
       card.start
