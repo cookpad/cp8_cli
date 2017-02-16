@@ -10,11 +10,14 @@ module TrelloFlow
     end
 
     def start(name)
-      Cli.error "Your `trello_flow` version is out of date. Please run `gem update trello_flow`." unless Version.latest?
+      cli_error("Your `trello_flow` version is out of date. Please run `gem update trello_flow`.") unless Version.latest?
       card = create_or_pick_card(name)
       card.add_member(current_user)
       card.start
       Branch.from_card(user: current_user, card: card).checkout
+
+    rescue TrelloFlow::Api::Error => error
+      cli_error(error.message)
     end
 
     def open
@@ -62,6 +65,10 @@ module TrelloFlow
 
       def current_user
         @_current_user ||= Api::Member.current
+      end
+
+      def cli_error(message)
+        Cli.error(message)
       end
   end
 end
