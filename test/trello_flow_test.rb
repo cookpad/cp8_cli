@@ -138,9 +138,16 @@ module TrelloFlow
     end
 
     def test_wrong_credentials
-      stub_trello(:get, "/tokens/WRONG_MEMBER_TOKEN/member").to_return_json(member_not_found, {status: 404})
+      stub_trello(:get, "/tokens/WRONG_MEMBER_TOKEN/member").to_return(member_not_found)
       cli.expect :error, "Verify your API key and token are correct at '~/.trello_flow'"
       trello_flow.start(nil)
+      cli.verify
+    end
+
+    def test_inexistent_card
+      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return(card_not_found)
+      cli.expect :error, resource_not_found[:body]
+      trello_flow.start(card_url)
       cli.verify
     end
 
@@ -191,7 +198,11 @@ module TrelloFlow
       end
 
       def member_not_found
-        "Cannot GET /1/tokens/WRONG_MEMBER_TOKEN/member"
+        { status: 404, body: "Cannot GET /1/tokens/WRONG_MEMBER_TOKEN/member" }
+      end
+
+      def card_not_found
+        { status: 404, body: "Cannot GET /1/cards/CARD_SHORT_LINK" }
       end
 
       def cli
