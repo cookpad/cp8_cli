@@ -1,8 +1,12 @@
 require 'webmock/minitest'
 
 class WebMock::RequestStub
-  def to_return_json(hash, options = {})
-    options[:body] = MultiJson.dump(hash)
+  def to_return_json(response, options = {})
+    if options[:status] == 404
+      options[:body] = response
+    else
+      options[:body] = MultiJson.dump(response)
+    end
     to_return(options)
   end
 end

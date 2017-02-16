@@ -1,5 +1,6 @@
 require "spyke"
 require "trello_flow/api/json_parser"
+require "trello_flow/api/error_handler"
 
 module TrelloFlow
   module Api
@@ -16,6 +17,7 @@ module TrelloFlow
       def self.configure(key:, token:)
         self.connection = Faraday.new(url: "https://api.trello.com/1", params: { key: key, token: token }) do |c|
           c.request   :json
+          c.use       ErrorHandler
           c.use       JSONParser
           c.adapter   Faraday.default_adapter
 
