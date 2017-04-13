@@ -6,7 +6,7 @@ module TrelloFlow
       def call(env)
         @app.call(env).on_complete do
           if !env.success?
-            raise TrelloFlow::Api::Error, env[:body]
+            raise Error, env[:body]
           end
         end
       end
