@@ -5,6 +5,7 @@ module TrelloFlow
     def setup
       Cli.client = cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
+      stub_request(:get, /api\.rubygems\.org/)
     end
 
     def test_git_start_from_url
@@ -137,6 +138,20 @@ module TrelloFlow
       cli.verify
     end
 
+    def test_wrong_credentials
+      stub_trello(:get, "/boards/BOARD_ID").to_return(invalid_token)
+      cli.expect :error, nil, ["invalid token"]
+      trello_flow.start(nil)
+      cli.verify
+    end
+
+    def test_inexistent_card
+      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return(invalid_card_id)
+      cli.expect :error, nil, ["invalid id"]
+      trello_flow.start(card_url)
+      cli.verify
+    end
+
     private
 
       def card_short_link
@@ -181,6 +196,14 @@ module TrelloFlow
 
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
+      end
+
+      def invalid_token
+        { status: 400, body: "invalid token" }
+      end
+
+      def invalid_card_id
+        { status: 302, body: "invalid id" }
       end
 
       def cli

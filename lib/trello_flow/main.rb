@@ -15,6 +15,8 @@ module TrelloFlow
       card.add_member(current_user)
       card.start
       Branch.from_card(user: current_user, card: card).checkout
+    rescue Api::Error => error
+      Cli.error(error.message)
     end
 
     def open
