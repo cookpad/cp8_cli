@@ -23,6 +23,14 @@ module TrelloFlow
       Cli.run "git push origin #{name} -u"
     end
 
+    def pull
+      Cli.run "git pull origin #{name}"
+    end
+
+    def rebase_to_master
+      Cli.run "git rebase origin master"
+    end
+
     def open_pull_request(options = {})
       PullRequest.new(current_card, options.merge(from: name, target: target)).open
     end

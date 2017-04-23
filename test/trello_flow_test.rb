@@ -101,6 +101,8 @@ module TrelloFlow
     def test_git_finish
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
+      cli.expect :run, nil, ["git pull origin master"]
+      cli.expect :run, nil, ["git rebase origin master"]
       cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
@@ -115,6 +117,8 @@ module TrelloFlow
     def test_git_finish_with_backwards_compatibility
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
+      cli.expect :run, nil, ["git pull origin master"]
+      cli.expect :run, nil, ["git rebase origin master"]
       cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.card-name.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
@@ -128,6 +132,8 @@ module TrelloFlow
     def test_finish_wip
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
 
+      cli.expect :run, nil, ["git pull origin master"]
+      cli.expect :run, nil, ["git rebase origin master"]
       cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
