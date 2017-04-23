@@ -14,6 +14,7 @@ Usage:
     git finish
 EOS
   opt :wip, "Open [WIP] PR"
+  opt :rebase, "Rebase to master"
 end
 
 TrelloFlow::Main.new.finish(options)

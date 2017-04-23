@@ -24,9 +24,8 @@ module TrelloFlow
     end
 
     def finish(options = {})
-      update_master_branch
       branch = Branch.current
-      branch.rebase_to_master
+      Update.new(branch).run if options[:rebase]
       branch.push
       branch.open_pull_request(options)
     end
@@ -41,11 +40,6 @@ module TrelloFlow
 
       def board
         @_board ||= local_config.board
-      end
-
-      def update_master_branch
-        master_branch = Branch.new("master")
-        master_branch.pull
       end
 
       def create_or_pick_card(name)
