@@ -2,17 +2,17 @@ module TrelloFlow
   class Update
     def initialize(branch)
       @feature_branch = branch
-      @master_branch = Branch.new("master")
+      @target_branch = Branch.new(branch.target)
     end
 
     def run
-      master_branch.checkout
-      master_branch.pull
+      target_branch.checkout
+      target_branch.pull
       feature_branch.checkout
       feature_branch.rebase
     end
 
     private
-      attr_reader :feature_branch, :master_branch
+      attr_reader :feature_branch, :target_branch
   end
 end

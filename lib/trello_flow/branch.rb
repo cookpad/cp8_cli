@@ -27,8 +27,8 @@ module TrelloFlow
       Cli.run "git pull origin #{name}"
     end
 
-    def rebase(branch = "master")
-      Cli.run "git rebase #{branch}"
+    def rebase
+      Cli.run "git rebase #{target}"
     end
 
     def open_pull_request(options = {})
