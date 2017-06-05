@@ -22,11 +22,21 @@ module TrelloFlow
       end
 
       def title
-        card.name.gsub('"',"'") + " [Delivers ##{card.short_link}]"
+        card_name + " [Delivers ##{card.short_link}]"
+      end
+
+      def card_name
+        card.name.gsub %("), %(')
       end
 
       def body
-        "Trello: #{card.short_url}"
+        body = "Trello: #{card.short_url}"
+        body << release_note unless release_branch?
+        body
+      end
+
+      def release_note
+        "\n\n_Release note: #{card_name}_"
       end
 
       def prefixes

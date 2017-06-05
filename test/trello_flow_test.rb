@@ -104,7 +104,7 @@ module TrelloFlow
       cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}%0A%0A_Release%20note:%20CARD%20NAME_"]
 
       trello_flow.finish
 
@@ -118,7 +118,7 @@ module TrelloFlow
       cli.expect :read, "master.card-name.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin master.card-name.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...master.card-name.CARD_SHORT_LINK?expand=1&title=CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}%0A%0A_Release%20note:%20CARD%20NAME_"]
 
       trello_flow.finish
 
@@ -131,7 +131,7 @@ module TrelloFlow
       cli.expect :read, "jb.card-name.master.CARD_SHORT_LINK", ["git rev-parse --abbrev-ref HEAD"]
       cli.expect :run, nil, ["git push origin jb.card-name.master.CARD_SHORT_LINK -u"]
       cli.expect :read, "git@github.com:balvig/trello_flow.git", ["git config --get remote.origin.url"]
-      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=[WIP]%20CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}"]
+      cli.expect :open_url, nil, ["https://github.com/balvig/trello_flow/compare/master...jb.card-name.master.CARD_SHORT_LINK?expand=1&title=[WIP]%20CARD%20NAME%20[Delivers%20%23CARD_SHORT_LINK]&body=Trello:%20#{card_short_url}%0A%0A_Release%20note:%20CARD%20NAME_"]
 
       trello_flow.finish(wip: true)
 
