@@ -30,11 +30,13 @@ module TrelloFlow
       end
 
       def body
-        "Trello: #{card.short_url}\n\n#{release_note}"
+        body = "Trello: #{card.short_url}"
+        body << release_note unless release_branch?
+        body
       end
 
       def release_note
-        "_Release note: #{card_name}_"
+        "\n\n_Release note: #{card_name}_"
       end
 
       def prefixes
