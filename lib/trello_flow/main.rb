@@ -25,6 +25,7 @@ module TrelloFlow
 
     def finish(options = {})
       branch = Branch.current
+      Update.new(branch).run if options[:rebase]
       branch.push
       branch.open_pull_request(options)
     end
