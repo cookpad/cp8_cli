@@ -26,7 +26,7 @@ module TrelloFlow
       end
 
       def card_name
-        card.name.gsub('"',"'")
+        card.name.gsub %("), %(')
       end
 
       def body
