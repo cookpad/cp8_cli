@@ -45,10 +45,6 @@ module TrelloFlow
         attributes[:shortUrl]
       end
 
-      def to_param
-        name.parameterize[0..50]
-      end
-
       private
 
         def move_to(list)

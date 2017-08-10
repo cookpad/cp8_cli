@@ -1,5 +1,6 @@
 require "active_support/core_ext/string/inflections"
 require "trello_flow/pull_request"
+require "trello_flow/branch_name"
 
 module TrelloFlow
   class Branch
@@ -12,7 +13,7 @@ module TrelloFlow
     end
 
     def self.from_card(user:, card:)
-      new("#{user.initials.downcase}.#{card.to_param}.#{current.target}.#{card.short_link}")
+      new BranchName.new(user: user, target: current.target, card: card).to_s
     end
 
     def checkout
@@ -24,10 +25,11 @@ module TrelloFlow
     end
 
     def open_pull_request(options = {})
-      PullRequest.new(current_card, options.merge(from: name, target: target)).open
+      pr = PullRequest.new options.merge(card: current_card, from: name, target: target)
+      pr.open
     end
 
-    def open_trello(user:, config:)
+    def open_trello(config)
       if current_card
         Cli.open_url current_card.url
       else
@@ -36,11 +38,7 @@ module TrelloFlow
     end
 
     def target
-      if legacy_naming?
-        name_parts.first
-      else
-        name_parts[-2] || name
-      end
+      name_parts[2] || name
     end
 
     private
@@ -52,11 +50,7 @@ module TrelloFlow
       end
 
       def card_short_link
-        name[/\.(\w+)$/, 1]
-      end
-
-      def legacy_naming?
-        name_parts.size == 3
+        name_parts[3]
       end
 
       def name_parts

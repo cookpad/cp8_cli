@@ -1,5 +1,5 @@
 require "colored"
-require "forwardable"
+require "active_support/core_ext/module/delegation"
 require "highline"
 require "hirb-colors"
 require "hirb"
@@ -7,12 +7,11 @@ require "hirb"
 module TrelloFlow
   class Cli
     class << self
-      extend Forwardable
-      def_delegators :client, :table, :open_url, :say, :success, :ask, :title, :error, :run, :read
+      delegate :table, :open_url, :say, :success, :ask, :title, :error, :run, :read, to: :client
       attr_accessor :client
     end
 
-    self.client = Cli.new
+    self.client = new
 
     def table(items)
       puts Hirb::Helpers::AutoTable.render(items, unicode: true)
