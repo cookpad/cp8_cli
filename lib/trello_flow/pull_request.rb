@@ -2,7 +2,7 @@ require "trello_flow/repo"
 
 module TrelloFlow
   class PullRequest
-    def initialize(card, from:, target:, **options)
+    def initialize(from:, target:, card: nil, **options)
       @card = card
       @from = from
       @target = target
@@ -22,6 +22,7 @@ module TrelloFlow
       end
 
       def title
+        return unless card
         card_name + " [Delivers ##{card.short_link}]"
       end
 
@@ -30,6 +31,7 @@ module TrelloFlow
       end
 
       def body
+        return unless card
         body = "Trello: #{card.short_url}"
         body << release_note unless release_branch?
         body
@@ -55,7 +57,7 @@ module TrelloFlow
       end
 
       def escape(text)
-        URI.escape text.strip
+        URI.escape text.to_s.strip
       end
 
       def repo
