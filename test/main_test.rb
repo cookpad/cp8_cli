@@ -1,7 +1,7 @@
 require "test_helper"
 
 module TrelloFlow
-  class TrelloFlowTest < Minitest::Test
+  class MainTest < Minitest::Test
     def setup
       stub_cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
@@ -75,6 +75,22 @@ module TrelloFlow
       assert_requested move_to_list_endpoint
       assert_requested add_member_endpoint
     end
+
+    def test_git_start_github_issue
+      issue_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
+      assign_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
+      #move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
+      stub_branch("master")
+
+      expect_checkout("jb.issue-name.master.balvig/trello_flow#GITHUB_ISSUE_ID")
+      trello_flow.start(issue_url)
+
+      cli.verify
+
+      assert_requested issue_endpoint
+      assert_requested assign_endpoint
+    end
+
 
     def test_git_start_release_branch
       stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])

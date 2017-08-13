@@ -1,6 +1,7 @@
 require "trello_flow/version"
 require "trello_flow/local_config"
 require "trello_flow/global_config"
+require "trello_flow/github/issue"
 
 module TrelloFlow
   class Main
@@ -42,7 +43,9 @@ module TrelloFlow
       end
 
       def create_or_pick_card(name)
-        if name.to_s.start_with?("http")
+        if name.to_s.start_with?("https://github.com")
+          Github::Issue.find_by_url(name)
+        elsif name.to_s.start_with?("http")
           Api::Card.find_by_url(name)
         elsif name.present?
           create_new_card(name)
