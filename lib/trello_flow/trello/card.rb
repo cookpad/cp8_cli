@@ -1,5 +1,5 @@
 module TrelloFlow
-  module Api
+  module Trello
     class Card < Base
       belongs_to :board, foreign_key: "idBoard"
 
@@ -24,7 +24,7 @@ module TrelloFlow
         move_to board.lists.accepted
       end
 
-      def add_member(user)
+      def assign(user)
         return if member_ids.include?(user.id)
         self.class.request(:post, "cards/#{id}/members", value: user.id)
       end

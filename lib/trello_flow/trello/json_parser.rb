@@ -1,7 +1,7 @@
 require "multi_json"
 
 module TrelloFlow
-  module Api
+  module Trello
     class JSONParser < Faraday::Response::Middleware
       def parse(body)
         return if body.blank?

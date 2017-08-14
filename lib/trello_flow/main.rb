@@ -6,17 +6,17 @@ require "trello_flow/github/issue"
 module TrelloFlow
   class Main
     def initialize(global_config = GlobalConfig.new, local_config = LocalConfig.new)
-      Api::Base.configure(key: global_config.key, token: global_config.token)
+      Trello::Base.configure(key: global_config.key, token: global_config.token)
       @local_config = local_config
     end
 
     def start(name)
       Cli.error "Your `trello_flow` version is out of date. Please run `gem update trello_flow`." unless Version.latest?
       card = create_or_pick_card(name)
-      card.add_member(current_user)
+      card.assign(current_user)
       card.start
       Branch.from_card(user: current_user, card: card).checkout
-    rescue Api::Error => error
+    rescue Trello::Error => error
       Cli.error(error.message)
     end
 
@@ -46,7 +46,7 @@ module TrelloFlow
         if name.to_s.start_with?("https://github.com")
           Github::Issue.find_by_url(name)
         elsif name.to_s.start_with?("http")
-          Api::Card.find_by_url(name)
+          Trello::Card.find_by_url(name)
         elsif name.present?
           create_new_card(name)
         else
@@ -66,7 +66,7 @@ module TrelloFlow
       end
 
       def current_user
-        @_current_user ||= Api::Member.current
+        @_current_user ||= Trello::Member.current
       end
   end
 end

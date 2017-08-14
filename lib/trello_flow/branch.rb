@@ -46,7 +46,7 @@ module TrelloFlow
       attr_reader :name
 
       def current_card
-        @_current_card ||= Api::Card.find(card_short_link) if card_short_link
+        @_current_card ||= Trello::Card.find(card_short_link) if card_short_link
       end
 
       def card_short_link

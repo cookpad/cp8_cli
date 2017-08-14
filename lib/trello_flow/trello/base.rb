@@ -1,15 +1,15 @@
 require "spyke"
-require "trello_flow/api/json_parser"
-require "trello_flow/api/error_handler"
+require "trello_flow/trello/json_parser"
+require "trello_flow/trello/error_handler"
 
 module TrelloFlow
-  module Api
+  module Trello
     class Base < Spyke::Base
-      require "trello_flow/api/board"
-      require "trello_flow/api/card"
-      require "trello_flow/api/label"
-      require "trello_flow/api/list"
-      require "trello_flow/api/member"
+      require "trello_flow/trello/board"
+      require "trello_flow/trello/card"
+      require "trello_flow/trello/label"
+      require "trello_flow/trello/list"
+      require "trello_flow/trello/member"
 
       include_root_in_json false
       cattr_accessor :token

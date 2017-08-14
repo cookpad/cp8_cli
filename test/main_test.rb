@@ -77,12 +77,14 @@ module TrelloFlow
     end
 
     def test_git_start_github_issue
-      issue_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
-      assign_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
+      issue_url = "https://github.com/balvig/trello_flow/pull/14"
+      #issue_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
+      #assign_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
       #move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       stub_branch("master")
 
       expect_checkout("jb.issue-name.master.balvig/trello_flow#GITHUB_ISSUE_ID")
+
       trello_flow.start(issue_url)
 
       cli.verify

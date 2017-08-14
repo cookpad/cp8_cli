@@ -1,7 +1,7 @@
-require "trello_flow/api/error"
+require "trello_flow/trello/error"
 
 module TrelloFlow
-  module Api
+  module Trello
     class ErrorHandler < Faraday::Middleware
       def call(env)
         @app.call(env).on_complete do

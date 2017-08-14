@@ -1,5 +1,5 @@
 module TrelloFlow
-  module Api
+  module Trello
     class Member < Base
       has_many :boards
 

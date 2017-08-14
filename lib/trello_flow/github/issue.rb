@@ -1,33 +1,44 @@
+require "trello_flow/github"
+
 module TrelloFlow
   module Github
     class Issue
+      def initialize(id:, repo:, **attributes)
+        @id = id
+        @repo = repo
+        @attributes = attributes
+      end
+
       def self.fields
         [:name]
       end
 
       def self.find_by_url(url)
-        #client.issue(
-        #Octokit.issue("octokit/octokit.rb", "25")
-        raise "trying to start GitHub issue"
-        #card = Card.new(url: url)
-        #find(card.short_link)
+        parts = url.split("/")
+        repo = parts[3, 2].join("/")
+        id = parts.last
+        new id: id, repo: repo, attributes: Github.client.issue(repo, id)
+      end
+
+      def name
+        attributes[:title]
       end
 
       def start
-        move_to board.lists.started
+        #move_to board.lists.started
       end
 
       def finish
-        move_to board.lists.finished
+        #move_to board.lists.finished
       end
 
       def accept
-        move_to board.lists.accepted
+        #move_to board.lists.accepted
       end
 
-      def add_member(user)
-        return if member_ids.include?(user.id)
-        self.class.request(:post, "cards/#{id}/members", value: user.id)
+      def assign(user)
+        require 'pry'; binding.pry
+        Github.client.add_assignees(repo, id, [user])
       end
 
       def add_label(label)
@@ -48,21 +59,14 @@ module TrelloFlow
 
       private
 
+        attr_reader :id, :repo, :attributes
+
         def move_to(list)
           self.class.with("cards/:id/idList").where(id: id, value: list.id).put
         end
 
         def member_ids
           attributes["idMembers"] || []
-        end
-
-        def client
-          @_client ||= octokit
-        end
-
-        def octokit
-          raise "OCTOKIT_ACCESS_TOKEN env variable not set" unless ENV["OCTOKIT_ACCESS_TOKEN"]
-          @_octokit ||= Octokit::Client.new
         end
     end
   end

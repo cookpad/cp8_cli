@@ -1,5 +1,5 @@
 module TrelloFlow
-  module Api
+  module Trello
     class List < Base
       BACKLOG_INDEX = 0
       STARTED_INDEX = 1

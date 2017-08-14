@@ -1,5 +1,5 @@
 require "trello_flow/config_store"
-require "trello_flow/api/base"
+require "trello_flow/trello/base"
 
 module TrelloFlow
   class GlobalConfig

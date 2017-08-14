@@ -7,7 +7,7 @@ module TrelloFlow
     end
 
     def board
-      @_board ||= Api::Board.find(board_id)
+      @_board ||= Trello::Board.find(board_id)
     end
 
     private
@@ -23,7 +23,7 @@ module TrelloFlow
       end
 
       def current_user
-        Api::Member.current
+        Trello::Member.current
       end
   end
 end

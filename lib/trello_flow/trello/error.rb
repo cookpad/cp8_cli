@@ -1,5 +1,5 @@
 module TrelloFlow
-  module Api
+  module Trello
     class Error < StandardError; end
   end
 end

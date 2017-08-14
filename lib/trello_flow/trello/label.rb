@@ -1,5 +1,5 @@
 module TrelloFlow
-  module Api
+  module Trello
     class Label < Base
       has_many :cards
 
