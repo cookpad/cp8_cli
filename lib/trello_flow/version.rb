@@ -1,5 +1,5 @@
 module TrelloFlow
-  VERSION = "3.7.1"
+  VERSION = "3.8.0"
 
   class Version
     def self.latest?
