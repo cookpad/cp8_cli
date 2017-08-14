@@ -36,5 +36,6 @@ Gem::Specification.new do |spec|
   spec.add_dependency "launchy"
   spec.add_dependency "multi_json"
   spec.add_dependency "spyke"
+  spec.add_dependency "thor"
   spec.add_dependency "trollop"
 end
