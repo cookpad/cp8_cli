@@ -5,7 +5,7 @@ module TrelloFlow
     def setup
       stub_cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
-      stub_request(:get, /api\.rubygems\.org/)
+      stub_request(:get, /api\.rubygems\.org/).to_return_json({})
     end
 
     def test_git_start_from_url
