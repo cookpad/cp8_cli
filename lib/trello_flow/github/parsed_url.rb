@@ -5,7 +5,7 @@ module TrelloFlow
         @url = url
       end
 
-      def id
+      def number
         parts.last
       end
 

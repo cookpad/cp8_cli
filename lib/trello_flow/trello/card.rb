@@ -4,12 +4,16 @@ module TrelloFlow
       belongs_to :board, foreign_key: "idBoard"
 
       def self.fields
-        [:name]
+        [:title]
       end
 
       def self.find_by_url(url)
         card = Card.new(url: url)
         find(card.short_link)
+      end
+
+      def title
+        name
       end
 
       def start

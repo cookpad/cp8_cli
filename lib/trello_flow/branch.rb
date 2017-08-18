@@ -12,8 +12,8 @@ module TrelloFlow
       new Cli.read("git rev-parse --abbrev-ref HEAD")
     end
 
-    def self.from_card(user:, card:)
-      new BranchName.new(user: user, target: current.target, card: card).to_s
+    def self.from_story(user:, story:)
+      new BranchName.new(user: user, target: current.target, story: story).to_s
     end
 
     def checkout
@@ -25,13 +25,13 @@ module TrelloFlow
     end
 
     def open_pull_request(options = {})
-      pr = PullRequest.new options.merge(card: current_card, from: name, target: target)
+      pr = PullRequest.new options.merge(story: current_story, from: name, target: target)
       pr.open
     end
 
     def open_trello(config)
-      if current_card
-        Cli.open_url current_card.url
+      if current_story
+        Cli.open_url current_story.url
       else
         Cli.open_url config.board.url
       end
@@ -45,8 +45,8 @@ module TrelloFlow
 
       attr_reader :name
 
-      def current_card
-        @_current_card ||= Trello::Card.find(card_short_link) if card_short_link
+      def current_story
+        @_current_story ||= Trello::Card.find(card_short_link) if card_short_link
       end
 
       def card_short_link

@@ -1,9 +1,9 @@
 module TrelloFlow
   class BranchName
-    def initialize(user:, target:, card:)
+    def initialize(user:, target:, story:)
       @user = user
       @target = target
-      @card = card
+      @story = story
     end
 
     def to_s
@@ -12,19 +12,19 @@ module TrelloFlow
 
     private
 
-      attr_reader :user, :target, :card
+      attr_reader :user, :target, :story
 
       def parts
         parts = []
         parts << user.initials.downcase
         parts << title
         parts << target
-        parts << card.short_link
+        parts << story.short_link
         parts
       end
 
       def title
-        card.name.parameterize[0..50]
+        story.title.parameterize[0..50]
       end
   end
 end

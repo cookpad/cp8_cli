@@ -77,19 +77,20 @@ module TrelloFlow
     end
 
     def test_git_start_github_issue
-      issue_url = "https://github.com/balvig/trello_flow/pull/14"
-      #issue_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
-      #assign_endpoint = stub_github(:get, "/cards/CARD_SHORT_LINK").to_return_json(issue)
-      #move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
+      issue_endpoint = stub_github(:get, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
+      assign_endpoint = stub_github(:post, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER/assignees").
+        with(body: { assignees: [["login", "GITHUB_USER" ]] })
       stub_branch("master")
 
-      expect_checkout("jb.issue-name.master.GITHUB_ISSUE_ID")
+      expect_checkout("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
 
-      trello_flow.start(issue_url)
+      trello_flow.start("https://github.com/balvig/trello_flow/issues/ISSUE_NUMBER")
 
       cli.verify
 
       assert_requested issue_endpoint
+      assert_requested user_endpoint
       assert_requested assign_endpoint
     end
 
@@ -258,6 +259,14 @@ module TrelloFlow
 
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
+      end
+
+      def github_issue
+        { number: "ISSUE_NUMBER", title: "ISSUE TITLE"}
+      end
+
+      def github_user
+        { login: "GITHUB_USER" }
       end
 
       def invalid_token

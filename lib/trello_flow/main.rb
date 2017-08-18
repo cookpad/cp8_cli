@@ -12,10 +12,10 @@ module TrelloFlow
 
     def start(name)
       Cli.error "Your `trello_flow` version is out of date. Please run `gem update trello_flow`." unless Version.latest?
-      card = create_or_pick_card(name)
-      card.assign(current_user)
-      card.start
-      Branch.from_card(user: current_user, card: card).checkout
+      story = create_or_pick_story(name)
+      story.assign(current_user)
+      story.start
+      Branch.from_story(user: current_user, story: story).checkout
     rescue Trello::Error => error
       Cli.error(error.message)
     end
@@ -42,10 +42,9 @@ module TrelloFlow
         @_board ||= local_config.board
       end
 
-      def create_or_pick_card(name)
+      def create_or_pick_story(name)
         if name.to_s.start_with?("https://github.com")
-          issue = Github::Issue.find_by_url(name)
-          require 'pry'; binding.pry
+          Github::Issue.find_by_url(name)
         elsif name.to_s.start_with?("http")
           Trello::Card.find_by_url(name)
         elsif name.present?

@@ -4,40 +4,40 @@ require "trello_flow/github/parsed_url"
 module TrelloFlow
   module Github
     class Issue
-      def initialize(id:, repo:, **attributes)
-        @id = id
+      def initialize(number:, repo:, attributes:)
+        @number = number
         @repo = repo
         @attributes = attributes
       end
 
       def self.fields
-        [:name]
+        [:title]
       end
 
       def self.find_by_url(url)
         url = ParsedUrl.new(url)
-        new id: url.id, repo: url.repo, attributes: Github.client.issue(url.repo, url.id)
+        issue = Github.client.issue(url.repo, url.number)
+        new number: url.number, repo: url.repo, attributes: issue
       end
 
-      def name
+      def title
         attributes[:title]
       end
 
       def start
-        #move_to board.lists.started
+        # noop for now
       end
 
       def finish
-        #move_to board.lists.finished
+        # noop for now
       end
 
       def accept
-        #move_to board.lists.accepted
+        # noop for now
       end
 
       def assign(user)
-        require 'pry'; binding.pry
-        Github.client.add_assignees(repo, id, [user])
+        Github.client.add_assignees(repo, number, Github.client.user)
       end
 
       def add_label(label)
@@ -49,7 +49,7 @@ module TrelloFlow
       end
 
       def short_link
-        url.scan(/\/c\/(.+)\//).flatten.first
+        "#{repo}##{number}"
       end
 
       def short_url
@@ -58,7 +58,7 @@ module TrelloFlow
 
       private
 
-        attr_reader :id, :repo, :attributes
+        attr_reader :number, :repo, :attributes
 
         def move_to(list)
           self.class.with("cards/:id/idList").where(id: id, value: list.id).put

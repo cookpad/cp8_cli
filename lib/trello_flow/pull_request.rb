@@ -2,8 +2,8 @@ require "trello_flow/repo"
 
 module TrelloFlow
   class PullRequest
-    def initialize(from:, target:, card: nil, **options)
-      @card = card
+    def initialize(from:, target:, story: nil, **options)
+      @story = story
       @from = from
       @target = target
       @options = options
@@ -15,30 +15,30 @@ module TrelloFlow
 
     private
 
-      attr_reader :card, :from, :target, :options
+      attr_reader :story, :from, :target, :options
 
       def url
         repo.url + "/compare/#{target}...#{from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
       end
 
       def title
-        return unless card
-        card_name + " [Delivers ##{card.short_link}]"
+        return unless story
+        story_name + " [Delivers ##{story.short_link}]"
       end
 
-      def card_name
-        card.name.gsub %("), %(')
+      def story_name
+        story.name.gsub %("), %(')
       end
 
       def body
-        return unless card
-        body = "Trello: #{card.short_url}"
+        return unless story
+        body = "Trello: #{story.short_url}"
         body << release_note unless release_branch?
         body
       end
 
       def release_note
-        "\n\n_Release note: #{card_name}_"
+        "\n\n_Release note: #{story_name}_"
       end
 
       def prefixes
