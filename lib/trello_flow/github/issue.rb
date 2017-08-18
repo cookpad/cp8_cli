@@ -1,4 +1,5 @@
 require "trello_flow/github"
+require "trello_flow/github/parsed_url"
 
 module TrelloFlow
   module Github
@@ -14,10 +15,8 @@ module TrelloFlow
       end
 
       def self.find_by_url(url)
-        parts = url.split("/")
-        repo = parts[3, 2].join("/")
-        id = parts.last
-        new id: id, repo: repo, attributes: Github.client.issue(repo, id)
+        url = ParsedUrl.new(url)
+        new id: url.id, repo: url.repo, attributes: Github.client.issue(url.repo, url.id)
       end
 
       def name

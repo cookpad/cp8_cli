@@ -44,7 +44,8 @@ module TrelloFlow
 
       def create_or_pick_card(name)
         if name.to_s.start_with?("https://github.com")
-          Github::Issue.find_by_url(name)
+          issue = Github::Issue.find_by_url(name)
+          require 'pry'; binding.pry
         elsif name.to_s.start_with?("http")
           Trello::Card.find_by_url(name)
         elsif name.present?

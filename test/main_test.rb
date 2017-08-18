@@ -83,7 +83,7 @@ module TrelloFlow
       #move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       stub_branch("master")
 
-      expect_checkout("jb.issue-name.master.balvig/trello_flow#GITHUB_ISSUE_ID")
+      expect_checkout("jb.issue-name.master.GITHUB_ISSUE_ID")
 
       trello_flow.start(issue_url)
 
@@ -175,7 +175,7 @@ module TrelloFlow
 
     def test_git_finish_github_issue
       #stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
+      stub_branch("jb.card-name.master.#GITHUB_ISSUE_ID")
       stub_repo("git@github.com:balvig/trello_flow.git")
 
       expect_push("jb.card-name.master.CARD_SHORT_LINK")
