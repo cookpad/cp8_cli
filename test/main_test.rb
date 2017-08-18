@@ -93,7 +93,6 @@ module TrelloFlow
       assert_requested assign_endpoint
     end
 
-
     def test_git_start_release_branch
       stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
       stub_trello(:get, "/lists/BACKLOG_LIST_ID/cards").to_return_json([card])
@@ -173,6 +172,27 @@ module TrelloFlow
 
       cli.verify
     end
+
+    def test_git_finish_github_issue
+      #stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
+      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
+      stub_repo("git@github.com:balvig/trello_flow.git")
+
+      expect_push("jb.card-name.master.CARD_SHORT_LINK")
+      expect_pr(
+        repo: "balvig/trello_flow",
+        from: "jb.card-name.master.CARD_SHORT_LINK",
+        to: "master",
+        title: "CARD NAME",
+        body: "Closes #balvig/trello_flow#GITHUB_ISSUE_ID\n\n_Release note: CARD NAME_"
+      )
+
+      trello_flow.finish
+
+      cli.verify
+    end
+
+
 
     def test_wrong_credentials
       stub_trello(:get, "/boards/BOARD_ID").to_return(invalid_token)
