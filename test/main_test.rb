@@ -114,15 +114,13 @@ module TrelloFlow
 
 
     def test_git_open_master
-      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       stub_branch("master")
 
-      expect_open_url(board_url)
+      expect_error("Not currently on story branch")
 
       trello_flow.open
 
       cli.verify
-      assert_requested board_endpoint
     end
 
     def test_git_open_card

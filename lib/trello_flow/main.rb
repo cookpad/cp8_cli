@@ -21,7 +21,7 @@ module TrelloFlow
     end
 
     def open
-      Branch.current.open_trello(local_config)
+      Branch.current.open_story_in_browser
     end
 
     def finish(options = {})

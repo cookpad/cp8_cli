@@ -35,6 +35,10 @@ module TrelloFlow
         title
       end
 
+      def url
+        attributes[:html_url]
+      end
+
       def summary
         "Closes #{short_link}"
       end

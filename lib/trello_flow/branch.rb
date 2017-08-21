@@ -30,11 +30,11 @@ module TrelloFlow
       pr.open
     end
 
-    def open_trello(config)
+    def open_story_in_browser
       if current_story
         Cli.open_url current_story.url
       else
-        Cli.open_url config.board.url
+        Cli.error "Not currently on story branch"
       end
     end
 
