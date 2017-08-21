@@ -52,7 +52,10 @@ module TrelloFlow
       end
 
       def assign(user)
-        Github.client.add_assignees(repo, number, Github.client.user)
+        # TODO: Figure out a way to pass in
+        # Github.client.add_assignees(repo, number, Github.client.user)
+        # add_assignes not released as gem yet https://github.com/octokit/octokit.rb/pull/894
+        Github.client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: Github.client.user
       end
 
       def add_label(label)
