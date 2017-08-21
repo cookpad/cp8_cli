@@ -6,6 +6,7 @@ module TrelloFlow
       stub_cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
+      ENV["OCTOKIT_ACCESS_TOKEN"] = "DUMMY"
     end
 
     def test_git_start_from_url
@@ -175,22 +176,23 @@ module TrelloFlow
     end
 
     def test_git_finish_github_issue
-      #stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      stub_branch("jb.card-name.master.#GITHUB_ISSUE_ID")
+      issue_endpoint = stub_github(:get, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      stub_branch("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/trello_flow.git")
 
-      expect_push("jb.card-name.master.CARD_SHORT_LINK")
+      expect_push("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
       expect_pr(
         repo: "balvig/trello_flow",
-        from: "jb.card-name.master.CARD_SHORT_LINK",
+        from: "jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER",
         to: "master",
-        title: "CARD NAME",
-        body: "Closes #balvig/trello_flow#GITHUB_ISSUE_ID\n\n_Release note: CARD NAME_"
+        title: "ISSUE TITLE",
+        body: "Closes balvig/trello_flow#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_"
       )
 
       trello_flow.finish
 
       cli.verify
+      assert_requested issue_endpoint
     end
 
 

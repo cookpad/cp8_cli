@@ -1,6 +1,7 @@
 require "active_support/core_ext/string/inflections"
 require "trello_flow/pull_request"
 require "trello_flow/branch_name"
+require "trello_flow/story_query"
 
 module TrelloFlow
   class Branch
@@ -46,10 +47,10 @@ module TrelloFlow
       attr_reader :name
 
       def current_story
-        @_current_story ||= Trello::Card.find(card_short_link) if card_short_link
+        @_current_story ||= StoryQuery.new(short_link).find if short_link
       end
 
-      def card_short_link
+      def short_link
         name_parts[3]
       end
 

@@ -1,5 +1,6 @@
 require "trello_flow/github"
 require "trello_flow/github/parsed_url"
+require "trello_flow/github/parsed_short_link"
 
 module TrelloFlow
   module Github
@@ -20,8 +21,22 @@ module TrelloFlow
         new number: url.number, repo: url.repo, attributes: issue
       end
 
+      def self.find_by_short_link(short_link)
+        short_link = ParsedShortLink.new(short_link)
+        issue = Github.client.issue(short_link.repo, short_link.number)
+        new number: short_link.number, repo: short_link.repo, attributes: issue
+      end
+
       def title
         attributes[:title]
+      end
+
+      def pr_title
+        title
+      end
+
+      def summary
+        "Closes #{short_link}"
       end
 
       def start

@@ -16,6 +16,14 @@ module TrelloFlow
         name
       end
 
+      def pr_title
+        "#{title} [Delivers ##{short_link}]"
+      end
+
+      def summary
+        "Trello: #{short_url}"
+      end
+
       def start
         move_to board.lists.started
       end

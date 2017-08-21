@@ -27,7 +27,11 @@ def expect_error(error)
 end
 
 def expect_pr(repo:, from:, to:, title:, body:)
-  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{from}?expand=1&title=#{URI.escape(title)}&body=#{URI.escape(body)}")
+  expected_from = URI.escape(from)
+  expected_title = URI.escape(title)
+  expected_body = URI.escape(body)
+
+  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?expand=1&title=#{expected_title}&body=#{expected_body}")
 end
 
 def expect_open_url(url)

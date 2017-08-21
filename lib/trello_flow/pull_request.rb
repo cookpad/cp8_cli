@@ -18,27 +18,23 @@ module TrelloFlow
       attr_reader :story, :from, :target, :options
 
       def url
-        repo.url + "/compare/#{target}...#{from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
+        repo.url + "/compare/#{target}...#{escape from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
       end
 
       def title
         return unless story
-        story_name + " [Delivers ##{story.short_link}]"
-      end
-
-      def story_name
-        story.name.gsub %("), %(')
+        story.pr_title
       end
 
       def body
         return unless story
-        body = "Trello: #{story.short_url}"
+        body = story.summary
         body << release_note unless release_branch?
         body
       end
 
       def release_note
-        "\n\n_Release note: #{story_name}_"
+        "\n\n_Release note: #{story.title}_"
       end
 
       def prefixes
