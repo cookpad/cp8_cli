@@ -1,10 +1,10 @@
-require "trello_flow/github"
+require "trello_flow/github/base"
 require "trello_flow/github/parsed_url"
 require "trello_flow/github/parsed_short_link"
 
 module TrelloFlow
   module Github
-    class Issue
+    class Issue < Base
       def initialize(number:, repo:, attributes:)
         @number = number
         @repo = repo
@@ -17,13 +17,13 @@ module TrelloFlow
 
       def self.find_by_url(url)
         url = ParsedUrl.new(url)
-        issue = Github.client.issue(url.repo, url.number)
+        issue = client.issue(url.repo, url.number)
         new number: url.number, repo: url.repo, attributes: issue
       end
 
       def self.find_by_short_link(short_link)
         short_link = ParsedShortLink.new(short_link)
-        issue = Github.client.issue(short_link.repo, short_link.number)
+        issue = client.issue(short_link.repo, short_link.number)
         new number: short_link.number, repo: short_link.repo, attributes: issue
       end
 
@@ -59,7 +59,7 @@ module TrelloFlow
         # TODO: Figure out a way to pass in
         # Github.client.add_assignees(repo, number, Github.client.user)
         # add_assignes not released as gem yet https://github.com/octokit/octokit.rb/pull/894
-        Github.client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: [Github.client.user.login]
+        client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: [client.user.login]
       end
 
       def add_label(label)

@@ -6,7 +6,6 @@ module TrelloFlow
       stub_cli
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
-      ENV["OCTOKIT_ACCESS_TOKEN"] = "DUMMY"
     end
 
     def test_git_start_from_url
@@ -278,7 +277,11 @@ module TrelloFlow
       end
 
       def trello_flow
-        @_trello_flow ||= Main.new GlobalConfig.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN"), LocalConfig.new(board_id: "BOARD_ID")
+        @_trello_flow ||= Main.new global_config, LocalConfig.new(board_id: "BOARD_ID")
+      end
+
+      def global_config
+        GlobalConfig.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN", github_token: "GITHUB_TOKEN")
       end
   end
 end

@@ -6,7 +6,8 @@ require "trello_flow/github/issue"
 module TrelloFlow
   class Main
     def initialize(global_config = GlobalConfig.new, local_config = LocalConfig.new)
-      Trello::Base.configure(key: global_config.key, token: global_config.token)
+      Trello::Base.configure(key: global_config.trello_key, token: global_config.trello_token)
+      Github::Base.configure(token: global_config.github_token)
       @local_config = local_config
     end
 
