@@ -81,7 +81,7 @@ module TrelloFlow
       issue_endpoint = stub_github(:get, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER").to_return_json(github_issue)
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
       assign_endpoint = stub_github(:post, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER/assignees").
-        with(body: { assignees: [["login", "GITHUB_USER" ]] })
+        with(body: { assignees: ["GITHUB_USER"] })
       stub_branch("master")
 
       expect_checkout("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
