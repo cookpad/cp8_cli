@@ -19,10 +19,10 @@ module TrelloFlow
       end
 
       def configure_board_id
-        store.save :board_id, Table.pick(current_user.boards.active).id
+        store.save :board_id, Table.pick(trello_user.boards.active).id
       end
 
-      def current_user
+      def trello_user
         Trello::Member.current
       end
   end

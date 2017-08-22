@@ -2,6 +2,7 @@ require "trello_flow/version"
 require "trello_flow/local_config"
 require "trello_flow/global_config"
 require "trello_flow/github/issue"
+require "trello_flow/current_user"
 
 module TrelloFlow
   class Main
@@ -67,7 +68,7 @@ module TrelloFlow
       end
 
       def current_user
-        @_current_user ||= Trello::Member.current
+        @_current_user ||= CurrentUser.new
       end
   end
 end

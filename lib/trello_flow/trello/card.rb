@@ -37,8 +37,8 @@ module TrelloFlow
       end
 
       def assign(user)
-        return if member_ids.include?(user.id)
-        self.class.request(:post, "cards/#{id}/members", value: user.id)
+        return if member_ids.include?(user.trello_id)
+        self.class.request(:post, "cards/#{id}/members", value: user.trello_id)
       end
 
       def add_label(label)
