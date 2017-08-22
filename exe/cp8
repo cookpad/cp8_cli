@@ -24,11 +24,6 @@ module Cp8
         main.open
       end
 
-      desc "cleanup", "Clean up merged branches"
-      def cleanup
-        main.cleanup
-      end
-
       private
 
         def main
