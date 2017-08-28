@@ -1,8 +1,8 @@
 $LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "trello_flow"
+require "cp8_cli"
 
 require "minitest/autorun"
-require 'minitest/reporters'
+require "minitest/reporters"
 require "pry"
 
 # Require support files

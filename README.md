@@ -1,21 +1,16 @@
-# trello_flow
+# CP-8 Cli
 
 ## Installation
 
 ```bash
-gem uninstall pt-flow # if used
-gem install trello_flow
+gem uninstall trello_flow # if used
+gem install cp8_cli
 ```
 
 ## Usage
 
 ```bash
-git start # Shows backlog for current board
-git start <card URL> # Assigns self to card, moves to "started", and creates branch
-git start "Do this" # Creates card "Do this" and starts it
-git open # Open relevant card/board in browser
-git finish # Opens PR
-git cleanup # cleans up merged card branches
+cp8 help
 ```
 
 

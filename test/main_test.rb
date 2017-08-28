@@ -1,9 +1,9 @@
 require "test_helper"
 
-module TrelloFlow
+module Cp8Cli
   class MainTest < Minitest::Test
     def setup
-      stub_cli
+      stub_shell
       stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
     end
@@ -18,9 +18,9 @@ module TrelloFlow
 
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
-      trello_flow.start(card_url)
+      cli.start(card_url)
 
-      cli.verify
+      shell.verify
       assert_requested card_endpoint
       assert_requested board_endpoint
       assert_requested lists_endpoint
@@ -38,13 +38,13 @@ module TrelloFlow
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
       stub_branch("master")
 
-      cli.expect :table, nil, [Array] # Pick label
-      cli.expect :ask, 1, ["Add label:", Integer]
+      shell.expect :table, nil, [Array] # Pick label
+      shell.expect :ask, 1, ["Add label:", Integer]
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
-      trello_flow.start("NEW CARD NAME")
+      cli.start("NEW CARD NAME")
 
-      cli.verify
+      shell.verify
       assert_requested lists_endpoint, times: 2
       assert_requested create_card_endpoint
       assert_requested board_endpoint, times: 2
@@ -62,13 +62,13 @@ module TrelloFlow
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
       stub_branch("master")
 
-      cli.expect :table, nil, [Array] # Pick column
-      cli.expect :ask, 1, ["Pick one:", Integer]
+      shell.expect :table, nil, [Array] # Pick column
+      shell.expect :ask, 1, ["Pick one:", Integer]
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
-      trello_flow.start(nil)
+      cli.start(nil)
 
-      cli.verify
+      shell.verify
       assert_requested lists_endpoint, times: 2
       assert_requested cards_endpoint
       assert_requested board_endpoint, times: 2
@@ -77,17 +77,17 @@ module TrelloFlow
     end
 
     def test_git_start_github_issue
-      issue_endpoint = stub_github(:get, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
-      assign_endpoint = stub_github(:post, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER/assignees").
+      assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
         with(body: { assignees: ["GITHUB_USER"] })
       stub_branch("master")
 
-      expect_checkout("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
+      expect_checkout("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
 
-      trello_flow.start("https://github.com/balvig/trello_flow/issues/ISSUE_NUMBER")
+      cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
-      cli.verify
+      shell.verify
 
       assert_requested issue_endpoint
       assert_requested user_endpoint
@@ -102,13 +102,13 @@ module TrelloFlow
       stub_trello(:post, "/cards/CARD_ID/members")
       stub_branch("release-branch")
 
-      cli.expect :table, nil, [Array] # Pick column
-      cli.expect :ask, 1, ["Pick one:", Integer]
+      shell.expect :table, nil, [Array] # Pick column
+      shell.expect :ask, 1, ["Pick one:", Integer]
       expect_checkout("jb.card-name.release-branch.CARD_SHORT_LINK")
 
-      trello_flow.start(nil)
+      cli.start(nil)
 
-      cli.verify
+      shell.verify
     end
 
 
@@ -117,9 +117,9 @@ module TrelloFlow
 
       expect_error("Not currently on story branch")
 
-      trello_flow.open
+      cli.open
 
-      cli.verify
+      shell.verify
     end
 
     def test_git_open_card
@@ -128,67 +128,67 @@ module TrelloFlow
 
       expect_open_url("https://trello.com/c/CARD_SHORT_LINK/2-trello-flow")
 
-      trello_flow.open
+      cli.open
 
-      cli.verify
+      shell.verify
     end
 
     def test_git_finish
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
-      stub_repo("git@github.com:balvig/trello_flow.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_push("jb.card-name.master.CARD_SHORT_LINK")
       expect_pr(
-        repo: "balvig/trello_flow",
+        repo: "balvig/cp8_cli",
         from: "jb.card-name.master.CARD_SHORT_LINK",
         to: "master",
         title: "CARD NAME [Delivers #CARD_SHORT_LINK]",
         body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
       )
 
-      trello_flow.finish
+      cli.finish
 
-      cli.verify
+      shell.verify
       assert_requested card_endpoint
     end
 
     def test_finish_wip
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
-      stub_repo("git@github.com:balvig/trello_flow.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_push("jb.card-name.master.CARD_SHORT_LINK")
       expect_pr(
-        repo: "balvig/trello_flow",
+        repo: "balvig/cp8_cli",
         from: "jb.card-name.master.CARD_SHORT_LINK",
         to: "master",
         title: "[WIP] CARD NAME [Delivers #CARD_SHORT_LINK]",
         body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
       )
 
-      trello_flow.finish(wip: true)
+      cli.finish(wip: true)
 
-      cli.verify
+      shell.verify
     end
 
     def test_git_finish_github_issue
-      issue_endpoint = stub_github(:get, "/repos/balvig/trello_flow/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
-      stub_repo("git@github.com:balvig/trello_flow.git")
+      issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_push("jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER")
+      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       expect_pr(
-        repo: "balvig/trello_flow",
-        from: "jb.issue-title.master.balvig/trello_flow#ISSUE_NUMBER",
+        repo: "balvig/cp8_cli",
+        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
         to: "master",
         title: "ISSUE TITLE",
-        body: "Closes balvig/trello_flow#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_"
+        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_"
       )
 
-      trello_flow.finish
+      cli.finish
 
-      cli.verify
+      shell.verify
       assert_requested issue_endpoint
     end
 
@@ -199,9 +199,9 @@ module TrelloFlow
 
       expect_error("invalid token")
 
-      trello_flow.start(nil)
+      cli.start(nil)
 
-      cli.verify
+      shell.verify
     end
 
     def test_inexistent_card
@@ -209,9 +209,9 @@ module TrelloFlow
 
       expect_error("invalid id")
 
-      trello_flow.start(card_url)
+      cli.start(card_url)
 
-      cli.verify
+      shell.verify
     end
 
     private
@@ -276,8 +276,8 @@ module TrelloFlow
         { status: 302, body: "invalid id" }
       end
 
-      def trello_flow
-        @_trello_flow ||= Main.new global_config, LocalConfig.new(board_id: "BOARD_ID")
+      def cli
+        @_cli ||= Main.new global_config, LocalConfig.new(board_id: "BOARD_ID")
       end
 
       def global_config

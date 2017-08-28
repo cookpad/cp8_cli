@@ -1,6 +1,6 @@
 require "test_helper"
 
-module TrelloFlow
+module Cp8Cli
   class CardTest < Minitest::Test
     def setup
       Trello::Base.configure(key: "PUBLIC_KEY", token: "MEMBER_TOKEN")
