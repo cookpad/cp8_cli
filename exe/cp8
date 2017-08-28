@@ -3,39 +3,32 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require "thor"
-require "trello_flow"
+require "cp8_cli"
 
-module Cp8
-  module Cli
-    class App < Thor
-      desc "start [URL|NAME]", "Assign self to story and create new branch"
-      def start(name = nil)
-        main.start(name)
-      end
-
-      desc "submit", "Pushes branch to GitHub and opens a PR"
-      method_option :wip, desc: "Flag PR as WIP", type: :boolean
-      def submit
-        main.finish(options.to_h.symbolize_keys)
-      end
-
-      desc "open", "Open current story or board in browser"
-      def open
-        main.open
-      end
-
-      desc "cleanup", "Clean up merged branches"
-      def cleanup
-        main.cleanup
-      end
-
-      private
-
-        def main
-          TrelloFlow::Main.new
-        end
+module Cp8Cli
+  class App < Thor
+    desc "start [URL|NAME]", "Assign self to story and create new branch"
+    def start(name = nil)
+      main.start(name)
     end
+
+    desc "submit", "Pushes branch to GitHub and opens a PR"
+    method_option :wip, desc: "Flag PR as WIP", type: :boolean
+    def submit
+      main.finish(options.to_h.symbolize_keys)
+    end
+
+    desc "open", "Open current story in browser"
+    def open
+      main.open
+    end
+
+    private
+
+      def main
+        Main.new
+      end
   end
 end
 
-Cp8::Cli::App.start
+Cp8Cli::App.start

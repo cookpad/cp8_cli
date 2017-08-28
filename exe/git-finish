@@ -2,7 +2,7 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require "trello_flow"
+require "cp8_cli"
 require "trollop"
 
 
@@ -16,4 +16,4 @@ EOS
   opt :wip, "Open [WIP] PR"
 end
 
-TrelloFlow::Main.new.finish(options)
+Cp8Cli::Main.new.finish(options)

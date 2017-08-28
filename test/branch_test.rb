@@ -1,13 +1,13 @@
 require "test_helper"
 
-module TrelloFlow
+module Cp8Cli
   class BranchTest < Minitest::Test
     def test_open_pull_request_without_card
-      stub_cli
-      stub_repo "git@github.com:balvig/trello_flow.git"
+      stub_shell
+      stub_repo "git@github.com:balvig/cp8_cli.git"
 
       expect_pr(
-        repo: "balvig/trello_flow",
+        repo: "balvig/cp8_cli",
         from: "onesky.update-translations.master",
         to: "master",
         title: "",

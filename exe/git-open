@@ -2,6 +2,6 @@
 
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
-require "trello_flow"
+require "cp8_cli"
 
-TrelloFlow::Main.new.open
+Cp8Cli::Main.new.open
