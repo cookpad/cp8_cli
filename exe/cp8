@@ -18,7 +18,7 @@ module Cp8Cli
       main.finish(options.to_h.symbolize_keys)
     end
 
-    desc "open", "Open current story or board in browser"
+    desc "open", "Open current story in browser"
     def open
       main.open
     end
