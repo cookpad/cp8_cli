@@ -6,6 +6,10 @@ def shell
   Cp8Cli::Command.client
 end
 
+def stub_github_user(name)
+  shell.expect :read, name, ["git config user.name"]
+end
+
 def stub_repo(repo)
   shell.expect :read, repo, ["git config --get remote.origin.url"]
 end

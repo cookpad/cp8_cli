@@ -15,6 +15,7 @@ module Cp8Cli
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
       stub_branch("master")
+      stub_github_user("John Bobson")
 
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
@@ -37,6 +38,7 @@ module Cp8Cli
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
       stub_branch("master")
+      stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick label
       shell.expect :ask, 1, ["Add label:", Integer]
@@ -61,6 +63,7 @@ module Cp8Cli
       move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
       add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
       stub_branch("master")
+      stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick column
       shell.expect :ask, 1, ["Pick one:", Integer]
@@ -82,6 +85,7 @@ module Cp8Cli
       assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
         with(body: { assignees: ["GITHUB_USER"] })
       stub_branch("master")
+      stub_github_user("John Bobson")
 
       expect_checkout("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
 
@@ -101,6 +105,7 @@ module Cp8Cli
       stub_trello(:put, "/cards/CARD_ID/idList")
       stub_trello(:post, "/cards/CARD_ID/members")
       stub_branch("release-branch")
+      stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick column
       shell.expect :ask, 1, ["Pick one:", Integer]
