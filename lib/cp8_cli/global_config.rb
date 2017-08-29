@@ -3,7 +3,7 @@ require "cp8_cli/trello/base"
 
 module Cp8Cli
   class GlobalConfig
-    PATH = ENV["HOME"] + "/.trello-flow"
+    PATH = ENV["HOME"] + "/.trello_flow"
 
     def initialize(store = nil)
       @store = store || ConfigStore.new(PATH)
@@ -32,7 +32,7 @@ module Cp8Cli
       end
 
       def configure_trello_token
-        Command.open_url authorize_url(key)
+        Command.open_url trello_authorize_url
         store.save :token, Command.ask("Input member token")
       end
 
@@ -44,8 +44,8 @@ module Cp8Cli
         store.save :github_token, Command.ask("Input GitHub token")
       end
 
-      def authorize_url(key)
-        "https://trello.com/1/authorize?key=#{key}&name=Trello-Flow&scope=read,write,account&expiration=never&response_type=token"
+      def trello_authorize_url
+        "https://trello.com/1/authorize?key=#{trello_key}&name=Trello-Flow&scope=read,write,account&expiration=never&response_type=token"
       end
   end
 end
