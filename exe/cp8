@@ -23,6 +23,11 @@ module Cp8Cli
       main.open
     end
 
+    desc "ci", "Open CI page for current branch"
+    def ci
+      main.ci
+    end
+
     private
 
       def main

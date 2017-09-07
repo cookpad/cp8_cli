@@ -1,4 +1,5 @@
 require "active_support/core_ext/string/inflections"
+require "cp8_cli/ci"
 require "cp8_cli/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/story_query"
@@ -28,6 +29,10 @@ module Cp8Cli
     def open_pull_request(options = {})
       pr = PullRequest.new options.merge(story: current_story, from: name, target: target)
       pr.open
+    end
+
+    def open_ci
+      Ci.new(branch_name: name, repo: Repo.current).open
     end
 
     def open_story_in_browser

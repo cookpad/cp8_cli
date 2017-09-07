@@ -197,8 +197,6 @@ module Cp8Cli
       assert_requested issue_endpoint
     end
 
-
-
     def test_wrong_credentials
       stub_trello(:get, "/boards/BOARD_ID").to_return(invalid_token)
 
@@ -215,6 +213,17 @@ module Cp8Cli
       expect_error("invalid id")
 
       cli.start(card_url)
+
+      shell.verify
+    end
+
+    def test_open_ci
+      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+
+      expect_open_url("https://circleci.com/gh/balvig/cp8_cli/tree/jb.issue-title.master.balvig/cp8_cli%23ISSUE_NUMBER")
+
+      cli.ci
 
       shell.verify
     end

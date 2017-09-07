@@ -57,7 +57,7 @@ module Cp8Cli
       end
 
       def repo
-        @_repo ||= Repo.new
+        @_repo ||= Repo.current
       end
   end
 end

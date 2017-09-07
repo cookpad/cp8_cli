@@ -32,6 +32,10 @@ module Cp8Cli
       branch.open_pull_request(options)
     end
 
+    def ci
+      Branch.current.open_ci
+    end
+
     def cleanup
       Cleanup.new(Branch.current.target).run
     end
