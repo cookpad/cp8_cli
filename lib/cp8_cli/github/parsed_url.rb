@@ -6,7 +6,7 @@ module Cp8Cli
       end
 
       def number
-        parts.last
+        parts.last.split("#").first
       end
 
       def repo
