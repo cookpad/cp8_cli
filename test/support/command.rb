@@ -31,9 +31,9 @@ def expect_error(error)
 end
 
 def expect_pr(repo:, from:, to:, title:, body:)
-  expected_from = URI.escape(from)
-  expected_title = URI.escape(title)
-  expected_body = URI.escape(body)
+  expected_from = CGI.escape(from)
+  expected_title = CGI.escape(title)
+  expected_body = CGI.escape(body)
 
   expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?expand=1&title=#{expected_title}&body=#{expected_body}")
 end

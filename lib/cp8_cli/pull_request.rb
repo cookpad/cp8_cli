@@ -53,7 +53,7 @@ module Cp8Cli
       end
 
       def escape(text)
-        URI.escape text.to_s.strip
+        CGI.escape(text.to_s.strip)
       end
 
       def repo

@@ -221,7 +221,7 @@ module Cp8Cli
       stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_open_url("https://circleci.com/gh/balvig/cp8_cli/tree/jb.issue-title.master.balvig/cp8_cli%23ISSUE_NUMBER")
+      expect_open_url("https://circleci.com/gh/balvig/cp8_cli/tree/jb.issue-title.master.balvig%2Fcp8_cli%23ISSUE_NUMBER")
 
       cli.ci
 
