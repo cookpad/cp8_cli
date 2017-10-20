@@ -30,8 +30,8 @@ module Cp8Cli
       highline.say(message.green.bold)
     end
 
-    def ask(message, type = nil)
-      highline.ask(message, type)
+    def ask(message, type: nil, validate: /.+/)
+      highline.ask(message, type) { |q| q.validate = validate }
     end
 
     def title(message)

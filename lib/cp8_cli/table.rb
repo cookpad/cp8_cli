@@ -13,7 +13,7 @@ module Cp8Cli
     def pick(caption)
       return if records.none?
       render_table
-      index = Command.ask(caption, Integer)
+      index = Command.ask(caption, type: Integer)
       records[index - 1]
     end
 

@@ -41,7 +41,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick label
-      shell.expect :ask, 1, ["Add label:", Integer]
+      shell.expect :ask, 1, ["Add label:", type: Integer]
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
       cli.start("NEW CARD NAME")
@@ -66,7 +66,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick column
-      shell.expect :ask, 1, ["Pick one:", Integer]
+      shell.expect :ask, 1, ["Pick one:", type: Integer]
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
 
       cli.start(nil)
@@ -108,7 +108,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
 
       shell.expect :table, nil, [Array] # Pick column
-      shell.expect :ask, 1, ["Pick one:", Integer]
+      shell.expect :ask, 1, ["Pick one:", type: Integer]
       expect_checkout("jb.card-name.release-branch.CARD_SHORT_LINK")
 
       cli.start(nil)

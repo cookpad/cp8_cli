@@ -1,5 +1,5 @@
 module Cp8Cli
-  VERSION = "4.1.2"
+  VERSION = "4.1.3"
 
   class Version
     def self.latest?

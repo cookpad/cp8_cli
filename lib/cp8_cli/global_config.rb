@@ -26,7 +26,7 @@ module Cp8Cli
       attr_reader :store
 
       def configure_trello_key
-        Command.ask "Press enter to setup Trello for this project (will open public key url)"
+        Command.ask "Press enter to setup Trello for this project (will open public key url)", validate: //
         Command.open_url "https://trello.com/app-key"
         store.save :key, Command.ask("Input Developer API key")
       end
