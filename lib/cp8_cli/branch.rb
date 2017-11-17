@@ -27,7 +27,7 @@ module Cp8Cli
     end
 
     def open_pull_request(options = {})
-      pr = PullRequest.new options.merge(story: current_story, from: name, target: target)
+      pr = PullRequest.new options.reverse_merge(story: current_story, from: name, target: target)
       pr.open
     end
 
@@ -45,6 +45,18 @@ module Cp8Cli
 
     def target
       name_parts[2] || name
+    end
+
+    def reset
+      if Command.read("git status --porcelain")
+        Command.error "Dirty working directory, not resetting."
+      else
+        Command.run("git reset --hard origin/#{name}")
+      end
+    end
+
+    def to_s
+      name
     end
 
     private

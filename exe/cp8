@@ -28,6 +28,11 @@ module Cp8Cli
       main.ci
     end
 
+    desc "suggest", "Creates a random branch from current commit, pushes it, and resets `master` back to `origin/master`."
+    def suggest
+      main.suggest
+    end
+
     private
 
       def main

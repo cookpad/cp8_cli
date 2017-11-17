@@ -2,10 +2,11 @@ require "cp8_cli/repo"
 
 module Cp8Cli
   class PullRequest
-    def initialize(from:, target:, story: nil, **options)
+    def initialize(from:, target:, story: nil, expand: true, **options)
       @story = story
       @from = from
-      @target = target
+      @target = target.to_s
+      @expand = expand
       @options = options
     end
 
@@ -15,10 +16,16 @@ module Cp8Cli
 
     private
 
-      attr_reader :story, :from, :target, :options
+      attr_reader :story, :from, :target, :expand, :options
 
       def url
-        repo.url + "/compare/#{target}...#{escape from}?expand=1&title=#{escape title_with_prefixes}&body=#{escape body}"
+        repo.url + "/compare/#{target}...#{escape from}?title=#{escape title_with_prefixes}&body=#{escape body}#{expand_query}"
+      end
+
+      def expand_query
+        if expand
+          "&expand=1"
+        end
       end
 
       def title

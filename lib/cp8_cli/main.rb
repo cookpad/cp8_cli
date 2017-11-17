@@ -36,6 +36,16 @@ module Cp8Cli
       Branch.current.open_ci
     end
 
+    def suggest
+      original_branch = Branch.current
+      suggestion_branch = Branch.new("suggestion-#{SecureRandom.hex(8)}")
+      suggestion_branch.checkout
+      suggestion_branch.push
+      suggestion_branch.open_pull_request(target: original_branch, expand: false)
+      original_branch.checkout
+      original_branch.reset
+    end
+
     def cleanup
       Cleanup.new(Branch.current.target).run
     end
