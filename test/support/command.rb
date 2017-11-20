@@ -35,7 +35,7 @@ def expect_pr(repo:, from:, to:, title:, body:)
   expected_title = CGI.escape(title)
   expected_body = CGI.escape(body)
 
-  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?expand=1&title=#{expected_title}&body=#{expected_body}")
+  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?title=#{expected_title}&body=#{expected_body}&expand=1")
 end
 
 def expect_open_url(url)
