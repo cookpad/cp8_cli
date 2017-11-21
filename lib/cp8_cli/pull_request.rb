@@ -2,10 +2,12 @@ require "cp8_cli/repo"
 
 module Cp8Cli
   class PullRequest
-    def initialize(from:, target:, story: nil, expand: true, **options)
-      @story = story
+    def initialize(from:, target:, title: nil, body: nil, story: nil, expand: true, **options)
+      @title = title
+      @body = body
       @from = from
-      @target = target.to_s
+      @target = target
+      self.story = story
       @expand = expand
       @options = options
     end
@@ -16,10 +18,19 @@ module Cp8Cli
 
     private
 
-      attr_reader :story, :from, :target, :expand, :options
+      attr_reader :from, :target, :expand, :options
+      attr_accessor :title, :body, :release_note
+
+      def story=(story)
+        return unless story
+
+        self.title = story.pr_title
+        self.body = story.summary
+        self.release_note = "\n\n_Release note: #{story.title}_"
+      end
 
       def url
-        repo.url + "/compare/#{target}...#{escape from}?title=#{escape title_with_prefixes}&body=#{escape body}#{expand_query}"
+        repo.url + "/compare/#{target}...#{escape from}?title=#{escape title_with_prefixes}&body=#{escape body_with_release_note}#{expand_query}"
       end
 
       def expand_query
@@ -28,20 +39,8 @@ module Cp8Cli
         end
       end
 
-      def title
-        return unless story
-        story.pr_title
-      end
-
-      def body
-        return unless story
-        body = story.summary
-        body << release_note unless release_branch?
-        body
-      end
-
-      def release_note
-        "\n\n_Release note: #{story.title}_"
+      def body_with_release_note
+        body.to_s + release_note.to_s
       end
 
       def prefixes
@@ -49,10 +48,6 @@ module Cp8Cli
         prefixes << "[WIP]" if options[:wip]
         prefixes << "[#{target.titleize}]" if release_branch?
         prefixes.join(" ")
-      end
-
-      def release_branch?
-        target != "master"
       end
 
       def title_with_prefixes

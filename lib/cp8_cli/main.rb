@@ -2,6 +2,7 @@ require "cp8_cli/version"
 require "cp8_cli/local_config"
 require "cp8_cli/global_config"
 require "cp8_cli/github/issue"
+require "cp8_cli/adhoc_story"
 require "cp8_cli/current_user"
 
 module Cp8Cli
@@ -64,7 +65,8 @@ module Cp8Cli
         elsif name.to_s.start_with?("http")
           Trello::Card.find_by_url(name)
         elsif name.present?
-          create_new_card(name)
+          AdhocStory.new
+          #create_new_card(name)
         else
           pick_existing_card
         end

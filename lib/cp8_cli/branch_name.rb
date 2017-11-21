@@ -1,9 +1,10 @@
 module Cp8Cli
   class BranchName
-    def initialize(user:, target:, story:)
+    def initialize(user:, target:, title:, short_link: nil)
       @user = user
       @target = target
-      @story = story
+      @title = title
+      @short_link = short_link
     end
 
     def to_s
@@ -12,19 +13,15 @@ module Cp8Cli
 
     private
 
-      attr_reader :user, :target, :story
+      attr_reader :user, :target, :title, :short_link
 
       def parts
         parts = []
         parts << user.initials.downcase
-        parts << title
+        parts << title.parameterize[0..50]
         parts << target
-        parts << story.short_link
+        parts << short_link
         parts
-      end
-
-      def title
-        story.title.parameterize[0..50]
       end
   end
 end

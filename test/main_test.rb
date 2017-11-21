@@ -8,7 +8,7 @@ module Cp8Cli
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
     end
 
-    def test_git_start_from_url
+    def test_git_start_from_trello_url
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
@@ -29,31 +29,17 @@ module Cp8Cli
       assert_requested add_member_endpoint
     end
 
-    def test_git_start_with_name
-      lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
-      create_card_endpoint = stub_trello(:post, "/lists/BACKLOG_LIST_ID/cards").to_return_json(card)
-      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
-      labels_endpoint = stub_trello(:get, "/boards/BOARD_ID/labels").to_return_json([label])
-      add_label_endpoint = stub_trello(:post, "/cards/CARD_ID/idLabels").with(body: { value: "LABEL_ID" }).to_return_json(["LABEL_ID"])
-      move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
-      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
+    def test_git_start_without_story
+      pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls") #.to_return_json(github_issue)
       stub_branch("master")
       stub_github_user("John Bobson")
 
-      shell.expect :table, nil, [Array] # Pick label
-      shell.expect :ask, 1, ["Add label:", type: Integer]
-      expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
+      expect_checkout("jb.fix-bug.master") #.balvig/cp8_cli#PR_NUMBER")
 
-      cli.start("NEW CARD NAME")
+      cli.start("Fix bug")
 
       shell.verify
-      assert_requested lists_endpoint, times: 2
-      assert_requested create_card_endpoint
-      assert_requested board_endpoint, times: 2
-      assert_requested labels_endpoint
-      assert_requested add_label_endpoint
-      assert_requested move_to_list_endpoint
-      assert_requested add_member_endpoint
+      #assert_requested pr_endpoint
     end
 
     def test_git_start_with_blank_name

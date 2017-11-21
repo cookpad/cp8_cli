@@ -18,7 +18,8 @@ module Cp8Cli
       new BranchName.new(
         user: user,
         target: current.target,
-        story: story
+        title: story.title,
+        short_link: story.short_link
       ).to_s
     end
 
