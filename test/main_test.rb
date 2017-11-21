@@ -138,7 +138,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_git_finish
+    def test_git_submit
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -152,13 +152,13 @@ module Cp8Cli
         body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
       )
 
-      cli.finish
+      cli.submit
 
       shell.verify
       assert_requested card_endpoint
     end
 
-    def test_finish_wip
+    def test_submit_wip
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -172,12 +172,12 @@ module Cp8Cli
         body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
       )
 
-      cli.finish(wip: true)
+      cli.submit(wip: true)
 
       shell.verify
     end
 
-    def test_git_finish_github_issue
+    def test_git_submit_github_issue
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -191,7 +191,7 @@ module Cp8Cli
         body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_"
       )
 
-      cli.finish
+      cli.submit
 
       shell.verify
       assert_requested issue_endpoint

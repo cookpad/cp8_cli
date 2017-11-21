@@ -16,4 +16,4 @@ EOS
   opt :wip, "Open [WIP] PR"
 end
 
-Cp8Cli::Main.new.finish(options)
+Cp8Cli::Main.new.submit(options)

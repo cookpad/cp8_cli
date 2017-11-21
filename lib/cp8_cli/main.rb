@@ -26,7 +26,7 @@ module Cp8Cli
       Branch.current.open_story_in_browser
     end
 
-    def finish(options = {})
+    def submit(options = {})
       branch = Branch.current
       branch.push
       branch.open_pull_request(options)
