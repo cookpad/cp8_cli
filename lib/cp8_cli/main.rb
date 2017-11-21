@@ -65,8 +65,7 @@ module Cp8Cli
         elsif name.to_s.start_with?("http")
           Trello::Card.find_by_url(name)
         elsif name.present?
-          AdhocStory.new
-          #create_new_card(name)
+          AdhocStory.new(name)
         else
           pick_existing_card
         end

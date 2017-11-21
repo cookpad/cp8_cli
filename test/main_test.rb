@@ -29,7 +29,7 @@ module Cp8Cli
       assert_requested add_member_endpoint
     end
 
-    def test_git_start_without_story
+    def test_git_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls") #.to_return_json(github_issue)
       stub_branch("master")
       stub_github_user("John Bobson")
