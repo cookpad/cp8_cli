@@ -197,6 +197,24 @@ module Cp8Cli
       assert_requested issue_endpoint
     end
 
+    def test_git_submit_plain_branch
+      stub_branch("fix-this")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+
+      expect_push("fix-this")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "fix-this",
+        to: "master",
+        title: "",
+        body: ""
+      )
+
+      cli.submit
+
+      shell.verify
+    end
+
     def test_wrong_credentials
       stub_trello(:get, "/boards/BOARD_ID").to_return(invalid_token)
 

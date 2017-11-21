@@ -15,7 +15,7 @@ module Cp8Cli
     desc "submit", "Pushes branch to GitHub and opens a PR"
     method_option :wip, desc: "Flag PR as WIP", type: :boolean
     def submit
-      main.finish(options.to_h.symbolize_keys)
+      main.submit(options.to_h.symbolize_keys)
     end
 
     desc "open", "Open current story in browser"

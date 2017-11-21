@@ -15,7 +15,11 @@ module Cp8Cli
     end
 
     def self.from_story(user:, story:)
-      new BranchName.new(user: user, target: current.target, story: story).to_s
+      new BranchName.new(
+        user: user,
+        target: current.target,
+        story: story
+      ).to_s
     end
 
     def checkout
@@ -27,7 +31,7 @@ module Cp8Cli
     end
 
     def open_pull_request(options = {})
-      pr = PullRequest.new options.reverse_merge(story: current_story, from: name, target: target)
+      pr = PullRequest.new options.reverse_merge(story: current_story, from: name, target: pull_request_target)
       pr.open
     end
 
@@ -73,6 +77,18 @@ module Cp8Cli
 
       def name_parts
         @_name_parts ||= name.split(".")
+      end
+
+      def pull_request_target
+        if plain_branch?
+          "master"
+        else
+          target
+        end
+      end
+
+      def plain_branch?
+        name_parts.size == 1
       end
   end
 end
