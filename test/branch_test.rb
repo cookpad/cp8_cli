@@ -14,7 +14,7 @@ module Cp8Cli
         body: ""
       )
 
-      Branch.new("onesky.update-translations.master").open_pull_request
+      Branch.new("onesky.update-translations.master").build_pull_request.open
     end
   end
 end

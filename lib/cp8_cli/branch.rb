@@ -3,6 +3,8 @@ require "cp8_cli/ci"
 require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/story_query"
+require "cp8_cli/pull_request_title"
+require "cp8_cli/pull_request_body"
 
 module Cp8Cli
   class Branch
@@ -31,9 +33,13 @@ module Cp8Cli
       Command.run "git push origin #{name} -u"
     end
 
-    def open_pull_request(options = {})
-      pr = Github::PullRequest.new options.reverse_merge(story: story, from: name, target: pull_request_target)
-      pr.open
+    def build_pull_request(prefixes: prefixes, **options)
+      Github::PullRequest.new options.reverse_merge(
+        from: name,
+        title: PullRequestTitle.new(story, prefixes: prefixes).to_s,
+        body: PullRequestBody.new(story).to_s,
+        target: pull_request_target
+      )
     end
 
     def open_ci
@@ -53,7 +59,7 @@ module Cp8Cli
     end
 
     def reset
-      if Command.read("git status --porcelain")
+      if dirty?
         Command.error "Dirty working directory, not resetting."
       else
         Command.run("git reset --hard origin/#{name}")
@@ -90,6 +96,10 @@ module Cp8Cli
 
       def plain_branch?
         short_link.blank?
+      end
+
+      def dirty?
+        Command.read("git status --porcelain")
       end
   end
 end

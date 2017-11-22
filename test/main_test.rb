@@ -34,7 +34,7 @@ module Cp8Cli
       stub_branch("master")
       stub_github_user("John Bobson")
 
-      expect_checkout("jb.fix-bug.master") #.balvig/cp8_cli#PR_NUMBER")
+      expect_checkout("jb.fix-bug.master")
 
       cli.start("Fix bug")
 

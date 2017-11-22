@@ -1,5 +1,9 @@
 module Cp8Cli
   class CurrentUser
+    def current
+      @_current ||= new
+    end
+
     def initials
       git_user_name.parameterize(separator: " ").split.map(&:first).join
     end

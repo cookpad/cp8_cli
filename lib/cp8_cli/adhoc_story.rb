@@ -7,10 +7,9 @@ module Cp8Cli
     end
 
     def start
-      # noop for now
-    end
-
-    def assign(user)
+      create_wip_pull_request
+      branch.open_rull_
+      # create_wip_pull_request
       # noop for now
     end
 
@@ -19,6 +18,10 @@ module Cp8Cli
     end
 
     private
+
+      def branch
+        @_branch ||= Branch.current
+      end
 
       def create_wip_pull_request
         #PullRequest.submit(from:, target:, title: title, wip: true)
