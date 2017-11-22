@@ -249,7 +249,7 @@ module Cp8Cli
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
       expect_reset("jb.card-name.master.CARD_SHORT_LINK")
 
-      Branch.stub :suggestion, Branch.new("suggestion-HEX") do
+      SecureRandom.stub :hex, "HEX" do
         cli.suggest
       end
 
