@@ -4,11 +4,11 @@ require "cp8_cli/repo"
 module Cp8Cli
   module Github
     class PullRequest < Base
-      def initialize(from:, target:, title: nil, body: nil)
+      def initialize(from:, to:, title: nil, body: nil)
         @title = title
         @body = body
         @from = from
-        @target = target
+        @to = to
       end
 
       def open(expand: 1)
@@ -17,10 +17,10 @@ module Cp8Cli
 
       private
 
-        attr_reader :from, :target, :title, :body
+        attr_reader :from, :to, :title, :body
 
         def url
-          repo.url + "/compare/#{target}...#{escape from}?#{url_query}"
+          repo.url + "/compare/#{escape to}...#{escape from}?#{url_query}"
         end
 
         def url_query

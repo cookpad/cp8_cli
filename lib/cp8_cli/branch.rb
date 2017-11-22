@@ -8,6 +8,7 @@ require "cp8_cli/pull_request_body"
 
 module Cp8Cli
   class Branch
+
     def initialize(name)
       @name = name
     end
@@ -23,10 +24,14 @@ module Cp8Cli
     def self.from_story(user:, story:)
       new BranchName.new(
         user: user,
-        target: current.target,
+        target: current,
         title: story.title,
         short_link: story.short_link
       ).to_s
+    end
+
+    def story
+      @_story ||= StoryQuery.new(short_link).find if short_link
     end
 
     def checkout
@@ -35,15 +40,6 @@ module Cp8Cli
 
     def push
       Command.run "git push origin #{name} -u"
-    end
-
-    def build_pull_request(prefixes:, **options)
-      Github::PullRequest.new options.reverse_merge(
-        from: name,
-        title: PullRequestTitle.new(story, prefixes: prefixes).to_s,
-        body: PullRequestBody.new(story).to_s,
-        target: pull_request_target
-      )
     end
 
     def open_ci
@@ -59,7 +55,7 @@ module Cp8Cli
     end
 
     def target
-      name_parts[2] || name
+      name_parts[2] || "master"
     end
 
     def reset
@@ -75,12 +71,7 @@ module Cp8Cli
     end
 
     private
-
       attr_reader :name
-
-      def story
-        @_story ||= StoryQuery.new(short_link).find if short_link
-      end
 
       def short_link
         name_parts[3]
@@ -88,18 +79,6 @@ module Cp8Cli
 
       def name_parts
         @_name_parts ||= name.split(".")
-      end
-
-      def pull_request_target
-        if plain_branch?
-          "master"
-        else
-          target
-        end
-      end
-
-      def plain_branch?
-        short_link.blank?
       end
 
       def dirty?

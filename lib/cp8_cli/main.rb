@@ -30,7 +30,15 @@ module Cp8Cli
     def submit(options = {})
       branch = Branch.current
       branch.push
-      branch.build_pull_request(prefixes: options.keys).open
+
+      pr = Github::PullRequest.new(
+        from: branch,
+        to: branch.target,
+        title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys).to_s,
+        body: PullRequestBody.new(branch.story).to_s
+      )
+
+      pr.open
     end
 
     def ci
@@ -43,7 +51,11 @@ module Cp8Cli
       suggestion_branch.checkout
       suggestion_branch.push
 
-      pr = suggestion_branch.build_pull_request(target: original_branch)
+      pr = Github::PullRequest.new(
+        from: suggestion_branch,
+        to: original_branch,
+      )
+
       pr.open(expand: false)
 
       original_branch.checkout
