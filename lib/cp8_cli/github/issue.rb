@@ -44,49 +44,22 @@ module Cp8Cli
       end
 
       def start
-        # noop for now
-      end
-
-      def finish
-        # noop for now
-      end
-
-      def accept
-        # noop for now
-      end
-
-      def assign(user)
-        # add_assignes not released as gem yet https://github.com/octokit/octokit.rb/pull/894
-        client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: [user.github_login]
-      end
-
-      def add_label(label)
-        self.class.request(:post, "cards/#{id}/idLabels", value: label.id)
-      end
-
-      def attach(url:)
-        self.class.request(:post, "cards/#{id}/attachments", url: url)
+        assign CurrentUser.new
       end
 
       def short_link
         "#{repo}##{number}"
       end
 
-      def short_url
-        attributes[:shortUrl]
-      end
-
       private
 
         attr_reader :number, :repo, :attributes
 
-        def move_to(list)
-          self.class.with("cards/:id/idList").where(id: id, value: list.id).put
+        def assign(user)
+          # add_assignes not released as gem yet https://github.com/octokit/octokit.rb/pull/894
+          client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: [user.github_login]
         end
 
-        def member_ids
-          attributes["idMembers"] || []
-        end
     end
   end
 end

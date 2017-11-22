@@ -26,38 +26,28 @@ module Cp8Cli
 
       def start
         move_to board.lists.started
-      end
-
-      def finish
-        move_to board.lists.finished
-      end
-
-      def accept
-        move_to board.lists.accepted
-      end
-
-      def assign(user)
-        return if member_ids.include?(user.trello_id)
-        self.class.request(:post, "cards/#{id}/members", value: user.trello_id)
-      end
-
-      def add_label(label)
-        self.class.request(:post, "cards/#{id}/idLabels", value: label.id)
-      end
-
-      def attach(url:)
-        self.class.request(:post, "cards/#{id}/attachments", url: url)
+        assign CurrentUser.new
       end
 
       def short_link
         url.scan(/\/c\/(.+)\//).flatten.first
       end
 
-      def short_url
-        attributes[:shortUrl]
+      # Used by CP-8 bot
+      def attach(url:)
+        self.class.request(:post, "cards/#{id}/attachments", url: url)
       end
 
       private
+
+        def short_url
+          attributes[:shortUrl]
+        end
+
+        def assign(user)
+          return if member_ids.include?(user.trello_id)
+          self.class.request(:post, "cards/#{id}/members", value: user.trello_id)
+        end
 
         def move_to(list)
           self.class.with("cards/:id/idList").where(id: id, value: list.id).put

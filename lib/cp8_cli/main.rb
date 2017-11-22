@@ -16,7 +16,6 @@ module Cp8Cli
     def start(name)
       Command.error "Your `cp8_cli` version is out of date. Please run `gem update cp8_cli`." unless Version.latest?
       story = create_or_pick_story(name)
-      story.assign(current_user)
       story.start
 
       Branch.from_story(user: current_user, story: story).checkout
@@ -24,8 +23,6 @@ module Cp8Cli
 
 
 
-      # commit
-      # submit pull request
     rescue Trello::Error => error
       Command.error(error.message)
     end
