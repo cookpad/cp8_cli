@@ -1,6 +1,10 @@
+require "cp8_cli/storyable"
+
 module Cp8Cli
   module Trello
     class Card < Base
+      include Storyable
+
       belongs_to :board, foreign_key: "idBoard"
 
       def self.fields

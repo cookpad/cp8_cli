@@ -3,7 +3,6 @@ require "cp8_cli/local_config"
 require "cp8_cli/global_config"
 require "cp8_cli/github/issue"
 require "cp8_cli/adhoc_story"
-require "cp8_cli/current_user"
 
 module Cp8Cli
   class Main
@@ -17,7 +16,7 @@ module Cp8Cli
       Command.error "Your `cp8_cli` version is out of date. Please run `gem update cp8_cli`." unless Version.latest?
 
       story = create_or_pick_story(name)
-      Branch.from_story(user: current_user, story: story).checkout
+      story.branch.checkout
       story.start
     rescue Trello::Error => error
       Command.error(error.message)
@@ -34,8 +33,8 @@ module Cp8Cli
       pr = Github::PullRequest.new(
         from: branch,
         to: branch.target,
-        title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys).to_s,
-        body: PullRequestBody.new(branch.story).to_s
+        title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys),
+        body: PullRequestBody.new(branch.story)
       )
 
       pr.open
@@ -88,10 +87,6 @@ module Cp8Cli
 
       def pick_existing_card
         Table.pick board.lists.backlog.cards
-      end
-
-      def current_user
-        @_current_user ||= CurrentUser.new
       end
   end
 end

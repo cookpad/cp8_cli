@@ -2,6 +2,7 @@ require "active_support/core_ext/string/inflections"
 require "cp8_cli/ci"
 require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
+require "cp8_cli/current_user"
 require "cp8_cli/story_query"
 require "cp8_cli/pull_request_title"
 require "cp8_cli/pull_request_body"
@@ -21,9 +22,9 @@ module Cp8Cli
       new("suggestion-#{SecureRandom.hex(8)}")
     end
 
-    def self.from_story(user:, story:)
+    def self.from_story(story)
       new BranchName.new(
-        user: user,
+        user: CurrentUser.new,
         target: current,
         title: story.title,
         short_link: story.short_link

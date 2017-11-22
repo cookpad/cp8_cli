@@ -1,5 +1,8 @@
+require "cp8_cli/storyable"
+
 module Cp8Cli
   class AdhocStory
+    include Storyable
     attr_reader :title
 
     def initialize(title)
@@ -18,19 +21,15 @@ module Cp8Cli
       nil # noop for now
     end
 
+    def pr_title
+      PullRequestTitle.new(title, prefixes: [:wip]).to_s
+    end
+
     private
 
-      def branch
-        @_branch ||= Branch.current
-      end
-
       def create_wip_pull_request
-        pr = Github::PullRequest.new(title: pr_title, from: branch.current.name, to: branch.target)
+        pr = Github::PullRequest.new(title: pr_title, from: branch, to: branch.target)
         pr.open
-      end
-
-      def pr_title
-        PullRequestTitle.new(title, prefixes: [:wip]).to_s
       end
   end
 end

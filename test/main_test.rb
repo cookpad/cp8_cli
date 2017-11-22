@@ -33,8 +33,17 @@ module Cp8Cli
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls") #.to_return_json(github_issue)
       stub_branch("master")
       stub_github_user("John Bobson")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_checkout("jb.fix-bug.master")
+      expect_push("jb.fix-bug.master")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "jb.fix-bug.master",
+        to: "master",
+        title: "Fix bug",
+        body: ""
+      )
 
       cli.start("Fix bug")
 
