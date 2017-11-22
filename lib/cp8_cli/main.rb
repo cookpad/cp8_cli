@@ -39,7 +39,7 @@ module Cp8Cli
 
     def suggest
       original_branch = Branch.current
-      suggestion_branch = Branch.new("suggestion-#{SecureRandom.hex(8)}")
+      suggestion_branch = Branch.suggestion
       suggestion_branch.checkout
       suggestion_branch.push
 

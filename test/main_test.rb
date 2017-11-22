@@ -232,6 +232,31 @@ module Cp8Cli
       shell.verify
     end
 
+    def test_suggest
+      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+
+      expect_checkout("suggestion-HEX")
+      expect_push("suggestion-HEX")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "suggestion-HEX",
+        to: "jb.card-name.master.CARD_SHORT_LINK",
+        title: "",
+        body: "",
+        expand: false
+      )
+      expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
+      expect_reset("jb.card-name.master.CARD_SHORT_LINK")
+
+      Branch.stub :suggestion, Branch.new("suggestion-HEX") do
+        cli.suggest
+      end
+
+      shell.verify
+
+    end
+
     private
 
       def card_short_link

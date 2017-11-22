@@ -16,6 +16,10 @@ module Cp8Cli
       new Command.read("git rev-parse --abbrev-ref HEAD")
     end
 
+    def self.suggestion
+      new("suggestion-#{SecureRandom.hex(8)}")
+    end
+
     def self.from_story(user:, story:)
       new BranchName.new(
         user: user,
