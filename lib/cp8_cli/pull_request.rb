@@ -30,12 +30,20 @@ module Cp8Cli
       end
 
       def url
-        repo.url + "/compare/#{target}...#{escape from}?title=#{escape title_with_prefixes}&body=#{escape body_with_release_note}#{expand_query}"
+        repo.url + "/compare/#{target}...#{escape from}?#{url_query}"
+      end
+
+      def url_query
+        {
+          title: title_with_prefixes,
+          body: body_with_release_note,
+          expand: expand_query
+        }.to_query
       end
 
       def expand_query
         if expand
-          "&expand=1"
+          "1"
         end
       end
 
@@ -46,7 +54,6 @@ module Cp8Cli
       def prefixes
         prefixes = []
         prefixes << "[WIP]" if options[:wip]
-        prefixes << "[#{target.titleize}]" if release_branch?
         prefixes.join(" ")
       end
 

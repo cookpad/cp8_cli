@@ -89,7 +89,7 @@ module Cp8Cli
       end
 
       def plain_branch?
-        name_parts.size == 1
+        short_link.blank?
       end
   end
 end

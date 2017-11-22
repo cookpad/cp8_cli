@@ -6,6 +6,10 @@ module Cp8Cli
       @title = title
     end
 
+    def start
+      # noop for now
+    end
+
     def assign(user)
       # noop for now
     end
