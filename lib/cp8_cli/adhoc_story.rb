@@ -8,9 +8,6 @@ module Cp8Cli
 
     def start
       create_wip_pull_request
-      branch.open_rull_
-      # create_wip_pull_request
-      # noop for now
     end
 
     def short_link
@@ -24,7 +21,7 @@ module Cp8Cli
       end
 
       def create_wip_pull_request
-        #PullRequest.submit(from:, target:, title: title, wip: true)
+        branch.build_pull_request.open(prefixes: :wip)
       end
   end
 end
