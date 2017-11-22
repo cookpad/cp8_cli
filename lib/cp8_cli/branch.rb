@@ -1,6 +1,6 @@
 require "active_support/core_ext/string/inflections"
 require "cp8_cli/ci"
-require "cp8_cli/pull_request"
+require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/story_query"
 
@@ -32,7 +32,7 @@ module Cp8Cli
     end
 
     def open_pull_request(options = {})
-      pr = PullRequest.new options.reverse_merge(story: current_story, from: name, target: pull_request_target)
+      pr = Github::PullRequest.new options.reverse_merge(story: story, from: name, target: pull_request_target)
       pr.open
     end
 
@@ -41,8 +41,8 @@ module Cp8Cli
     end
 
     def open_story_in_browser
-      if current_story
-        Command.open_url current_story.url
+      if story
+        Command.open_url story.url
       else
         Command.error "Not currently on story branch"
       end
@@ -68,8 +68,8 @@ module Cp8Cli
 
       attr_reader :name
 
-      def current_story
-        @_current_story ||= StoryQuery.new(short_link).find if short_link
+      def story
+        @_story ||= StoryQuery.new(short_link).find if short_link
       end
 
       def short_link

@@ -18,7 +18,14 @@ module Cp8Cli
       story = create_or_pick_story(name)
       story.assign(current_user)
       story.start
+
       Branch.from_story(user: current_user, story: story).checkout
+
+
+
+
+      # commit
+      # submit pull request
     rescue Trello::Error => error
       Command.error(error.message)
     end
@@ -42,7 +49,11 @@ module Cp8Cli
       suggestion_branch = Branch.new("suggestion-#{SecureRandom.hex(8)}")
       suggestion_branch.checkout
       suggestion_branch.push
+
+
+
       suggestion_branch.open_pull_request(target: original_branch, expand: false)
+
       original_branch.checkout
       original_branch.reset
     end
@@ -69,13 +80,6 @@ module Cp8Cli
         else
           pick_existing_card
         end
-      end
-
-      def create_new_card(name)
-        label = Table.pick board.labels, caption: "Add label:"
-        card = board.lists.backlog.cards.create name: name
-        card.add_label(label) if label
-        card
       end
 
       def pick_existing_card

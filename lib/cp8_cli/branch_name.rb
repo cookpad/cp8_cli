@@ -21,7 +21,7 @@ module Cp8Cli
         parts << title.parameterize[0..50]
         parts << target
         parts << short_link
-        parts
+        parts.compact
       end
   end
 end

@@ -39,7 +39,7 @@ module Cp8Cli
       cli.start("Fix bug")
 
       shell.verify
-      #assert_requested pr_endpoint
+      assert_requested pr_endpoint
     end
 
     def test_git_start_with_blank_name
