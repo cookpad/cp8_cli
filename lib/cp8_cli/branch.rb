@@ -37,7 +37,7 @@ module Cp8Cli
       Command.run "git push origin #{name} -u"
     end
 
-    def build_pull_request(prefixes: prefixes, **options)
+    def build_pull_request(prefixes:, **options)
       Github::PullRequest.new options.reverse_merge(
         from: name,
         title: PullRequestTitle.new(story, prefixes: prefixes).to_s,

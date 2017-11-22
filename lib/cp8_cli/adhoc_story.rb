@@ -1,9 +1,11 @@
 module Cp8Cli
   class AdhocStory
-    attr_reader :title
-
     def initialize(title)
       @title = title
+    end
+
+    def summary
+      nil # noop for now
     end
 
     def start
@@ -11,17 +13,20 @@ module Cp8Cli
     end
 
     def short_link
-      nil
+      nil # noop for now
     end
 
     private
+
+      attr_reader :title
 
       def branch
         @_branch ||= Branch.current
       end
 
       def create_wip_pull_request
-        branch.build_pull_request.open(prefixes: :wip)
+        pr = PullRequest.new(title: title, from: branch.current.name, to: branch.target)
+        pr.open
       end
   end
 end
