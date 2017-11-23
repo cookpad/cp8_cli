@@ -12,7 +12,7 @@ module Cp8Cli
       end
 
       def open(expand: 1)
-        #Command.open_url(url + "&expand=#{expand}")
+        Command.open_url(url + "&expand=#{expand}")
       end
 
       private

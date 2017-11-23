@@ -8,7 +8,7 @@ module Cp8Cli
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
     end
 
-    def test_git_start_from_trello_url
+    def test_start_from_trello_url
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
       lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
@@ -29,7 +29,7 @@ module Cp8Cli
       assert_requested add_member_endpoint
     end
 
-    def test_git_start_adhoc_story
+    def test_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls") #.to_return_json(github_issue)
       stub_branch("master")
       stub_github_user("John Bobson")
@@ -51,30 +51,13 @@ module Cp8Cli
       assert_requested pr_endpoint
     end
 
-    def test_git_start_with_blank_name
-      lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
-      cards_endpoint = stub_trello(:get, "/lists/BACKLOG_LIST_ID/cards").to_return_json([card])
-      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
-      move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
-      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
-      stub_branch("master")
-      stub_github_user("John Bobson")
+    #def test_start_with_blank_name
+      #expect_error("No name/url provided")
 
-      shell.expect :table, nil, [Array] # Pick column
-      shell.expect :ask, 1, ["Pick one:", type: Integer]
-      expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
+      #cli.start(nil)
+    #end
 
-      cli.start(nil)
-
-      shell.verify
-      assert_requested lists_endpoint, times: 2
-      assert_requested cards_endpoint
-      assert_requested board_endpoint, times: 2
-      assert_requested move_to_list_endpoint
-      assert_requested add_member_endpoint
-    end
-
-    def test_git_start_github_issue
+    def test_start_github_issue
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
       assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
@@ -93,24 +76,19 @@ module Cp8Cli
       assert_requested assign_endpoint
     end
 
-    def test_git_start_release_branch
-      stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
-      stub_trello(:get, "/lists/BACKLOG_LIST_ID/cards").to_return_json([card])
-      stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
-      stub_trello(:put, "/cards/CARD_ID/idList")
-      stub_trello(:post, "/cards/CARD_ID/members")
+    def test_start_release_branch
+      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      stub_github(:get, "/user").to_return_json(github_user)
+      stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees")
       stub_branch("release-branch")
       stub_github_user("John Bobson")
 
-      shell.expect :table, nil, [Array] # Pick column
-      shell.expect :ask, 1, ["Pick one:", type: Integer]
-      expect_checkout("jb.card-name.release-branch.CARD_SHORT_LINK")
+      expect_checkout("jb.issue-title.release-branch.balvig/cp8_cli#ISSUE_NUMBER")
 
-      cli.start(nil)
+      cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
       shell.verify
     end
-
 
     def test_git_open_master
       stub_branch("master")
@@ -206,16 +184,6 @@ module Cp8Cli
       )
 
       cli.submit
-
-      shell.verify
-    end
-
-    def test_wrong_credentials
-      stub_trello(:get, "/boards/BOARD_ID").to_return(invalid_token)
-
-      expect_error("invalid token")
-
-      cli.start(nil)
 
       shell.verify
     end
@@ -329,7 +297,7 @@ module Cp8Cli
       end
 
       def cli
-        @_cli ||= Main.new global_config, LocalConfig.new(board_id: "BOARD_ID")
+        @_cli ||= Main.new global_config
       end
 
       def global_config

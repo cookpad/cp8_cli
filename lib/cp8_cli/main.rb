@@ -1,25 +1,16 @@
 require "cp8_cli/version"
-require "cp8_cli/local_config"
 require "cp8_cli/global_config"
-require "cp8_cli/github/issue"
-require "cp8_cli/adhoc_story"
+require "cp8_cli/commands/start"
 
 module Cp8Cli
   class Main
-    def initialize(global_config = GlobalConfig.new, local_config = LocalConfig.new)
+    def initialize(global_config = GlobalConfig.new)
       Trello::Base.configure(key: global_config.trello_key, token: global_config.trello_token)
       Github::Base.configure(token: global_config.github_token)
-      @local_config = local_config
     end
 
     def start(name)
-      Command.error "Your `cp8_cli` version is out of date. Please run `gem update cp8_cli`." unless Version.latest?
-
-      story = create_or_pick_story(name)
-      story.branch.checkout
-      story.start
-    rescue Trello::Error => error
-      Command.error(error.message)
+      Commands::Start.new(name).run
     end
 
     def open
@@ -64,29 +55,5 @@ module Cp8Cli
     def cleanup
       Cleanup.new(Branch.current.target).run
     end
-
-    private
-
-      attr_reader :local_config
-
-      def board
-        @_board ||= local_config.board
-      end
-
-      def create_or_pick_story(name)
-        if name.to_s.start_with?("https://github.com")
-          Github::Issue.find_by_url(name)
-        elsif name.to_s.start_with?("http")
-          Trello::Card.find_by_url(name)
-        elsif name.present?
-          AdhocStory.new(name)
-        else
-          pick_existing_card
-        end
-      end
-
-      def pick_existing_card
-        Table.pick board.lists.backlog.cards
-      end
   end
 end
