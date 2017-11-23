@@ -1,0 +1,31 @@
+module Cp8Cli
+  module Commands
+    class Submit
+      def initialize(options = {})
+        @options = options
+      end
+
+      def run
+        branch.push
+        pull_request.open
+      end
+
+      private
+
+        attr_reader :options
+
+        def branch
+          @_branch ||= Branch.current
+        end
+
+        def pull_request
+          Github::PullRequest.new(
+            from: branch,
+            to: branch.target,
+            title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys),
+            body: PullRequestBody.new(branch.story)
+          )
+        end
+    end
+  end
+end

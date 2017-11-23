@@ -1,6 +1,9 @@
 require "cp8_cli/version"
 require "cp8_cli/global_config"
+require "cp8_cli/commands/cleanup"
 require "cp8_cli/commands/start"
+require "cp8_cli/commands/submit"
+require "cp8_cli/commands/suggest"
 
 module Cp8Cli
   class Main
@@ -18,17 +21,7 @@ module Cp8Cli
     end
 
     def submit(options = {})
-      branch = Branch.current
-      branch.push
-
-      pr = Github::PullRequest.new(
-        from: branch,
-        to: branch.target,
-        title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys),
-        body: PullRequestBody.new(branch.story)
-      )
-
-      pr.open
+      Commands::Submit.new(options).run
     end
 
     def ci
@@ -36,24 +29,11 @@ module Cp8Cli
     end
 
     def suggest
-      original_branch = Branch.current
-      suggestion_branch = Branch.suggestion
-      suggestion_branch.checkout
-      suggestion_branch.push
-
-      pr = Github::PullRequest.new(
-        from: suggestion_branch,
-        to: original_branch,
-      )
-
-      pr.open(expand: false)
-
-      original_branch.checkout
-      original_branch.reset
+      Commands::Suggest.new.run
     end
 
     def cleanup
-      Cleanup.new(Branch.current.target).run
+      Commands::Cleanup.new.run
     end
   end
 end
