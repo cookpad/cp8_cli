@@ -36,14 +36,15 @@ module Cp8Cli
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_checkout("jb.fix-bug.master")
+      expect_commit("Started \"Fix Bug\"")
       expect_push("jb.fix-bug.master")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb.fix-bug.master",
-        to: "master",
-        title: "Fix bug",
-        body: ""
-      )
+      #expect_pr(
+        #repo: "balvig/cp8_cli",
+        #from: "jb.fix-bug.master",
+        #to: "master",
+        #title: "Fix bug",
+        #body: ""
+      #)
 
       cli.start("Fix bug")
 
@@ -90,7 +91,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_git_open_master
+    def test_open_master
       stub_branch("master")
 
       expect_error("Not currently on story branch")
@@ -100,7 +101,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_git_open_card
+    def test_open_card
       stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
 
@@ -111,7 +112,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_git_submit
+    def test_submit
       card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
       stub_branch("jb.card-name.master.CARD_SHORT_LINK")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -150,7 +151,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_git_submit_github_issue
+    def test_submit_github_issue
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -170,7 +171,7 @@ module Cp8Cli
       assert_requested issue_endpoint
     end
 
-    def test_git_submit_plain_branch
+    def test_submit_plain_branch
       stub_branch("fix-this")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
@@ -198,7 +199,7 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_open_ci
+    def test_ci
       stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 

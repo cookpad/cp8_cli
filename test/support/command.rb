@@ -22,6 +22,10 @@ def expect_checkout(branch)
   shell.expect :run, nil, ["git checkout #{branch} >/dev/null 2>&1 || git checkout -b #{branch}"]
 end
 
+def expect_commit(message)
+  shell.expect :run, nil, ["git commit --allow-empty -m#{message}"]
+end
+
 def expect_push(branch)
   shell.expect :run, nil, ["git push origin #{branch} -u"]
 end

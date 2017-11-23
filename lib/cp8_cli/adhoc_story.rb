@@ -28,8 +28,11 @@ module Cp8Cli
     private
 
       def create_wip_pull_request
-        pr = Github::PullRequest.new(title: pr_title, from: branch, to: branch.target)
-        pr.open
+        Github::PullRequest.create(
+          title: pr_title,
+          from: branch,
+          to: branch.target
+        )
       end
   end
 end

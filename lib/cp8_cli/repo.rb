@@ -17,8 +17,12 @@ module Cp8Cli
       path.split('/').last
     end
 
+    def shorthand
+      "#{user}/#{name}"
+    end
+
     def url
-      "https://github.com/#{user}/#{name}"
+      "https://github.com/#{shorthand}"
     end
 
     private

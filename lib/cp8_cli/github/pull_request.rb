@@ -4,6 +4,10 @@ require "cp8_cli/repo"
 module Cp8Cli
   module Github
     class PullRequest < Base
+      def self.create(attributes = {})
+        new(attributes).save
+      end
+
       def initialize(from:, to:, title: nil, body: nil)
         @title = title
         @body = body
@@ -13,6 +17,16 @@ module Cp8Cli
 
       def open(expand: 1)
         Command.open_url(url + "&expand=#{expand}")
+      end
+
+      def save
+        client.create_pull_request(
+          repo.shorthand,
+          to,
+          from,
+          title,
+          body
+        )
       end
 
       private

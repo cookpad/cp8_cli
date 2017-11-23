@@ -17,7 +17,7 @@ module Cp8Cli
     end
 
     def open
-      Branch.current.open_story_in_browser
+      Branch.current.open_story_in_browser # TODO: move to /commands
     end
 
     def submit(options = {})
@@ -25,7 +25,7 @@ module Cp8Cli
     end
 
     def ci
-      Branch.current.open_ci
+      Branch.current.open_ci # TODO: move to /commands
     end
 
     def suggest
