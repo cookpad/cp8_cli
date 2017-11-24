@@ -23,7 +23,8 @@ def expect_checkout(branch)
 end
 
 def expect_commit(message)
-  shell.expect :run, nil, ["git commit --allow-empty -m#{message}"]
+  expected_command = "git commit --allow-empty -m\"#{message}\""
+  shell.expect :run, nil, [expected_command]
 end
 
 def expect_push(branch)

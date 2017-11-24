@@ -14,6 +14,8 @@ module Cp8Cli
     end
 
     def start
+      create_empty_commit
+      push_branch
       create_wip_pull_request
     end
 
@@ -26,6 +28,22 @@ module Cp8Cli
     end
 
     private
+
+      def create_empty_commit
+        Command.run "git commit --allow-empty -m\"#{commit_message}\""
+      end
+
+      def commit_message
+        "Started: #{escaped_title}"
+      end
+
+      def escaped_title
+        title.gsub('"', '\"')
+      end
+
+      def push_branch
+        branch.push
+      end
 
       def create_wip_pull_request
         Github::PullRequest.create(
