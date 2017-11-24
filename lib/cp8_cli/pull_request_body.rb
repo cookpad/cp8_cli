@@ -4,7 +4,7 @@ module Cp8Cli
       @story = story
     end
 
-    def to_s
+    def run
       return unless story
 
       summary_with_release_note

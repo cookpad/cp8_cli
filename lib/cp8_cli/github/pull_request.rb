@@ -16,7 +16,10 @@ module Cp8Cli
       end
 
       def open(expand: 1)
-        Command.open_url(url + "&expand=#{expand}")
+        query = base_query.merge(expand: expand)
+        url = "#{base_url}?#{query.compact.to_query}"
+
+        Command.open_url(url)
       end
 
       def save
@@ -33,15 +36,15 @@ module Cp8Cli
 
         attr_reader :from, :to, :title, :body
 
-        def url
-          repo.url + "/compare/#{escape to}...#{escape from}?#{url_query}"
+        def base_url
+          repo.url + "/compare/#{escape to}...#{escape from}"
         end
 
-        def url_query
+        def base_query
           {
             title: title,
             body: body,
-          }.to_query
+          }
         end
 
         def escape(text)

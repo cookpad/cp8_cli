@@ -22,7 +22,7 @@ module Cp8Cli
     end
 
     def pr_title
-      PullRequestTitle.new(title, prefixes: [:wip]).to_s
+      PullRequestTitle.new(title, prefixes: [:wip]).run
     end
 
     private

@@ -5,8 +5,8 @@ module Cp8Cli
       @prefixes = prefixes
     end
 
-    def to_s
-      title_with_prefixes
+    def run
+      title_with_prefixes.presence
     end
 
     private

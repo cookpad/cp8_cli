@@ -34,12 +34,11 @@ def expect_error(error)
   shell.expect :error, nil, [error]
 end
 
-def expect_pr(repo:, from:, to:, title:, body:, expand: 1)
+def expect_pr(repo:, from:, to:, **options)
   expected_from = CGI.escape(from)
-  expected_title = CGI.escape(title)
-  expected_body = CGI.escape(body)
+  query = options.to_query
 
-  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?body=#{expected_body}&title=#{expected_title}&expand=#{expand}")
+  expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?#{query}")
 end
 
 def expect_reset(branch)

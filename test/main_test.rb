@@ -123,7 +123,8 @@ module Cp8Cli
         from: "jb.card-name.master.CARD_SHORT_LINK",
         to: "master",
         title: "CARD NAME [Delivers #CARD_SHORT_LINK]",
-        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
+        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_",
+        expand: 1
       )
 
       cli.submit
@@ -143,7 +144,8 @@ module Cp8Cli
         from: "jb.card-name.master.CARD_SHORT_LINK",
         to: "master",
         title: "[WIP] CARD NAME [Delivers #CARD_SHORT_LINK]",
-        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_"
+        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_",
+        expand: 1
       )
 
       cli.submit(wip: true)
@@ -162,7 +164,8 @@ module Cp8Cli
         from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
         to: "master",
         title: "ISSUE TITLE",
-        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_"
+        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
+        expand: 1
       )
 
       cli.submit
@@ -180,8 +183,7 @@ module Cp8Cli
         repo: "balvig/cp8_cli",
         from: "fix-this",
         to: "master",
-        title: "",
-        body: ""
+        expand: 1
       )
 
       cli.submit
@@ -219,10 +221,7 @@ module Cp8Cli
       expect_pr(
         repo: "balvig/cp8_cli",
         from: "suggestion-HEX",
-        to: "jb.card-name.master.CARD_SHORT_LINK",
-        title: "",
-        body: "",
-        expand: false
+        to: "jb.card-name.master.CARD_SHORT_LINK"
       )
       expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
       expect_reset("jb.card-name.master.CARD_SHORT_LINK")

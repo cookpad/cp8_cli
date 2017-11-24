@@ -7,7 +7,7 @@ module Cp8Cli
 
         suggestion_branch.checkout
         suggestion_branch.push
-        pull_request.open(expand: false)
+        pull_request.open(expand: nil)
 
         original_branch.checkout
         original_branch.reset
