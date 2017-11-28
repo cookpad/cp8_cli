@@ -30,7 +30,8 @@ module Cp8Cli
     end
 
     def test_start_adhoc_story
-      pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls")
+      pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
+        with(body: { base: "master", head: "jb.fix-bug.master", title: "[WIP] Fix bug" })
       stub_branch("master")
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")

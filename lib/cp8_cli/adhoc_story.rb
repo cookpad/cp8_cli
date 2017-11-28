@@ -48,7 +48,7 @@ module Cp8Cli
       def create_wip_pull_request
         Github::PullRequest.create(
           title: pr_title,
-          from: branch,
+          from: branch.name,
           to: branch.target
         )
       end

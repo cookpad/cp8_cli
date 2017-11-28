@@ -10,6 +10,8 @@ require "cp8_cli/pull_request_body"
 module Cp8Cli
   class Branch
 
+    attr_reader :name
+
     def initialize(name)
       @name = name
     end
@@ -72,8 +74,6 @@ module Cp8Cli
     end
 
     private
-      attr_reader :name
-
       def short_link
         name_parts[3]
       end
