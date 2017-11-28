@@ -16,4 +16,5 @@ EOS
   opt :wip, "Open [WIP] PR"
 end
 
+puts "git finish is DEPRECATED, please use cp8 submit".red
 Cp8Cli::Main.new.submit(options)

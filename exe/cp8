@@ -7,7 +7,7 @@ require "cp8_cli"
 
 module Cp8Cli
   class App < Thor
-    desc "start [URL|NAME]", "Assign self to story and create new branch"
+    desc "start [URL|TITLE]", "Assign self to story and create new branch"
     def start(name = nil)
       main.start(name)
     end
