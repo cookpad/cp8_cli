@@ -74,8 +74,15 @@ module Cp8Cli
     end
 
     private
+
       def short_link
-        name_parts[3]
+        return unless linked_branch?
+
+        name_parts.last
+      end
+
+      def linked_branch?
+        name_parts.size == 4
       end
 
       def name_parts
