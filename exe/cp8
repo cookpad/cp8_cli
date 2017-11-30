@@ -7,7 +7,7 @@ require "cp8_cli"
 
 module Cp8Cli
   class App < Thor
-    desc "start [URL|TITLE]", "Assign self to story and create new branch"
+    desc "start [URL|TITLE]", "Picks up existing issue/creates new ad hoc story and checks out branch"
     def start(name = nil)
       main.start(name)
     end
@@ -18,7 +18,7 @@ module Cp8Cli
       main.submit(options.to_h.symbolize_keys)
     end
 
-    desc "open", "Open current story in browser"
+    desc "open", "Open current associated issue in browser"
     def open
       main.open
     end
@@ -28,7 +28,7 @@ module Cp8Cli
       main.ci
     end
 
-    desc "suggest", "Creates a random branch from current commit, pushes it, and resets `master` back to `origin/master`."
+    desc "suggest", "Creates a suggestion branch from new commits, pushes it, opens URL and resets `master` back to `origin/master`."
     def suggest
       main.suggest
     end
