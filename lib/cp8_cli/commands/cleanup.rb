@@ -21,7 +21,7 @@ module Cp8Cli
         end
 
         def remove_fully_merged_local_branches
-          Command.run "git branch --merged origin/#{target} | grep '#{filter}' | xargs git branch -D"
+          Command.run "git branch --merged origin/#{target} | grep -v ' #{target}' | xargs git branch -d"
         end
 
         def remove_fully_merged_remote_branches
