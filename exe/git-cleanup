@@ -4,5 +4,4 @@ $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require "cp8_cli"
 
-puts "git cleanup is DEPRECATED, please use cp8 cleanup".red
-Cp8Cli::Main.new.cleanup
+Cp8Cli::Command.error "cleanup command has been removed, consider using https://github.com/Seinh/git-prune instead?"

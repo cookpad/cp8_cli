@@ -1,6 +1,5 @@
 require "cp8_cli/version"
 require "cp8_cli/global_config"
-require "cp8_cli/commands/cleanup"
 require "cp8_cli/commands/start"
 require "cp8_cli/commands/submit"
 require "cp8_cli/commands/suggest"
@@ -30,10 +29,6 @@ module Cp8Cli
 
     def suggest
       Commands::Suggest.new.run
-    end
-
-    def cleanup
-      Commands::Cleanup.new.run
     end
   end
 end
