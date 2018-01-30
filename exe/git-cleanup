@@ -1,7 +1,0 @@
-#!/usr/bin/env ruby
-
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require "cp8_cli"
-
-Cp8Cli::Command.error "cleanup command has been removed, consider using https://github.com/Seinh/git-prune instead?"

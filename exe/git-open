@@ -1,8 +1,0 @@
-#!/usr/bin/env ruby
-
-$LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
-
-require "cp8_cli"
-
-puts "git open is DEPRECATED, please use cp8 open".red
-Cp8Cli::Main.new.open
