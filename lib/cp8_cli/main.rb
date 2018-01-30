@@ -1,5 +1,6 @@
 require "cp8_cli/version"
 require "cp8_cli/global_config"
+require "cp8_cli/commands/deploy"
 require "cp8_cli/commands/start"
 require "cp8_cli/commands/submit"
 require "cp8_cli/commands/suggest"
@@ -29,6 +30,10 @@ module Cp8Cli
 
     def suggest
       Commands::Suggest.new.run
+    end
+
+    def deploy(environment)
+      Commands::Deploy.new(environment).run
     end
   end
 end

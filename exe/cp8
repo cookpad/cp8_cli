@@ -33,6 +33,11 @@ module Cp8Cli
       main.suggest
     end
 
+    desc "deploy [ENVIRONMENT]", "copies deploy command to clipboard and opens Slack"
+    def deploy(environment = "production")
+      main.deploy(environment)
+    end
+
     private
 
       def main
