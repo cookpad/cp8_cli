@@ -1,5 +1,7 @@
 require "cp8_cli/version"
 require "cp8_cli/global_config"
+require "cp8_cli/commands/ci"
+require "cp8_cli/commands/open"
 require "cp8_cli/commands/start"
 require "cp8_cli/commands/submit"
 require "cp8_cli/commands/suggest"
@@ -16,7 +18,7 @@ module Cp8Cli
     end
 
     def open
-      Branch.current.open_story_in_browser # TODO: move to /commands
+      Commands::Open.new.run
     end
 
     def submit(options = {})
@@ -24,7 +26,7 @@ module Cp8Cli
     end
 
     def ci
-      Branch.current.open_ci # TODO: move to /commands
+      Commands::Ci.new.run
     end
 
     def suggest
