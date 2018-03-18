@@ -4,29 +4,7 @@ module Cp8Cli
   class MainTest < Minitest::Test
     def setup
       stub_shell
-      stub_trello(:get, "/tokens/MEMBER_TOKEN/member").to_return_json(member)
       stub_request(:get, /api\.rubygems\.org/).to_return_json({})
-    end
-
-    def test_start_from_trello_url
-      card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      board_endpoint = stub_trello(:get, "/boards/BOARD_ID").to_return_json(board)
-      lists_endpoint = stub_trello(:get, "/boards/BOARD_ID/lists").to_return_json([backlog, started, finished])
-      move_to_list_endpoint = stub_trello(:put, "/cards/CARD_ID/idList").with(body: { value: "STARTED_LIST_ID" })
-      add_member_endpoint = stub_trello(:post, "/cards/CARD_ID/members").with(body: { value: "MEMBER_ID" })
-      stub_branch("master")
-      stub_github_user("John Bobson")
-
-      expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
-
-      cli.start(card_url)
-
-      shell.verify
-      assert_requested card_endpoint
-      assert_requested board_endpoint
-      assert_requested lists_endpoint
-      assert_requested move_to_list_endpoint
-      assert_requested add_member_endpoint
     end
 
     def test_start_adhoc_story
@@ -46,11 +24,11 @@ module Cp8Cli
       assert_requested pr_endpoint
     end
 
-    #def test_start_with_blank_name
-      #expect_error("No name/url provided")
+    def test_start_with_blank_name
+      expect_error("No name/url provided")
 
-      #cli.start(nil)
-    #end
+      cli.start(nil)
+    end
 
     def test_start_github_issue
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
@@ -95,11 +73,11 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_open_card
-      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
+    def test_open_issue
+      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
 
-      expect_open_url("https://trello.com/c/CARD_SHORT_LINK/2-trello-flow")
+      expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
       cli.open
 
@@ -107,47 +85,6 @@ module Cp8Cli
     end
 
     def test_submit
-      card_endpoint = stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-
-      expect_push("jb.card-name.master.CARD_SHORT_LINK")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb.card-name.master.CARD_SHORT_LINK",
-        to: "master",
-        title: "CARD NAME [Delivers #CARD_SHORT_LINK]",
-        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_",
-        expand: 1
-      )
-
-      cli.submit
-
-      shell.verify
-      assert_requested card_endpoint
-    end
-
-    def test_submit_wip
-      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return_json(card)
-      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-
-      expect_push("jb.card-name.master.CARD_SHORT_LINK")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb.card-name.master.CARD_SHORT_LINK",
-        to: "master",
-        title: "[WIP] CARD NAME [Delivers #CARD_SHORT_LINK]",
-        body: "Trello: #{card_short_url}\n\n_Release note: CARD NAME_",
-        expand: 1
-      )
-
-      cli.submit(wip: true)
-
-      shell.verify
-    end
-
-    def test_submit_github_issue
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -168,6 +105,27 @@ module Cp8Cli
       assert_requested issue_endpoint
     end
 
+    def test_submit_wip
+      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+
+      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
+        to: "master",
+        title: "[WIP] ISSUE TITLE",
+        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
+        expand: 1
+      )
+
+      cli.submit(wip: true)
+
+      shell.verify
+    end
+
+
     def test_submit_plain_branch
       stub_branch("fix-this")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -181,16 +139,6 @@ module Cp8Cli
       )
 
       cli.submit
-
-      shell.verify
-    end
-
-    def test_inexistent_card
-      stub_trello(:get, "/cards/CARD_SHORT_LINK").to_return(invalid_card_id)
-
-      expect_error("invalid id")
-
-      cli.start(card_url)
 
       shell.verify
     end
@@ -230,64 +178,16 @@ module Cp8Cli
 
     private
 
-      def card_short_link
-        "CARD_SHORT_LINK"
-      end
-
-      def card_short_url
-        "https://trello.com/c/#{card_short_link}"
-      end
-
-      def card_url
-        "#{card_short_url}/2-trello-flow"
-      end
-
-      def board_url
-        "https://trello.com/b/qdC0CNy0/2-trello-flow-board"
-      end
-
-      def member
-        { id: "MEMBER_ID", username: "balvig", initials: "JB" }
-      end
-
-      def board
-        { name: "BOARD NAME", id: "BOARD_ID", url: board_url }
-      end
-
-      def backlog
-        { id: "BACKLOG_LIST_ID" }
-      end
-
-      def started
-        { id: "STARTED_LIST_ID" }
-      end
-
-      def finished
-        { id: "FINISHED_LIST_ID" }
-      end
-
-      def card
-        { id: "CARD_ID", name: "CARD NAME", idBoard: "BOARD_ID", url: card_url, shortUrl: card_short_url }
-      end
-
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
       end
 
       def github_issue
-        { number: "ISSUE_NUMBER", title: "ISSUE TITLE"}
+        { number: "ISSUE_NUMBER", title: "ISSUE TITLE", html_url: "https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER" }
       end
 
       def github_user
         { login: "GITHUB_USER" }
-      end
-
-      def invalid_token
-        { status: 400, body: "invalid token" }
-      end
-
-      def invalid_card_id
-        { status: 302, body: "invalid id" }
       end
 
       def cli
@@ -295,7 +195,7 @@ module Cp8Cli
       end
 
       def global_config
-        GlobalConfig.new(key: "PUBLIC_KEY", token: "MEMBER_TOKEN", github_token: "GITHUB_TOKEN")
+        GlobalConfig.new(key: "PUBLIC_KEY", github_token: "GITHUB_TOKEN")
       end
   end
 end

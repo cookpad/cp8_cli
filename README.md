@@ -3,7 +3,6 @@
 ## Installation
 
 ```bash
-gem uninstall trello_flow # if used
 gem install cp8_cli
 ```
 

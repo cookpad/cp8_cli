@@ -1,4 +1,5 @@
-require 'webmock/minitest'
+require "multi_json"
+require "webmock/minitest"
 
 class WebMock::RequestStub
   def to_return_json(hash, options = {})

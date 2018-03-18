@@ -9,7 +9,6 @@ require "cp8_cli/commands/suggest"
 module Cp8Cli
   class Main
     def initialize(global_config = GlobalConfig.new)
-      Trello::Base.configure(key: global_config.trello_key, token: global_config.trello_token)
       Github::Base.configure(token: global_config.github_token)
     end
 

@@ -10,10 +10,12 @@ module Cp8Cli
 
       def run
         check_version
-        story.branch.checkout
-        story.start
-      rescue Trello::Error => error
-        Command.error(error.message)
+        if story
+          story.branch.checkout
+          story.start
+        else
+          Command.error "No name/url provided"
+        end
       end
 
       private
@@ -33,12 +35,8 @@ module Cp8Cli
         def find_or_create_story
           if name.to_s.start_with?("https://github.com")
             Github::Issue.find_by_url(name)
-          elsif name.to_s.start_with?("http")
-            Trello::Card.find_by_url(name)
           elsif name.present?
             AdhocStory.new(name)
-          else
-            Command.error "No name/url provided"
           end
         end
     end
