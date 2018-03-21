@@ -1,3 +1,5 @@
+require "yaml"
+
 module Cp8Cli
   class ConfigStore
     def initialize(path)
