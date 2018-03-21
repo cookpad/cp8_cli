@@ -1,3 +1,5 @@
+require "active_support/core_ext/hash"
+
 def stub_shell
   Cp8Cli::Command.client = Minitest::Mock.new
 end

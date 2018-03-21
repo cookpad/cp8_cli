@@ -1,8 +1,6 @@
 require "colored"
 require "active_support/core_ext/module/delegation"
 require "highline"
-require "hirb-colors"
-require "hirb"
 
 module Cp8Cli
   class Command
