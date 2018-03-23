@@ -9,14 +9,13 @@ module Cp8Cli
 
     def test_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
-        with(body: { base: "master", head: "jb.fix-bug.master", title: "[WIP] Fix bug" })
-      stub_branch("master")
+        with(body: { base: "master", head: "jb/fix-bug", title: "[WIP] Fix bug" })
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_checkout("jb.fix-bug.master")
+      expect_checkout("jb/fix-bug")
       expect_commit("Started: Fix bug")
-      expect_push("jb.fix-bug.master")
+      expect_push("jb/fix-bug")
 
       cli.start("Fix bug")
 
@@ -35,10 +34,9 @@ module Cp8Cli
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
       assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
         with(body: { assignees: ["GITHUB_USER"] })
-      stub_branch("master")
       stub_github_user("John Bobson")
 
-      expect_checkout("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      expect_checkout("jb/balvig/cp8_cli#ISSUE_NUMBER")
 
       cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
@@ -47,20 +45,6 @@ module Cp8Cli
       assert_requested issue_endpoint
       assert_requested user_endpoint
       assert_requested assign_endpoint
-    end
-
-    def test_start_release_branch
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_github(:get, "/user").to_return_json(github_user)
-      stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees")
-      stub_branch("release-branch")
-      stub_github_user("John Bobson")
-
-      expect_checkout("jb.issue-title.release-branch.balvig/cp8_cli#ISSUE_NUMBER")
-
-      cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
-
-      shell.verify
     end
 
     def test_open_master
@@ -75,7 +59,7 @@ module Cp8Cli
 
     def test_open_issue
       stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
 
       expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
@@ -86,13 +70,13 @@ module Cp8Cli
 
     def test_submit
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      expect_push("jb/balvig/cp8_cli#ISSUE_NUMBER")
       expect_pr(
         repo: "balvig/cp8_cli",
-        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
+        from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
         to: "master",
         title: "ISSUE TITLE",
         body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
@@ -107,13 +91,13 @@ module Cp8Cli
 
     def test_submit_wip
       stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      expect_push("jb/balvig/cp8_cli#ISSUE_NUMBER")
       expect_pr(
         repo: "balvig/cp8_cli",
-        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
+        from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
         to: "master",
         title: "[WIP] ISSUE TITLE",
         body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",

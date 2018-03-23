@@ -1,27 +1,20 @@
 module Cp8Cli
   class BranchName
-    def initialize(user:, target:, title:, short_link: nil)
+    def initialize(user:, branch_identifier:)
       @user = user
-      @target = target
-      @title = title
-      @short_link = short_link
+      @branch_identifier = branch_identifier
     end
 
     def to_s
-      parts.join(".")
+      "#{prefix}/#{branch_identifier}"
     end
 
     private
 
-      attr_reader :user, :target, :title, :short_link
+      attr_reader :user, :branch_identifier
 
-      def parts
-        parts = []
-        parts << user.initials.downcase
-        parts << title.parameterize[0..50]
-        parts << target
-        parts << short_link
-        parts.compact
+      def prefix
+        user.initials.downcase
       end
   end
 end

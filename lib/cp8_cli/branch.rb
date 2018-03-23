@@ -27,9 +27,7 @@ module Cp8Cli
     def self.from_story(story)
       new BranchName.new(
         user: CurrentUser.new,
-        target: current,
-        title: story.title,
-        short_link: story.short_link
+        branch_identifier: story.branch_identifier
       ).to_s
     end
 
@@ -57,10 +55,6 @@ module Cp8Cli
       end
     end
 
-    def target
-      name_parts[2] || "master"
-    end
-
     def reset
       if dirty?
         Command.error "Dirty working directory, not resetting."
@@ -78,15 +72,15 @@ module Cp8Cli
       def short_link
         return unless linked_branch?
 
-        name_parts.last
+        name_parts[1..2].join("/")
       end
 
       def linked_branch?
-        name_parts.size == 4
+        name_parts.size == 3
       end
 
       def name_parts
-        @_name_parts ||= name.split(".")
+        @_name_parts ||= name.split("/")
       end
 
       def dirty?

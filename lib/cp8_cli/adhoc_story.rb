@@ -27,6 +27,10 @@ module Cp8Cli
       PullRequestTitle.new(title, prefixes: [:wip]).run
     end
 
+    def branch_identifier
+      title.parameterize[0..50]
+    end
+
     private
 
       def create_empty_commit
@@ -48,8 +52,7 @@ module Cp8Cli
       def create_wip_pull_request
         Github::PullRequest.create(
           title: pr_title,
-          from: branch.name,
-          to: branch.target
+          from: branch.name
         )
       end
   end
