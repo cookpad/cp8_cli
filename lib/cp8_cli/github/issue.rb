@@ -54,10 +54,6 @@ module Cp8Cli
         "#{repo}##{number}"
       end
 
-      def branch_identifier
-        short_link
-      end
-
       private
 
         attr_reader :number, :repo, :attributes

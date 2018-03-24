@@ -20,15 +20,11 @@ module Cp8Cli
     end
 
     def short_link
-      nil # noop for now
+      title.parameterize[0..50]
     end
 
     def pr_title
       PullRequestTitle.new(title, prefixes: [:wip]).run
-    end
-
-    def branch_identifier
-      title.parameterize[0..50]
     end
 
     private

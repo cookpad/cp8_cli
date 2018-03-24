@@ -6,10 +6,10 @@ module Cp8Cli
       stub_shell
     end
 
-    def test_branch_name_for_story
+    def test_to_s
       stub_github_user("Doug Adams")
       user = CurrentUser.new
-      name = BranchName.new(user: user, branch_identifier: "cookpad/cp-8#1234").to_s
+      name = BranchName.new(user: user, short_link: "cookpad/cp-8#1234").to_s
 
       assert_equal "da/cookpad/cp-8#1234", name
     end

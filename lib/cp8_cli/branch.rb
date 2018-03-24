@@ -27,7 +27,7 @@ module Cp8Cli
     def self.from_story(story)
       new BranchName.new(
         user: CurrentUser.new,
-        branch_identifier: story.branch_identifier
+        short_link: story.short_link
       ).to_s
     end
 
