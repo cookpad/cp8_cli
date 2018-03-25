@@ -1,9 +1,11 @@
-require "cp8_cli/github/base"
+require "cp8_cli/github/api"
 require "cp8_cli/repo"
 
 module Cp8Cli
   module Github
-    class PullRequest < Base
+    class PullRequest
+      include Api::Client
+
       def self.create(attributes = {})
         new(attributes).save
       end

@@ -49,8 +49,22 @@ module Cp8Cli
 
     def test_open_master
       stub_branch("master")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_branch("master")
 
-      expect_error("Not currently on story branch")
+      expect_open_url("https://github.com/balvig/cp8_cli/tree/master")
+
+      cli.open
+
+      shell.verify
+    end
+
+    def test_open_adhoc
+      stub_branch("jb/adhoc-story")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_branch("jb/adhoc-story")
+
+      expect_open_url("https://github.com/balvig/cp8_cli/tree/jb/adhoc-story")
 
       cli.open
 
@@ -157,7 +171,6 @@ module Cp8Cli
       end
 
       shell.verify
-
     end
 
     private

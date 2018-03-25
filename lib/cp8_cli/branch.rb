@@ -31,9 +31,7 @@ module Cp8Cli
     end
 
     def story
-      return unless github_linked_branch?
-
-      @_story ||= Github::Issue.find_by_short_link(short_link)
+      @_story ||= Story.find_by_short_link(short_link)
     end
 
     def checkout
@@ -69,10 +67,6 @@ module Cp8Cli
     end
 
     private
-
-      def github_linked_branch?
-        short_link.include?("#")
-      end
 
       def short_link
         name_parts[1..-1].join("/")

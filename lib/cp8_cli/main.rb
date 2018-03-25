@@ -9,7 +9,7 @@ require "cp8_cli/commands/suggest"
 module Cp8Cli
   class Main
     def initialize(global_config = GlobalConfig.new)
-      Github::Base.configure(token: global_config.github_token)
+      Github::Api.configure(token: global_config.github_token)
     end
 
     def start(name)

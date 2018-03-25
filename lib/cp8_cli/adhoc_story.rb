@@ -1,16 +1,19 @@
-require "cp8_cli/storyable"
+require "cp8_cli/story"
 
 module Cp8Cli
-  class AdhocStory
-    include Storyable
+  class AdhocStory < Story
     attr_reader :title
+
+    def self.find_by_short_link(short_link)
+      new short_link.humanize
+    end
 
     def initialize(title)
       @title = title
     end
 
     def summary
-      nil # noop for now
+      nil
     end
 
     def start
@@ -21,6 +24,10 @@ module Cp8Cli
 
     def short_link
       title.parameterize[0..50]
+    end
+
+    def url
+      "#{Repo.current.url}/tree/#{Branch.current}"
     end
 
     private

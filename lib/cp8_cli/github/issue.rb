@@ -1,12 +1,12 @@
-require "cp8_cli/github/base"
+require "cp8_cli/github/api"
 require "cp8_cli/github/parsed_url"
 require "cp8_cli/github/parsed_short_link"
-require "cp8_cli/storyable"
+require "cp8_cli/story"
 
 module Cp8Cli
   module Github
-    class Issue < Base
-      include Storyable
+    class Issue < Story
+      include Api::Client
 
       def initialize(number:, repo:, attributes:)
         @number = number
