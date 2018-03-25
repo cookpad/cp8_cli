@@ -21,8 +21,7 @@ module Cp8Cli
         def pull_request
           Github::PullRequest.new(
             from: branch,
-            to: branch.target,
-            title: PullRequestTitle.new(branch.story&.pr_title, prefixes: options.keys).run,
+            title: PullRequestTitle.new(branch.story&.title, prefixes: options.keys).run,
             body: PullRequestBody.new(branch.story).run
           )
         end

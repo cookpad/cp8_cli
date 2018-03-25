@@ -20,11 +20,7 @@ module Cp8Cli
     end
 
     def short_link
-      nil # noop for now
-    end
-
-    def pr_title
-      PullRequestTitle.new(title, prefixes: [:wip]).run
+      title.parameterize[0..50]
     end
 
     private
@@ -47,10 +43,13 @@ module Cp8Cli
 
       def create_wip_pull_request
         Github::PullRequest.create(
-          title: pr_title,
-          from: branch.name,
-          to: branch.target
+          title: wip_pr_title,
+          from: branch.name
         )
+      end
+
+      def wip_pr_title
+        PullRequestTitle.new(title, prefixes: [:wip]).run
       end
   end
 end

@@ -8,7 +8,7 @@ module Cp8Cli
         new(attributes).save
       end
 
-      def initialize(from:, to:, title: nil, body: nil)
+      def initialize(from:, to: "master", title: nil, body: nil)
         @title = title
         @body = body
         @from = from

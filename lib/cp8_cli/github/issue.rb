@@ -14,10 +14,6 @@ module Cp8Cli
         @attributes = attributes
       end
 
-      def self.fields
-        [:title]
-      end
-
       def self.find_by_url(url)
         url = ParsedUrl.new(url)
         issue = client.issue(url.repo, url.number)
@@ -32,10 +28,6 @@ module Cp8Cli
 
       def title
         attributes[:title]
-      end
-
-      def pr_title
-        title
       end
 
       def url
@@ -59,10 +51,8 @@ module Cp8Cli
         attr_reader :number, :repo, :attributes
 
         def assign(user)
-          # add_assignes not released as gem yet https://github.com/octokit/octokit.rb/pull/894
-          client.post "#{Octokit::Repository.path repo}/issues/#{number}/assignees", assignees: [user.github_login]
+          client.add_assignees repo, number, [user.github_login]
         end
-
     end
   end
 end

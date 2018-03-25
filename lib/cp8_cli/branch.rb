@@ -3,7 +3,6 @@ require "cp8_cli/ci"
 require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/current_user"
-require "cp8_cli/story_query"
 require "cp8_cli/pull_request_title"
 require "cp8_cli/pull_request_body"
 
@@ -27,14 +26,14 @@ module Cp8Cli
     def self.from_story(story)
       new BranchName.new(
         user: CurrentUser.new,
-        target: current,
-        title: story.title,
         short_link: story.short_link
       ).to_s
     end
 
     def story
-      @_story ||= StoryQuery.new(short_link).find if short_link
+      return unless github_linked_branch?
+
+      @_story ||= Github::Issue.find_by_short_link(short_link)
     end
 
     def checkout
@@ -57,10 +56,6 @@ module Cp8Cli
       end
     end
 
-    def target
-      name_parts[2] || "master"
-    end
-
     def reset
       if dirty?
         Command.error "Dirty working directory, not resetting."
@@ -75,18 +70,16 @@ module Cp8Cli
 
     private
 
-      def short_link
-        return unless linked_branch?
-
-        name_parts.last
+      def github_linked_branch?
+        short_link.include?("#")
       end
 
-      def linked_branch?
-        name_parts.size == 4
+      def short_link
+        name_parts[1..-1].join("/")
       end
 
       def name_parts
-        @_name_parts ||= name.split(".")
+        @_name_parts ||= name.split("/")
       end
 
       def dirty?
