@@ -30,10 +30,6 @@ module Cp8Cli
         attributes[:title]
       end
 
-      def pr_title
-        title
-      end
-
       def url
         attributes[:html_url]
       end
