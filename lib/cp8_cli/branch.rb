@@ -3,7 +3,6 @@ require "cp8_cli/ci"
 require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/current_user"
-require "cp8_cli/story_query"
 require "cp8_cli/pull_request_title"
 require "cp8_cli/pull_request_body"
 
@@ -32,7 +31,9 @@ module Cp8Cli
     end
 
     def story
-      @_story ||= StoryQuery.new(short_link).find if short_link
+      return unless github_linked_branch?
+
+      @_story ||= Github::Issue.find_by_short_link(short_link)
     end
 
     def checkout
@@ -69,14 +70,12 @@ module Cp8Cli
 
     private
 
-      def short_link
-        return unless linked_branch?
-
-        name_parts[1..2].join("/")
+      def github_linked_branch?
+        short_link.include?("#")
       end
 
-      def linked_branch?
-        name_parts.size == 3
+      def short_link
+        name_parts[1..-1].join("/")
       end
 
       def name_parts
