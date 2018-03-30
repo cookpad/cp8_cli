@@ -7,7 +7,7 @@ module Cp8Cli
 
         suggestion_branch.checkout
         suggestion_branch.push
-        pull_request.open(expand: nil)
+        pull_request.open
 
         original_branch.checkout
         original_branch.reset
@@ -31,6 +31,7 @@ module Cp8Cli
           Github::PullRequest.new(
             from: suggestion_branch,
             to: original_branch,
+            expand: nil
           )
         end
 

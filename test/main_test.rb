@@ -5,6 +5,7 @@ module Cp8Cli
     def setup
       stub_shell
       stub_request(:get, /rubygems\.org/).to_return_json({})
+      stub_github(:get, "/pulls").to_return_json([])
     end
 
     def test_start_adhoc_story
@@ -66,6 +67,7 @@ module Cp8Cli
     def test_open_master
       stub_branch("master")
       stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
       expect_pr(
         repo: "balvig/cp8_cli",
@@ -79,12 +81,17 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_open_branch_with_pr
+    def test_open_branch
       stub_branch("jb/adhoc-story")
       stub_repo("git@github.com:balvig/cp8_cli.git")
-      stub_branch("jb/adhoc-story")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
-      expect_open_url("https://github.com/balvig/cp8_cli/tree/jb/adhoc-story")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "jb/adhoc-story",
+        to: "master",
+        expand: 1
+      )
 
       cli.open
 
@@ -98,27 +105,19 @@ module Cp8Cli
 
       expect_push("jb/fix-bug")
 
-      #expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
       expect_open_url("https://github.com/balvig/cp8_cli/pull/PR_NUMBER")
-      #expect_pr(
-        #repo: "balvig/cp8_cli",
-        #from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
-        #to: "master",
-        #title: "ISSUE TITLE",
-        #body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
-        #expand: 1
-      #)
 
       cli.submit
 
       shell.verify
-      #assert_requested issue_endpoint
+
       assert_requested find_pr_endpoint
     end
 
     def test_submit_plain_branch
       stub_branch("fix-this")
       stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
       expect_push("fix-this")
       expect_pr(
