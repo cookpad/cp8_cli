@@ -58,9 +58,13 @@ module Cp8Cli
     def test_open_master
       stub_branch("master")
       stub_repo("git@github.com:balvig/cp8_cli.git")
-      stub_branch("master")
 
-      expect_open_url("https://github.com/balvig/cp8_cli/tree/master")
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "master",
+        to: "master",
+        expand: 1
+      )
 
       cli.open
 

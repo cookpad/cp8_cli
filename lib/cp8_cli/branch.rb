@@ -49,6 +49,7 @@ module Cp8Cli
     end
 
     def open_story_in_browser
+      open_pr
       #if story
         #Command.open_url story.url
       #else

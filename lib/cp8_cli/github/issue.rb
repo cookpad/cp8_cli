@@ -1,6 +1,5 @@
 require "cp8_cli/github/api"
 require "cp8_cli/github/parsed_url"
-require "cp8_cli/github/parsed_short_link"
 require "cp8_cli/story"
 
 module Cp8Cli
