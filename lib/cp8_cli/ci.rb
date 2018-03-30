@@ -14,7 +14,7 @@ module Cp8Cli
       attr_reader :branch_name, :repo
 
       def url
-        "https://circleci.com/gh/#{repo.user}/#{repo.name}/tree/#{escape branch_name}"
+        "https://circleci.com/gh/#{repo.shorthand}/tree/#{escape branch_name}"
       end
 
       def escape(text)
