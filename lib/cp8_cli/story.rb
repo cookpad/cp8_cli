@@ -33,7 +33,8 @@ module Cp8Cli
       def create_wip_pull_request
         Github::PullRequest.create(
           title: wip_pr_title,
-          from: branch.name
+          from: branch.name,
+          body: PullRequestBody.new(self).run
         )
       end
 

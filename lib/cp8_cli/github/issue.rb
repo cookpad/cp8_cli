@@ -31,10 +31,6 @@ module Cp8Cli
         "Closes #{short_link}"
       end
 
-      def short_link
-        "#{repo}##{number}"
-      end
-
       private
 
         attr_reader :number, :repo, :attributes
@@ -45,6 +41,10 @@ module Cp8Cli
 
         def user
           CurrentUser.new
+        end
+
+        def short_link
+          "#{repo}##{number}"
         end
     end
   end
