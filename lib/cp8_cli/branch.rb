@@ -23,15 +23,6 @@ module Cp8Cli
       new("suggestion-#{SecureRandom.hex(8)}")
     end
 
-    def self.from_story(story)
-      default_branch_name = BranchName.new(
-        user: CurrentUser.new,
-        story: story
-      ).to_s
-
-      new Command.ask("Branch name [#{default_branch_name}]:") { |q| q.default = default_branch_name }
-    end
-
     def checkout
       Command.run "git checkout #{name} >/dev/null 2>&1 || git checkout -b #{name}"
     end
@@ -46,15 +37,6 @@ module Cp8Cli
 
     def open_ci
       Ci.new(branch_name: name, repo: repo).open
-    end
-
-    def open_story_in_browser
-      open_pr
-      #if story
-        #Command.open_url story.url
-      #else
-        #Command.error "Not currently on story branch"
-      #end
     end
 
     def reset

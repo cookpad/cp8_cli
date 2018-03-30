@@ -32,18 +32,28 @@ module Cp8Cli
 
       def create_wip_pull_request
         Github::PullRequest.create(
-          title: wip_pr_title,
           from: branch.name,
+          title: PullRequestTitle.new(title, prefixes: :wip).run,
           body: PullRequestBody.new(self).run
         )
       end
 
-      def wip_pr_title
-        PullRequestTitle.new(title, prefixes: [:wip]).run
+      def branch
+        @_branch ||= Branch.new(branch_name)
       end
 
-      def branch
-        @_branch ||= Branch.from_story(self)
+      def branch_name
+        Command.ask("Branch name [#{default_branch_name}]:") do |q|
+          q.default = default_branch_name
+        end
+      end
+
+      def default_branch_name
+        @_default_branch_name ||= BranchName.new(user: user, story: self).to_s
+      end
+
+      def user
+        @_user ||= CurrentUser.new
       end
   end
 end

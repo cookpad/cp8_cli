@@ -9,9 +9,11 @@ module Cp8Cli
     def test_to_s
       stub_github_user("Doug Adams")
       user = CurrentUser.new
-      name = BranchName.new(user: user, short_link: "cookpad/cp-8#1234").to_s
+      story = Minitest::Mock.new
+      story.expect :title, "Fix Bug"
+      name = BranchName.new(user: user, story: story).to_s
 
-      assert_equal "da/cookpad/cp-8#1234", name
+      assert_equal "da/fix-bug", name
     end
   end
 end
