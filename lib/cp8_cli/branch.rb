@@ -24,14 +24,12 @@ module Cp8Cli
     end
 
     def self.from_story(story)
-      new BranchName.new(
+      default_branch_name = BranchName.new(
         user: CurrentUser.new,
-        short_link: story.short_link
+        story: story
       ).to_s
-    end
 
-    def story
-      @_story ||= Story.find_by_short_link(short_link)
+      new Command.ask("Branch name [#{default_branch_name}]:") { |q| q.default = default_branch_name }
     end
 
     def checkout
@@ -42,16 +40,20 @@ module Cp8Cli
       Command.run "git push origin #{name} -u"
     end
 
+    def open_pr
+      pull_request.open
+    end
+
     def open_ci
       Ci.new(branch_name: name, repo: Repo.current).open
     end
 
     def open_story_in_browser
-      if story
-        Command.open_url story.url
-      else
-        Command.error "Not currently on story branch"
-      end
+      #if story
+        #Command.open_url story.url
+      #else
+        #Command.error "Not currently on story branch"
+      #end
     end
 
     def reset
@@ -68,16 +70,20 @@ module Cp8Cli
 
     private
 
-      def short_link
-        name_parts[1..-1].join("/")
-      end
-
-      def name_parts
-        @_name_parts ||= name.split("/")
-      end
-
       def dirty?
         Command.read("git status --porcelain")
+      end
+
+      def pull_request
+        existing_pull_request || new_pull_request
+      end
+
+      def existing_pull_request
+        nil
+      end
+
+      def new_pull_request
+        Github::PullRequest.new(from: name)
       end
   end
 end

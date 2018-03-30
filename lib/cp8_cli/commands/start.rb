@@ -11,7 +11,6 @@ module Cp8Cli
       def run
         check_version
         if story
-          story.branch.checkout
           story.start
         else
           Command.error "No name/url provided"

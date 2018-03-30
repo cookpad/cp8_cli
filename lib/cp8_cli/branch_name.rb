@@ -1,17 +1,17 @@
 module Cp8Cli
   class BranchName
-    def initialize(user:, short_link:)
+    def initialize(user:, story:)
       @user = user
-      @short_link = short_link
+      @title = story.title.parameterize[0..50]
     end
 
     def to_s
-      "#{prefix}/#{short_link}"
+      "#{prefix}/#{title}"
     end
 
     private
 
-      attr_reader :user, :short_link
+      attr_reader :user, :title
 
       def prefix
         user.initials.downcase

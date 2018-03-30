@@ -1,11 +1,38 @@
 module Cp8Cli
   class Story
-    def self.find_by_short_link(short_link)
-      if short_link.include?("#")
-        Github::Issue.find_by_short_link(short_link)
-      else
-        AdhocStory.find_by_short_link(short_link)
-      end
+    def start
+      branch.checkout
+      create_empty_commit
+      push_branch
+      create_wip_pull_request
+      assign
+    end
+
+    def create_empty_commit
+      Command.run "git commit --allow-empty -m\"#{commit_message}\""
+    end
+
+    def commit_message
+      "Started: #{escaped_title}"
+    end
+
+    def escaped_title
+      title.gsub('"', '\"')
+    end
+
+    def push_branch
+      branch.push
+    end
+
+    def create_wip_pull_request
+      Github::PullRequest.create(
+        title: wip_pr_title,
+        from: branch.name
+      )
+    end
+
+    def wip_pr_title
+      PullRequestTitle.new(title, prefixes: [:wip]).run
     end
 
     def branch

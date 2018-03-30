@@ -20,12 +20,6 @@ module Cp8Cli
         new number: url.number, repo: url.repo, attributes: issue
       end
 
-      def self.find_by_short_link(short_link)
-        short_link = ParsedShortLink.new(short_link)
-        issue = client.issue(short_link.repo, short_link.number)
-        new number: short_link.number, repo: short_link.repo, attributes: issue
-      end
-
       def title
         attributes[:title]
       end
@@ -38,10 +32,6 @@ module Cp8Cli
         "Closes #{short_link}"
       end
 
-      def start
-        assign CurrentUser.new
-      end
-
       def short_link
         "#{repo}##{number}"
       end
@@ -50,8 +40,12 @@ module Cp8Cli
 
         attr_reader :number, :repo, :attributes
 
-        def assign(user)
+        def assign
           client.add_assignees repo, number, [user.github_login]
+        end
+
+        def user
+          CurrentUser.new
         end
     end
   end

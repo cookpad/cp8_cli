@@ -4,7 +4,7 @@ module Cp8Cli
   class MainTest < Minitest::Test
     def setup
       stub_shell
-      stub_request(:get, /api\.rubygems\.org/).to_return_json({})
+      stub_request(:get, /rubygems\.org/).to_return_json({})
     end
 
     def test_start_adhoc_story
@@ -13,6 +13,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
+      expect_question("Branch name [jb/fix-bug]:", "jb/fix-bug")
       expect_checkout("jb/fix-bug")
       expect_commit("Started: Fix bug")
       expect_push("jb/fix-bug")
@@ -30,13 +31,19 @@ module Cp8Cli
     end
 
     def test_start_github_issue
+      pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
+        with(body: { base: "master", head: "jb/issue-title", title: "[WIP] ISSUE TITLE" })
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
       assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
         with(body: { assignees: ["GITHUB_USER"] })
       stub_github_user("John Bobson")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_checkout("jb/balvig/cp8_cli#ISSUE_NUMBER")
+      expect_question("Branch name [jb/issue-title]:", "jb/issue-title")
+      expect_checkout("jb/issue-title")
+      expect_commit("Started: ISSUE TITLE")
+      expect_push("jb/issue-title")
 
       cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
@@ -45,6 +52,7 @@ module Cp8Cli
       assert_requested issue_endpoint
       assert_requested user_endpoint
       assert_requested assign_endpoint
+      assert_requested pr_endpoint
     end
 
     def test_open_master
@@ -71,58 +79,39 @@ module Cp8Cli
       shell.verify
     end
 
-    def test_open_issue
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
+    #def test_open_issue
+      #stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      #stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
 
-      expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
+      #expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
-      cli.open
+      #cli.open
 
-      shell.verify
-    end
+      #shell.verify
+    #end
 
-    def test_submit
+    def test_submit_branch_with_pr
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_push("jb/balvig/cp8_cli#ISSUE_NUMBER")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
-        to: "master",
-        title: "ISSUE TITLE",
-        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
-        expand: 1
-      )
+
+      expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
+      #expect_pr(
+        #repo: "balvig/cp8_cli",
+        #from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
+        #to: "master",
+        #title: "ISSUE TITLE",
+        #body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
+        #expand: 1
+      #)
 
       cli.submit
 
       shell.verify
       assert_requested issue_endpoint
     end
-
-    def test_submit_wip
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb/balvig/cp8_cli#ISSUE_NUMBER")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-
-      expect_push("jb/balvig/cp8_cli#ISSUE_NUMBER")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb/balvig/cp8_cli#ISSUE_NUMBER",
-        to: "master",
-        title: "[WIP] ISSUE TITLE",
-        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
-        expand: 1
-      )
-
-      cli.submit(wip: true)
-
-      shell.verify
-    end
-
 
     def test_submit_plain_branch
       stub_branch("fix-this")

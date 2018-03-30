@@ -12,13 +12,12 @@ module Cp8Cli
       main.start(name)
     end
 
-    desc "submit", "Pushes branch to GitHub and opens a PR"
-    method_option :wip, desc: "Flag PR as WIP", type: :boolean
+    desc "submit", "Pushes branch to GitHub and opens PR"
     def submit
-      main.submit(options.to_h.symbolize_keys)
+      main.submit
     end
 
-    desc "open", "Open current associated issue in browser"
+    desc "open", "Open current associated PR in browser"
     def open
       main.open
     end

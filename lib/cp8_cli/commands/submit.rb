@@ -7,7 +7,7 @@ module Cp8Cli
 
       def run
         branch.push
-        pull_request.open
+        branch.open_pr
       end
 
       private
@@ -16,14 +16,6 @@ module Cp8Cli
 
         def branch
           @_branch ||= Branch.current
-        end
-
-        def pull_request
-          Github::PullRequest.new(
-            from: branch,
-            title: PullRequestTitle.new(branch.story&.title, prefixes: options.keys).run,
-            body: PullRequestBody.new(branch.story).run
-          )
         end
     end
   end
