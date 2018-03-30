@@ -10,7 +10,11 @@ module Cp8Cli
         new(attributes).save
       end
 
-      def initialize(from:, to: "master", title: nil, body: nil)
+      def self.find_by(repo:, branch:)
+        new client.pull_requests(repo: repo, head: branch).first
+      end
+
+      def initialize(from: nil, to: "master", title: nil, body: nil, **other)
         @title = title
         @body = body
         @from = from

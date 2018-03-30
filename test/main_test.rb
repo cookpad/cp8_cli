@@ -92,7 +92,7 @@ module Cp8Cli
     end
 
     def test_submit_branch_with_pr
-      find_pr_endpoint = # ...stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
+      find_pr_endpoint = stub_github(:get, "/pulls").to_return_json([github_pr])
       stub_branch("jb/fix-bug")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
@@ -169,6 +169,10 @@ module Cp8Cli
 
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
+      end
+
+      def github_pr
+        { number: "PR_NUMBER", title: "PR TITLE", html_url: "https://github.com/balvig/cp8_cli/pull/PR_NUMBER" }
       end
 
       def github_issue

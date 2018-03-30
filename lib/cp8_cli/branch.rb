@@ -45,7 +45,7 @@ module Cp8Cli
     end
 
     def open_ci
-      Ci.new(branch_name: name, repo: Repo.current).open
+      Ci.new(branch_name: name, repo: repo).open
     end
 
     def open_story_in_browser
@@ -71,6 +71,10 @@ module Cp8Cli
 
     private
 
+      def repo
+        Repo.current
+      end
+
       def dirty?
         Command.read("git status --porcelain")
       end
@@ -80,7 +84,7 @@ module Cp8Cli
       end
 
       def existing_pull_request
-        nil
+        Github::PullRequest.find_by(branch: name, repo: repo)
       end
 
       def new_pull_request
