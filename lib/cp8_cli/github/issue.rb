@@ -7,7 +7,7 @@ module Cp8Cli
     class Issue < Story
       include Api::Client
 
-      def initialize(number:, repo:, attributes:)
+      def initialize(number:, repo:, **attributes)
         @number = number
         @repo = repo
         @attributes = attributes
@@ -15,16 +15,12 @@ module Cp8Cli
 
       def self.find_by_url(url)
         url = ParsedUrl.new(url)
-        issue = client.issue(url.repo, url.number)
-        new number: url.number, repo: url.repo, attributes: issue
+        issue = client.issue(url.repo, url.number).to_h
+        new issue.merge(number: url.number, repo: url.repo)
       end
 
       def title
         attributes[:title]
-      end
-
-      def url
-        attributes[:html_url]
       end
 
       def summary
