@@ -5,7 +5,7 @@ module Cp8Cli
     def setup
       stub_shell
       stub_request(:get, /rubygems\.org/).to_return_json({})
-      stub_github(:get, "/pulls").to_return_json([])
+      stub_request(:get, /pulls/).to_return_json([])
     end
 
     def test_start_adhoc_story
@@ -99,7 +99,9 @@ module Cp8Cli
     end
 
     def test_submit_branch_with_pr
-      find_pr_endpoint = stub_github(:get, "/pulls").to_return_json([github_pr])
+      find_pr_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/pulls").
+        with(query: { head: "jb/fix-bug" }).
+        to_return_json([github_pr])
       stub_branch("jb/fix-bug")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 

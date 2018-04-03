@@ -9,7 +9,6 @@ module Cp8Cli
       @path = path
     end
 
-
     def shorthand
       "#{user}/#{name}"
     end

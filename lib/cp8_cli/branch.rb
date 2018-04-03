@@ -66,7 +66,7 @@ module Cp8Cli
       end
 
       def existing_pull_request
-        Github::PullRequest.find_by(branch: name, repo: repo)
+        Github::PullRequest.find_by(branch: name, repo: repo.shorthand)
       end
 
       def new_pull_request
