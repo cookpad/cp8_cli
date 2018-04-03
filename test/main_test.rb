@@ -15,7 +15,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_question("Branch name [jb/fix-bug]:", "jb/fix-bug")
+      expect_question("Branch name: jb/", default: "fix-bug", answer: "fix-bug")
       expect_checkout("jb/fix-bug")
       expect_commit("Started: Fix bug")
       expect_push("jb/fix-bug")
@@ -49,7 +49,7 @@ module Cp8Cli
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_question("Branch name [jb/issue-title]:", "jb/issue-title")
+      expect_question("Branch name: jb/", default: "issue-title", answer: "issue-title")
       expect_checkout("jb/issue-title")
       expect_commit("Started: ISSUE TITLE")
       expect_push("jb/issue-title")

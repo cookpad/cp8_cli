@@ -35,4 +35,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "octokit"
   spec.add_dependency "thor"
   spec.add_dependency "trollop"
+  spec.add_dependency "tty-prompt"
 end

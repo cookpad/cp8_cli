@@ -11,9 +11,10 @@ module Cp8Cli
       user = CurrentUser.new
       story = Minitest::Mock.new
       story.expect :title, "Fix Bug"
-      name = BranchName.new(user: user, story: story).to_s
 
-      assert_equal "da/fix-bug", name
+      expect_question "Branch name: da/", default: "fix-bug"
+
+      BranchName.new(user: user, story: story).to_s
     end
   end
 end

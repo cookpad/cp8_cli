@@ -1,20 +1,30 @@
 module Cp8Cli
   class BranchName
+    SEPARATOR = "/"
+
     def initialize(user:, story:)
       @user = user
-      @title = story.title.parameterize[0..50]
+      @story = story
     end
 
     def to_s
-      "#{prefix}/#{title}"
+      "#{prefix}#{user_input}"
     end
 
     private
 
-      attr_reader :user, :title
+      attr_reader :user, :story
+
+      def user_input
+        Command.ask("Branch name: #{prefix}", default: default)
+      end
 
       def prefix
-        user.initials.downcase
+        user.initials.downcase + SEPARATOR
+      end
+
+      def default
+        story.title.parameterize[0..50]
       end
   end
 end

@@ -43,13 +43,7 @@ module Cp8Cli
       end
 
       def branch_name
-        Command.ask("Branch name [#{default_branch_name}]:") do |q|
-          q.default = default_branch_name
-        end
-      end
-
-      def default_branch_name
-        @_default_branch_name ||= BranchName.new(user: user, story: self).to_s
+        BranchName.new(user: user, story: self).to_s
       end
 
       def user
