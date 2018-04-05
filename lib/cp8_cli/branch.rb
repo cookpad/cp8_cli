@@ -3,7 +3,6 @@ require "cp8_cli/ci"
 require "cp8_cli/github/pull_request"
 require "cp8_cli/branch_name"
 require "cp8_cli/current_user"
-require "cp8_cli/story_query"
 require "cp8_cli/pull_request_title"
 require "cp8_cli/pull_request_body"
 
@@ -24,19 +23,6 @@ module Cp8Cli
       new("suggestion-#{SecureRandom.hex(8)}")
     end
 
-    def self.from_story(story)
-      new BranchName.new(
-        user: CurrentUser.new,
-        target: current,
-        title: story.title,
-        short_link: story.short_link
-      ).to_s
-    end
-
-    def story
-      @_story ||= StoryQuery.new(short_link).find if short_link
-    end
-
     def checkout
       Command.run "git checkout #{name} >/dev/null 2>&1 || git checkout -b #{name}"
     end
@@ -45,20 +31,12 @@ module Cp8Cli
       Command.run "git push origin #{name} -u"
     end
 
+    def open_pr
+      pull_request.open
+    end
+
     def open_ci
-      Ci.new(branch_name: name, repo: Repo.current).open
-    end
-
-    def open_story_in_browser
-      if story
-        Command.open_url story.url
-      else
-        Command.error "Not currently on story branch"
-      end
-    end
-
-    def target
-      name_parts[2] || "master"
+      Ci.new(branch_name: name, repo: repo).open
     end
 
     def reset
@@ -75,22 +53,24 @@ module Cp8Cli
 
     private
 
-      def short_link
-        return unless linked_branch?
-
-        name_parts.last
-      end
-
-      def linked_branch?
-        name_parts.size == 4
-      end
-
-      def name_parts
-        @_name_parts ||= name.split(".")
+      def repo
+        Repo.current
       end
 
       def dirty?
         Command.read("git status --porcelain")
+      end
+
+      def pull_request
+        existing_pull_request || new_pull_request
+      end
+
+      def existing_pull_request
+        Github::PullRequest.find_by(branch: name, repo: repo.shorthand)
+      end
+
+      def new_pull_request
+        Github::PullRequest.new(from: name)
       end
   end
 end

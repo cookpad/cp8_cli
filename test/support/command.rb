@@ -44,6 +44,14 @@ def expect_pr(repo:, from:, to:, **options)
   expect_open_url("https://github.com/#{repo}/compare/#{to}...#{expected_from}?#{query}")
 end
 
+def expect_question(question, answer: nil,  **options)
+  shell.expect :ask, answer, [question, options]
+end
+
+def expect_say(message)
+  shell.expect :say, nil, [message]
+end
+
 def expect_reset(branch)
   shell.expect :read, false, ["git status --porcelain"]
   shell.expect :run, nil, ["git reset --hard origin/#{branch}"]

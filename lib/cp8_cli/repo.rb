@@ -9,14 +9,6 @@ module Cp8Cli
       @path = path
     end
 
-    def user
-      path.split('/').first
-    end
-
-    def name
-      path.split('/').last
-    end
-
     def shorthand
       "#{user}/#{name}"
     end
@@ -28,5 +20,13 @@ module Cp8Cli
     private
 
       attr_reader :path
+
+      def user
+        path.split('/').first
+      end
+
+      def name
+        path.split('/').last
+      end
   end
 end

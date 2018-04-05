@@ -5,7 +5,7 @@ module Cp8Cli
     end
 
     def run
-      return unless story
+      return if story.summary.blank?
 
       summary_with_release_note
     end

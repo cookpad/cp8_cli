@@ -4,19 +4,22 @@ module Cp8Cli
   class MainTest < Minitest::Test
     def setup
       stub_shell
-      stub_request(:get, /api\.rubygems\.org/).to_return_json({})
+      stub_request(:get, /rubygems\.org/).to_return_json({})
+      stub_request(:get, /pulls/).to_return_json([])
     end
 
     def test_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
-        with(body: { base: "master", head: "jb.fix-bug.master", title: "[WIP] Fix bug" })
-      stub_branch("master")
+        with(body: { base: "master", head: "jb/fix-bug", title: "[WIP] Fix bug" })
+
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_checkout("jb.fix-bug.master")
+      expect_question("Branch name: jb/", default: "fix-bug", answer: "fix-bug")
+      expect_checkout("jb/fix-bug")
       expect_commit("Started: Fix bug")
-      expect_push("jb.fix-bug.master")
+      expect_push("jb/fix-bug")
+      expect_say "Created WIP PR, run `cp8 open` to view."
 
       cli.start("Fix bug")
 
@@ -31,14 +34,27 @@ module Cp8Cli
     end
 
     def test_start_github_issue
+      create_pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").with(
+        body: {
+          base: "master",
+          head: "jb/issue-title",
+          title: "[WIP] ISSUE TITLE",
+          body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
+        }
+      )
+
       issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
       user_endpoint = stub_github(:get, "/user").to_return_json(github_user)
       assign_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees").
         with(body: { assignees: ["GITHUB_USER"] })
-      stub_branch("master")
       stub_github_user("John Bobson")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_checkout("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      expect_question("Branch name: jb/", default: "issue-title", answer: "issue-title")
+      expect_checkout("jb/issue-title")
+      expect_commit("Started: ISSUE TITLE")
+      expect_push("jb/issue-title")
+      expect_say "Created WIP PR, run `cp8 open` to view."
 
       cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 
@@ -47,88 +63,65 @@ module Cp8Cli
       assert_requested issue_endpoint
       assert_requested user_endpoint
       assert_requested assign_endpoint
-    end
-
-    def test_start_release_branch
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_github(:get, "/user").to_return_json(github_user)
-      stub_github(:post, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER/assignees")
-      stub_branch("release-branch")
-      stub_github_user("John Bobson")
-
-      expect_checkout("jb.issue-title.release-branch.balvig/cp8_cli#ISSUE_NUMBER")
-
-      cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
-
-      shell.verify
+      assert_requested create_pr_endpoint
     end
 
     def test_open_master
       stub_branch("master")
-
-      expect_error("Not currently on story branch")
-
-      cli.open
-
-      shell.verify
-    end
-
-    def test_open_issue
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
-
-      expect_open_url("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
-
-      cli.open
-
-      shell.verify
-    end
-
-    def test_submit
-      issue_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
-      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
       expect_pr(
         repo: "balvig/cp8_cli",
-        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
+        from: "master",
         to: "master",
-        title: "ISSUE TITLE",
-        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
         expand: 1
       )
+
+      cli.open
+
+      shell.verify
+    end
+
+    def test_open_branch
+      stub_branch("jb/adhoc-story")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
+
+      expect_pr(
+        repo: "balvig/cp8_cli",
+        from: "jb/adhoc-story",
+        to: "master",
+        expand: 1
+      )
+
+      cli.open
+
+      shell.verify
+    end
+
+    def test_submit_branch_with_pr
+      find_pr_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/pulls").
+        with(query: { head: "jb/fix-bug" }).
+        to_return_json([github_pr])
+      stub_branch("jb/fix-bug")
+      stub_repo("git@github.com:balvig/cp8_cli.git")
+
+      expect_push("jb/fix-bug")
+
+      expect_open_url("https://github.com/balvig/cp8_cli/pull/PR_NUMBER")
 
       cli.submit
 
       shell.verify
-      assert_requested issue_endpoint
+
+      assert_requested find_pr_endpoint
     end
-
-    def test_submit_wip
-      stub_github(:get, "/repos/balvig/cp8_cli/issues/ISSUE_NUMBER").to_return_json(github_issue)
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-
-      expect_push("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
-      expect_pr(
-        repo: "balvig/cp8_cli",
-        from: "jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER",
-        to: "master",
-        title: "[WIP] ISSUE TITLE",
-        body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
-        expand: 1
-      )
-
-      cli.submit(wip: true)
-
-      shell.verify
-    end
-
 
     def test_submit_plain_branch
       stub_branch("fix-this")
       stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
       expect_push("fix-this")
       expect_pr(
@@ -173,13 +166,16 @@ module Cp8Cli
       end
 
       shell.verify
-
     end
 
     private
 
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
+      end
+
+      def github_pr
+        { number: "PR_NUMBER", title: "PR TITLE", html_url: "https://github.com/balvig/cp8_cli/pull/PR_NUMBER" }
       end
 
       def github_issue

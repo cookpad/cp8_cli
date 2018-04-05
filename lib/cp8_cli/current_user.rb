@@ -2,9 +2,7 @@ require "active_support/core_ext/string"
 
 module Cp8Cli
   class CurrentUser
-    def current
-      @_current ||= new
-    end
+    include Github::Api::Client
 
     def initials
       git_user_name.parameterize(separator: " ").split.map(&:first).join
@@ -21,7 +19,7 @@ module Cp8Cli
       end
 
       def github_user
-        @_github_user ||= Github::Base.client.user
+        @_github_user ||= client.user
       end
   end
 end
