@@ -6,7 +6,7 @@ module Cp8Cli
       push_branch
       create_wip_pull_request
       assign
-      Command.say "Created WIP PR"
+      Command.say "Created WIP PR, run `cp8 open` to view."
     end
 
     private
