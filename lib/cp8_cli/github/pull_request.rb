@@ -11,7 +11,7 @@ module Cp8Cli
       end
 
       def self.find_by(repo:, branch:)
-        client.pull_requests(repo, head: branch).map do |data|
+        client.pull_requests(repo.shorthand, head: "#{repo.user}:#{branch}").map do |data|
           new(data)
         end.first
       end
