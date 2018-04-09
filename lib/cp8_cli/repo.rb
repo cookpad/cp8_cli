@@ -17,13 +17,13 @@ module Cp8Cli
       "https://github.com/#{shorthand}"
     end
 
+    def user
+      path.split('/').first
+    end
+
     private
 
       attr_reader :path
-
-      def user
-        path.split('/').first
-      end
 
       def name
         path.split('/').last
