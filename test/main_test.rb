@@ -102,7 +102,7 @@ module Cp8Cli
 
     def test_submit_branch_with_pr
       find_pr_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/pulls").
-        with(query: { head: "jb/fix-bug" }).
+        with(query: { head: "balvig:jb/fix-bug" }).
         to_return_json([github_pr])
       stub_branch("jb/fix-bug")
       stub_repo("git@github.com:balvig/cp8_cli.git")
