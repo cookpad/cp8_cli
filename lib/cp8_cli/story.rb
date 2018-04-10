@@ -20,7 +20,7 @@ module Cp8Cli
       end
 
       def commit_message
-        "Started: #{escaped_title}"
+        escaped_title
       end
 
       def escaped_title

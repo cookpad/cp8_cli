@@ -17,7 +17,7 @@ module Cp8Cli
 
       expect_question("Branch name: jb/", default: "fix-bug", answer: "fix-bug")
       expect_checkout("jb/fix-bug")
-      expect_commit("Started: Fix bug")
+      expect_commit("Fix bug")
       expect_push("jb/fix-bug")
       expect_say "Created WIP PR, run `cp8 open` to view."
 
@@ -52,7 +52,7 @@ module Cp8Cli
 
       expect_question("Branch name: jb/", default: "issue-title", answer: "issue-title")
       expect_checkout("jb/issue-title")
-      expect_commit("Started: ISSUE TITLE")
+      expect_commit("ISSUE TITLE")
       expect_push("jb/issue-title")
       expect_say "Created WIP PR, run `cp8 open` to view."
 
