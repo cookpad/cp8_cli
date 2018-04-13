@@ -6,7 +6,7 @@ module Cp8Cli
       push_branch
       create_wip_pull_request
       assign
-      Command.say "Created WIP PR, run `cp8 open` to view."
+      Command.title "Created WIP PR, run `cp8 open` to view."
     end
 
     private
@@ -16,7 +16,7 @@ module Cp8Cli
       end
 
       def create_empty_commit
-        Command.run "git commit --allow-empty -m\"#{commit_message}\""
+        Command.run "git commit --allow-empty -m\"#{commit_message}\"", title: "Creating initial commit"
       end
 
       def commit_message

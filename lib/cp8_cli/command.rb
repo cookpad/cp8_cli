@@ -17,6 +17,10 @@ module Cp8Cli
       `open \"#{url}\"`
     end
 
+    def title(message)
+      highline.say(message.bold)
+    end
+
     def say(*args)
       highline.say(*args)
     end
@@ -29,17 +33,14 @@ module Cp8Cli
       tty.ask(message, required: required, default: default)
     end
 
-    def title(message)
-      highline.say(message.bold)
-    end
-
     def error(message)
       say(message.red.bold)
       exit(false)
     end
 
-    def run(command)
-      title(command)
+    def run(command, title: nil)
+      title(title) if title
+      say(command)
       system(command) || error("Error running: #{command}")
     end
 
