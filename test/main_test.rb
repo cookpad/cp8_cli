@@ -19,7 +19,7 @@ module Cp8Cli
       expect_checkout("jb/fix-bug")
       expect_commit("Fix bug")
       expect_push("jb/fix-bug")
-      expect_say "Created WIP PR, run `cp8 open` to view."
+      expect_title "Created WIP PR, run `cp8 open` to view."
 
       cli.start("Fix bug")
 
@@ -54,7 +54,7 @@ module Cp8Cli
       expect_checkout("jb/issue-title")
       expect_commit("ISSUE TITLE")
       expect_push("jb/issue-title")
-      expect_say "Created WIP PR, run `cp8 open` to view."
+      expect_title "Created WIP PR, run `cp8 open` to view."
 
       cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 

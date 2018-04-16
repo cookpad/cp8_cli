@@ -24,11 +24,11 @@ module Cp8Cli
     end
 
     def checkout
-      Command.run "git checkout #{name} >/dev/null 2>&1 || git checkout -b #{name}"
+      Command.run "git checkout #{name} >/dev/null 2>&1 || git checkout -b #{name}", title: "Checking out new branch"
     end
 
     def push
-      Command.run "git push origin #{name} -u"
+      Command.run "git push origin #{name} -u", title: "Pushing to origin"
     end
 
     def open_pr
@@ -43,7 +43,7 @@ module Cp8Cli
       if dirty?
         Command.error "Dirty working directory, not resetting."
       else
-        Command.run("git reset --hard origin/#{name}")
+        Command.run "git reset --hard origin/#{name}", title: "Resetting branch"
       end
     end
 

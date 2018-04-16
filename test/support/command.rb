@@ -21,16 +21,16 @@ def stub_branch(branch)
 end
 
 def expect_checkout(branch)
-  shell.expect :run, nil, ["git checkout #{branch} >/dev/null 2>&1 || git checkout -b #{branch}"]
+  shell.expect :run, nil, ["git checkout #{branch} >/dev/null 2>&1 || git checkout -b #{branch}", { title: "Checking out new branch" }]
 end
 
 def expect_commit(message)
   expected_command = "git commit --allow-empty -m\"#{message}\""
-  shell.expect :run, nil, [expected_command]
+  shell.expect :run, nil, [expected_command, { title: "Creating initial commit" }]
 end
 
 def expect_push(branch)
-  shell.expect :run, nil, ["git push origin #{branch} -u"]
+  shell.expect :run, nil, ["git push origin #{branch} -u", { title: "Pushing to origin" }]
 end
 
 def expect_error(error)
@@ -48,13 +48,13 @@ def expect_question(question, answer: nil,  **options)
   shell.expect :ask, answer, [question, options]
 end
 
-def expect_say(message)
-  shell.expect :say, nil, [message]
+def expect_title(message)
+  shell.expect :title, nil, [message]
 end
 
 def expect_reset(branch)
   shell.expect :read, false, ["git status --porcelain"]
-  shell.expect :run, nil, ["git reset --hard origin/#{branch}"]
+  shell.expect :run, nil, ["git reset --hard origin/#{branch}", { title: "Resetting branch" }]
 end
 
 def expect_open_url(url)
