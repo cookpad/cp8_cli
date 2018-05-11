@@ -1,5 +1,7 @@
 module Cp8Cli
   class Story
+    require "shellwords"
+
     def start
       checkout_branch
       create_empty_commit
@@ -16,7 +18,7 @@ module Cp8Cli
       end
 
       def create_empty_commit
-        Command.run "git commit --allow-empty -m\"#{commit_message}\"", title: "Creating initial commit"
+        Command.run "git commit --allow-empty -m#{commit_message}", title: "Creating initial commit"
       end
 
       def commit_message
@@ -24,7 +26,7 @@ module Cp8Cli
       end
 
       def escaped_title
-        title.gsub('"', '\"')
+        Shellwords.escape(title)
       end
 
       def push_branch
