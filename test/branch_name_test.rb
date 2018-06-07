@@ -1,5 +1,6 @@
 require "test_helper"
 # changes
+# another change
 
 module Cp8Cli
   class BranchNameTest < Minitest::Test
