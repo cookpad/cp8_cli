@@ -21,7 +21,7 @@ module Cp8Cli
       end
 
       def configure_github_token
-        store.save :github_token, Command.ask("Input GitHub token")
+        store.save :github_token, Command.ask("Input GitHub token (https://github.com/settings/tokens)")
       end
   end
 end
