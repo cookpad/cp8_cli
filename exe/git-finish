@@ -3,10 +3,10 @@
 $LOAD_PATH.unshift File.join(File.dirname(__FILE__), '..', 'lib')
 
 require "cp8_cli"
-require "trollop"
+require "optimist"
 
 
-options = Trollop::options do
+options = Optimist::options do
 	banner <<-EOS
 Pushes branch to GitHub and opens a PR
 
