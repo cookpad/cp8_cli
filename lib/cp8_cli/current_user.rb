@@ -5,7 +5,7 @@ module Cp8Cli
     include Github::Api::Client
 
     def initials
-      raise_error("please setup your user.name using git config user.name MyName") unless git_user_name
+       raise_error("please configure your git user.name using git config user.name Jane Doe") unless git_user_name
       git_user_name.parameterize(separator: " ").split.map(&:first).join
     end
 
