@@ -1,0 +1,10 @@
+#!/usr/bin/env ruby
+
+protected_branch = "master"
+
+current_branch = `git rev-parse --abbrev-ref HEAD`.strip
+
+if current_branch == protected_branch
+  puts "You are trying to push #{current_branch}, please create a new branch using 'cp8 suggest'"
+  exit 1
+end

@@ -7,6 +7,11 @@ require "cp8_cli"
 
 module Cp8Cli
   class App < Thor
+    desc "install-git-hooks", "Install commit githooks"
+    def install_git_hooks
+      main.install_git_hooks
+    end
+
     desc "start [URL|TITLE]", "Picks up existing issue/creates new ad hoc story and checks out branch"
     def start(name = nil)
       main.start(name)
