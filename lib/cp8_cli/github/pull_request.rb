@@ -35,7 +35,9 @@ module Cp8Cli
           to,
           from,
           title,
-          body
+          body,
+          draft: true,
+          accept: "application/vnd.github.shadow-cat-preview" # waiting for https://github.com/octokit/octokit.rb/pull/1114
         )
       end
 

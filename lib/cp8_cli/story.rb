@@ -6,9 +6,9 @@ module Cp8Cli
       checkout_branch
       create_empty_commit
       push_branch
-      create_wip_pull_request
+      create_draft_pull_request
       assign
-      Command.title "Created WIP PR, run `cp8 open` to view."
+      Command.title "Created draft PR, run `cp8 open` to view."
     end
 
     private
@@ -33,10 +33,10 @@ module Cp8Cli
         branch.push
       end
 
-      def create_wip_pull_request
+      def create_draft_pull_request
         Github::PullRequest.create(
           from: branch.name,
-          title: PullRequestTitle.new(title, prefixes: :wip).run,
+          title: PullRequestTitle.new(title).run,
           body: PullRequestBody.new(self).run
         )
       end
