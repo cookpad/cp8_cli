@@ -35,7 +35,9 @@ module Cp8Cli
           to,
           from,
           title,
-          body
+          body,
+          draft: true,
+          accept: Octokit::Preview::PREVIEW_TYPES[:draft]
         )
       end
 
