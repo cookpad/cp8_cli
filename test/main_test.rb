@@ -10,7 +10,7 @@ module Cp8Cli
 
     def test_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
-        with(body: { base: "master", head: "jb/fix-bug", title: "[WIP] Fix bug" })
+        with(body: { base: "master", head: "jb/fix-bug", title: "Fix bug", draft: true })
 
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -19,7 +19,7 @@ module Cp8Cli
       expect_checkout("jb/fix-bug")
       expect_commit("Fix bug")
       expect_push("jb/fix-bug")
-      expect_title "Created WIP PR, run `cp8 open` to view."
+      expect_title "Created draft PR, run `cp8 open` to view."
 
       cli.start("Fix bug")
 
@@ -38,8 +38,9 @@ module Cp8Cli
         body: {
           base: "master",
           head: "jb/issue-title",
-          title: "[WIP] ISSUE TITLE",
+          title: "ISSUE TITLE",
           body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
+          draft: true
         }
       )
 
@@ -54,7 +55,7 @@ module Cp8Cli
       expect_checkout("jb/issue-title")
       expect_commit("ISSUE TITLE")
       expect_push("jb/issue-title")
-      expect_title "Created WIP PR, run `cp8 open` to view."
+      expect_title "Created draft PR, run `cp8 open` to view."
 
       cli.start("https://github.com/balvig/cp8_cli/issues/ISSUE_NUMBER")
 

@@ -2,7 +2,7 @@ module Cp8Cli
   class PullRequestTitle
     def initialize(title, prefixes: [])
       @title = title
-      @prefixes = Array(*prefixes)
+      @prefixes = Array(prefixes)
     end
 
     def run
