@@ -18,7 +18,7 @@ module Cp8Cli
       end
 
       def create_empty_commit
-        Command.run "git commit --allow-empty -m#{commit_message}", title: "Creating initial commit"
+        Command.run "git commit --allow-empty -m#{commit_message} #{skip_ci}", title: "Creating initial commit"
       end
 
       def commit_message
@@ -27,6 +27,10 @@ module Cp8Cli
 
       def escaped_title
         Shellwords.escape(title)
+      end
+
+      def skip_ci
+        "-m'[skip ci]'"
       end
 
       def push_branch

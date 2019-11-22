@@ -25,7 +25,7 @@ def expect_checkout(branch)
 end
 
 def expect_commit(message)
-  expected_command = "git commit --allow-empty -m#{Shellwords.escape(message)}"
+  expected_command = "git commit --allow-empty -m#{Shellwords.escape(message)} -m'[skip ci]'"
   shell.expect :run, nil, [expected_command, { title: "Creating initial commit" }]
 end
 
