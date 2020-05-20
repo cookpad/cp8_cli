@@ -2,6 +2,7 @@ require "colored"
 require "active_support/core_ext/module/delegation"
 require "highline"
 require "tty-prompt"
+require "os"
 
 module Cp8Cli
   class Command
@@ -14,7 +15,7 @@ module Cp8Cli
 
     def open_url(url)
       return title(url) if ENV['BROWSER'] == 'echo'
-      `open \"#{url}\"`
+      `#{OS.open_file_command} \"#{url}\"`
     end
 
     def title(message)
