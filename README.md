@@ -1,4 +1,5 @@
 # CP-8 Cli
+CP-8 is a ruby tool which aids in interacting with github by opening draft PRs, creating suggestion branches, opening CI for a branch etc.
 
 ## Installation
 
