@@ -10,9 +10,18 @@ module Cp8Cli
       data[key]
     end
 
+    def exist?
+      File.exist?(path)
+    end
+
+    def move_to(new_path)
+      File.rename(path, new_path)
+      @path = new_path
+    end
+
     def save(key, value)
       data[key] = value
-      File.new(path, "w") unless File.exists?(path)
+      File.new(path, "w") unless exist?
       File.open(path, "w") { |f| f.write(data.to_yaml) }
       value
     end
