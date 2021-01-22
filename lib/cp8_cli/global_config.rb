@@ -24,7 +24,7 @@ module Cp8Cli
       end
 
       def uses_legacy_store?
-        !default_store.exist? && legacy_store.exist?
+        legacy_store.exist?
       end
 
       def migrate_legacy_store
