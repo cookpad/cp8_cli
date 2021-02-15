@@ -16,7 +16,7 @@ module Cp8Cli
         end.first
       end
 
-      def initialize(from: nil, to: "master", title: nil, body: nil, expand: 1, html_url: nil, **attributes)
+      def initialize(from: nil, to: "main", title: nil, body: nil, expand: 1, html_url: nil, **attributes)
         @from = from
         @to = to
         @title = title

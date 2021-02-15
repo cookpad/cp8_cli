@@ -27,7 +27,7 @@ module Cp8Cli
       main.ci
     end
 
-    desc "suggest", "Creates a suggestion branch from new commits, pushes it, opens URL and resets `master` back to `origin/master`."
+    desc "suggest", "Creates a suggestion branch from new commits, pushes it, opens URL and resets `main` back to `origin/main`."
     def suggest
       main.suggest
     end

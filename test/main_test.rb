@@ -10,7 +10,7 @@ module Cp8Cli
 
     def test_start_adhoc_story
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
-        with(body: { base: "master", head: "jb/fix-bug", title: "Fix bug", draft: true })
+        with(body: { base: "main", head: "jb/fix-bug", title: "Fix bug", draft: true })
 
       stub_github_user("John Bobson")
       stub_repo("git@github.com:balvig/cp8_cli.git")
@@ -36,7 +36,7 @@ module Cp8Cli
     def test_start_github_issue
       create_pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").with(
         body: {
-          base: "master",
+          base: "main",
           head: "jb/issue-title",
           title: "ISSUE TITLE",
           body: "Closes balvig/cp8_cli#ISSUE_NUMBER\n\n_Release note: ISSUE TITLE_",
@@ -67,15 +67,15 @@ module Cp8Cli
       assert_requested create_pr_endpoint
     end
 
-    def test_open_master
-      stub_branch("master")
+    def test_open_main
+      stub_branch("main")
       stub_repo("git@github.com:balvig/cp8_cli.git")
       stub_repo("git@github.com:balvig/cp8_cli.git") # erm
 
       expect_pr(
         repo: "balvig/cp8_cli",
-        from: "master",
-        to: "master",
+        from: "main",
+        to: "main",
         expand: 1
       )
 
@@ -92,7 +92,7 @@ module Cp8Cli
       expect_pr(
         repo: "balvig/cp8_cli",
         from: "jb/adhoc-story",
-        to: "master",
+        to: "main",
         expand: 1
       )
 
@@ -128,7 +128,7 @@ module Cp8Cli
       expect_pr(
         repo: "balvig/cp8_cli",
         from: "fix-this",
-        to: "master",
+        to: "main",
         expand: 1
       )
 
@@ -138,10 +138,10 @@ module Cp8Cli
     end
 
     def test_ci
-      stub_branch("jb.issue-title.master.balvig/cp8_cli#ISSUE_NUMBER")
+      stub_branch("jb.issue-title.main.balvig/cp8_cli#ISSUE_NUMBER")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
-      expect_open_url("https://circleci.com/gh/balvig/cp8_cli/tree/jb.issue-title.master.balvig%2Fcp8_cli%23ISSUE_NUMBER")
+      expect_open_url("https://circleci.com/gh/balvig/cp8_cli/tree/jb.issue-title.main.balvig%2Fcp8_cli%23ISSUE_NUMBER")
 
       cli.ci
 
@@ -149,7 +149,7 @@ module Cp8Cli
     end
 
     def test_suggest
-      stub_branch("jb.card-name.master.CARD_SHORT_LINK")
+      stub_branch("jb.card-name.main.CARD_SHORT_LINK")
       stub_repo("git@github.com:balvig/cp8_cli.git")
 
       expect_checkout("suggestion-HEX")
@@ -157,10 +157,10 @@ module Cp8Cli
       expect_pr(
         repo: "balvig/cp8_cli",
         from: "suggestion-HEX",
-        to: "jb.card-name.master.CARD_SHORT_LINK"
+        to: "jb.card-name.main.CARD_SHORT_LINK"
       )
-      expect_checkout("jb.card-name.master.CARD_SHORT_LINK")
-      expect_reset("jb.card-name.master.CARD_SHORT_LINK")
+      expect_checkout("jb.card-name.main.CARD_SHORT_LINK")
+      expect_reset("jb.card-name.main.CARD_SHORT_LINK")
 
       SecureRandom.stub :hex, "HEX" do
         cli.suggest
