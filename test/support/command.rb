@@ -12,8 +12,8 @@ def stub_github_user(name)
   shell.expect :read, name, ["git config user.name"]
 end
 
-def stub_repo(repo)
-  shell.expect :read, repo, ["git config --get remote.origin.url"]
+def stub_repo(repo, count: 1)
+  count.times { shell.expect(:read, repo, ["git config --get remote.origin.url"]) }
 end
 
 def stub_branch(branch)

@@ -16,9 +16,9 @@ module Cp8Cli
         end.first
       end
 
-      def initialize(from: nil, to: "master", title: nil, body: nil, expand: 1, html_url: nil, **attributes)
+      def initialize(from: nil, to: nil, title: nil, body: nil, expand: 1, html_url: nil, **attributes)
         @from = from
-        @to = to
+        @to = to || default_branch
         @title = title
         @body = body
         @expand = expand
@@ -44,6 +44,10 @@ module Cp8Cli
       private
 
         attr_reader :from, :to, :title, :body, :expand, :html_url
+
+        def default_branch
+          client.repo(repo.shorthand).default_branch
+        end
 
         def url
           html_url || new_pr_url

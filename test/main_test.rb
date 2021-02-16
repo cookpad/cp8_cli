@@ -9,6 +9,7 @@ module Cp8Cli
     end
 
     def test_start_adhoc_story
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").
         with(body: { base: "master", head: "jb/fix-bug", title: "Fix bug", draft: true })
 
@@ -34,6 +35,7 @@ module Cp8Cli
     end
 
     def test_start_github_issue
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       create_pr_endpoint = stub_github(:post, "/repos/balvig/cp8_cli/pulls").with(
         body: {
           base: "master",
@@ -68,6 +70,7 @@ module Cp8Cli
     end
 
     def test_open_master
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       stub_branch("master")
       stub_repo("git@github.com:balvig/cp8_cli.git")
       stub_repo("git@github.com:balvig/cp8_cli.git") # erm
@@ -85,9 +88,9 @@ module Cp8Cli
     end
 
     def test_open_branch
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       stub_branch("jb/adhoc-story")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
+      stub_repo("git@github.com:balvig/cp8_cli.git", count: 2)
 
       expect_pr(
         repo: "balvig/cp8_cli",
@@ -102,11 +105,12 @@ module Cp8Cli
     end
 
     def test_submit_branch_with_pr
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       find_pr_endpoint = stub_github(:get, "/repos/balvig/cp8_cli/pulls").
         with(query: { head: "balvig:jb/fix-bug" }).
         to_return_json([github_pr])
       stub_branch("jb/fix-bug")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
+      stub_repo("git@github.com:balvig/cp8_cli.git", count: 2)
 
       expect_push("jb/fix-bug")
 
@@ -120,9 +124,9 @@ module Cp8Cli
     end
 
     def test_submit_plain_branch
+      stub_github(:get, "/repos/balvig/cp8_cli").to_return_json(github_repo)
       stub_branch("fix-this")
-      stub_repo("git@github.com:balvig/cp8_cli.git")
-      stub_repo("git@github.com:balvig/cp8_cli.git") # erm
+      stub_repo("git@github.com:balvig/cp8_cli.git", count: 2)
 
       expect_push("fix-this")
       expect_pr(
@@ -173,6 +177,10 @@ module Cp8Cli
 
       def label
         { id: "LABEL_ID", name: "LABEL NAME" }
+      end
+
+      def github_repo
+        { default_branch: "master" }
       end
 
       def github_pr
