@@ -7,12 +7,12 @@ module Cp8Cli
       include Api::Client
 
       def self.create(attributes = {})
-        new(attributes).save
+        new(**attributes).save
       end
 
       def self.find_by(repo:, branch:)
         client.pull_requests(repo.shorthand, head: "#{repo.user}:#{branch}").map do |data|
-          new(data)
+          new(**data)
         end.first
       end
 

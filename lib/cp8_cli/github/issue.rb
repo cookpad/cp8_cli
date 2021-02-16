@@ -16,7 +16,7 @@ module Cp8Cli
       def self.find_by_url(url)
         url = ParsedUrl.new(url)
         issue = client.issue(url.repo, url.number).to_h
-        new issue.merge(number: url.number, repo: url.repo)
+        new(**issue.merge(number: url.number, repo: url.repo))
       end
 
       def title
