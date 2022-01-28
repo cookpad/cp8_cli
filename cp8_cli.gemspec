@@ -32,7 +32,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "colored"
   spec.add_dependency "highline"
   spec.add_dependency "launchy"
-  spec.add_dependency "octokit", "~> 4.18"
+  spec.add_dependency "octokit", "~> 4.22"
   spec.add_dependency "thor"
   spec.add_dependency "tty-prompt"
   spec.add_dependency "os"
